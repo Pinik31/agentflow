@@ -1,11 +1,52 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { SiWhatsapp } from "react-icons/si";
+import { Link } from "wouter";
 
 export default function Services() {
   return (
     <div className="container py-12">
       <h1 className="text-4xl font-bold mb-12">השירותים שלנו</h1>
-      
+
       <div className="space-y-12">
+        <section id="landing">
+          <Card>
+            <CardHeader>
+              <CardTitle>דפי נחיתה חכמים</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <p className="text-muted-foreground mb-4">
+                    נפגש עם הבוט החכם שלנו להערכה עסקית מקיפה וחינמית:
+                  </p>
+                  <ul className="space-y-2">
+                    <li>✓ בוט WhatsApp המותאם לאפיון צרכי העסק</li>
+                    <li>✓ הערכה מקצועית של צרכי הדיגיטל שלך</li>
+                    <li>✓ המלצות מותאמות אישית לעסק שלך</li>
+                    <li>✓ תכנון דף נחיתה אופטימלי</li>
+                  </ul>
+                  <div className="mt-6">
+                    <Link href="https://wa.me/972000000000">
+                      <Button className="gap-2">
+                        <SiWhatsapp className="w-5 h-5" />
+                        התחל שיחה חינמית עם הבוט שלנו
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+                <div>
+                  <img
+                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+                    alt="דפי נחיתה"
+                    className="rounded-lg"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
         <section id="social">
           <Card>
             <CardHeader>
@@ -26,7 +67,7 @@ export default function Services() {
                 </div>
                 <div>
                   <img
-                    src="https://images.unsplash.com/photo-1612066473428-fb6833a0d855"
+                    src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7"
                     alt="ניהול רשתות חברתיות"
                     className="rounded-lg"
                   />
@@ -56,7 +97,7 @@ export default function Services() {
                 </div>
                 <div>
                   <img
-                    src="https://images.unsplash.com/photo-1506729623306-b5a934d88b53"
+                    src="https://images.unsplash.com/photo-1592748197482-4c814e8eb95f"
                     alt="צ'אטבוט לשירות לקוחות"
                     className="rounded-lg"
                   />
