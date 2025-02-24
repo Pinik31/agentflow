@@ -9,6 +9,7 @@ export const blogPosts = pgTable("blog_posts", {
   excerpt: text("excerpt").notNull(),
   slug: text("slug").notNull().unique(),
   imageUrl: text("image_url").notNull(),
+  category: text("category").notNull(),
   publishedAt: timestamp("published_at").notNull(),
 });
 
