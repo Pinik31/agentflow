@@ -2,22 +2,28 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
 
 interface ServiceCardProps {
   title: string;
   description: string;
   imageUrl: string;
   href: string;
+  className?: string;
 }
 
-export default function ServiceCard({ title, description, imageUrl, href }: ServiceCardProps) {
+export default function ServiceCard({ title, description, imageUrl, href, className }: ServiceCardProps) {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <Card className="overflow-hidden group transition-all hover:shadow-lg">
       <div className="aspect-video relative overflow-hidden">
         <img 
-          src={imageUrl} 
+          src={imageError ? "https://images.unsplash.com/photo-1682687982501-1e58ab814714" : imageUrl} 
           alt={title} 
-          className="object-cover w-full h-full transition duration-300 group-hover:scale-105" 
+          className={`w-full h-full transition duration-300 group-hover:scale-105 ${className}`}
+          onError={() => setImageError(true)}
+          loading="lazy"
         />
       </div>
       <CardHeader>

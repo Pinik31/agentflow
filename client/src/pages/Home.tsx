@@ -10,14 +10,15 @@ export default function Home() {
   return (
     <>
       <NewsletterPopup />
-      <section className="hero bg-primary/5 relative overflow-hidden">
+      <section className="hero bg-primary/5 relative overflow-hidden py-24">
         <div className="absolute inset-0 bg-grid-white/10" />
         <div 
           className="absolute inset-0 opacity-20" 
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1682687981922-7b55dbb30892')", // More modern AI visualization
+            backgroundImage: "url('https://images.unsplash.com/photo-1684163400422-35b048f26af3')", // AI visualization
             backgroundSize: "cover",
             backgroundPosition: "center",
+            backgroundBlendMode: "overlay"
           }}
         />
         <div className="container relative">
@@ -46,7 +47,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="py-24">
         <div className="container">
           <h2 className="text-3xl font-bold text-center mb-4">הפתרונות שלנו</h2>
           <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
@@ -58,24 +59,27 @@ export default function Home() {
               description="ניהול תוכן אוטומטי, SEO ופרסום ברשתות החברתיות באמצעות AI"
               imageUrl="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7"
               href="/services#social"
+              className="aspect-video object-cover"
             />
             <ServiceCard
               title="צ'אטבוט WhatsApp חכם"
               description="צ'אטבוט AI לשירות לקוחות ומענה אוטומטי 24/7"
               imageUrl="https://images.unsplash.com/photo-1592748197482-4c814e8eb95f"
               href="/services#chatbot"
+              className="aspect-video object-cover"
             />
             <ServiceCard
               title="ניהול לידים אוטומטי"
               description="מערכת AI לניהול וטיפול בלידים לשיפור אחוזי המרה"
               imageUrl="https://images.unsplash.com/photo-1460925895917-afdab827c52f"
               href="/services#leads"
+              className="aspect-video object-cover"
             />
           </div>
         </div>
       </section>
 
-      <section className="section bg-primary/5">
+      <section className="section bg-primary/5 py-24">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
@@ -99,14 +103,14 @@ export default function Home() {
               <img
                 src="https://images.unsplash.com/photo-1522071820081-009f0129c71c"
                 alt="הצוות שלנו"
-                className="rounded-lg shadow-xl"
+                className="rounded-lg shadow-xl w-full aspect-video object-cover"
               />
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section">
+      <section className="py-24">
         <div className="container">
           <h2 className="text-3xl font-bold text-center mb-12">למה לבחור בנו?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -149,7 +153,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section bg-primary text-primary-foreground">
+      <section className="bg-primary text-primary-foreground py-24">
         <div className="container text-center">
           <h2 className="text-3xl font-bold mb-6">מוכנים להתחיל?</h2>
           <p className="text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
