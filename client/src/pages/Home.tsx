@@ -10,20 +10,21 @@ export default function Home() {
   return (
     <>
       <NewsletterPopup />
-      <section className="hero bg-primary/5 relative overflow-hidden py-24">
+      <section className="relative min-h-[80vh] flex items-center bg-gradient-to-br from-primary/5 via-primary/10 to-background">
         <div className="absolute inset-0 bg-grid-white/10" />
         <div 
-          className="absolute inset-0 opacity-20" 
+          className="absolute inset-0 opacity-10" 
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1676389761175-b17c641b3120')", // Modern AI visualization
+            backgroundImage: "url('https://images.unsplash.com/photo-1676389761175-b17c641b3120')",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            backgroundBlendMode: "overlay"
+            backgroundBlendMode: "overlay",
+            maskImage: "linear-gradient(to bottom, black, transparent)"
           }}
         />
-        <div className="container relative">
+        <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-6xl font-bold mb-6">
+            <h1 className="text-4xl sm:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
               אוטומציה חכמה לעסק שלך
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
@@ -31,13 +32,13 @@ export default function Home() {
             </p>
             <div className="flex gap-4 justify-center">
               <Link href="/services">
-                <Button size="lg" className="gap-2">
+                <Button size="lg" className="gap-2 bg-gradient-to-r from-primary to-primary/70 hover:from-primary/90 hover:to-primary/60">
                   <Bot className="w-5 h-5" />
                   גלה את השירותים שלנו
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="gap-2">
+                <Button size="lg" variant="outline" className="gap-2 border-primary/20 hover:bg-primary/5">
                   <MessageSquare className="w-5 h-5" />
                   צור קשר
                 </Button>
@@ -47,7 +48,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-24">
+      <section className="py-24 bg-gradient-to-b from-background to-primary/5">
         <div className="container">
           <h2 className="text-3xl font-bold text-center mb-4">הפתרונות שלנו</h2>
           <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
@@ -79,7 +80,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section bg-primary/5 py-24">
+      <section className="section bg-gradient-to-br from-primary/5 to-background py-24">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
@@ -89,14 +90,18 @@ export default function Home() {
                 המשימה שלנו היא לעזור לעסקים להתייעל ולצמוח באמצעות טכנולוגיות מתקדמות.
               </p>
               <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-primary mb-2">150+</div>
-                  <div className="text-muted-foreground">לקוחות מרוצים</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-primary mb-2">98%</div>
-                  <div className="text-muted-foreground">שביעות רצון</div>
-                </div>
+                <Card className="bg-primary/5 border-primary/10">
+                  <CardContent className="p-6 text-center">
+                    <div className="text-4xl font-bold text-primary mb-2">150+</div>
+                    <div className="text-muted-foreground">לקוחות מרוצים</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-primary/5 border-primary/10">
+                  <CardContent className="p-6 text-center">
+                    <div className="text-4xl font-bold text-primary mb-2">98%</div>
+                    <div className="text-muted-foreground">שביעות רצון</div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
             <div>
@@ -110,11 +115,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-24">
+      <section className="py-24 bg-gradient-to-t from-primary/5 to-background">
         <div className="container">
           <h2 className="text-3xl font-bold text-center mb-12">למה לבחור בנו?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card>
+            <Card className="bg-primary/5 border-primary/10 transition-transform hover:scale-105">
               <CardContent className="p-6">
                 <div className="rounded-full bg-primary/10 p-3 w-12 h-12 flex items-center justify-center mb-4">
                   <Bot className="w-6 h-6 text-primary" />
@@ -126,7 +131,7 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-primary/5 border-primary/10 transition-transform hover:scale-105">
               <CardContent className="p-6">
                 <div className="rounded-full bg-primary/10 p-3 w-12 h-12 flex items-center justify-center mb-4">
                   <Code className="w-6 h-6 text-primary" />
@@ -138,7 +143,7 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-primary/5 border-primary/10 transition-transform hover:scale-105">
               <CardContent className="p-6">
                 <div className="rounded-full bg-primary/10 p-3 w-12 h-12 flex items-center justify-center mb-4">
                   <Rocket className="w-6 h-6 text-primary" />
@@ -153,10 +158,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-primary text-primary-foreground py-24">
+      <section className="bg-gradient-to-br from-primary to-primary-foreground text-primary-foreground py-24">
         <div className="container text-center">
           <h2 className="text-3xl font-bold mb-6">מוכנים להתחיל?</h2>
-          <p className="text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
+          <p className="text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
             צרו איתנו קשר עוד היום וגלו כיצד פתרונות האוטומציה שלנו יכולים לעזור לעסק שלכם לצמוח
           </p>
           <Link href="/contact">
