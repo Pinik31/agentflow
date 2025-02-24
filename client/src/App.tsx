@@ -8,6 +8,7 @@ import Blog from "@/pages/Blog";
 import Contact from "@/pages/Contact";
 import Services from "@/pages/Services";
 import About from "@/pages/About";
+import Courses from "@/pages/Courses";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
@@ -18,10 +19,11 @@ function Router() {
       <main className="flex-1">
         <Switch>
           <Route path="/" component={Home} />
-          <Route path="/about" component={About} />
           <Route path="/blog" component={Blog} />
-          <Route path="/contact" component={Contact} />
+          <Route path="/courses" component={Courses} />
+          <Route path="/about" component={About} />
           <Route path="/services" component={Services} />
+          <Route path="/contact" component={Contact} />
           <Route component={NotFound} />
         </Switch>
       </main>

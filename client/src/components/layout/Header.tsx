@@ -13,14 +13,17 @@ export default function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="/about">
-            <a className="text-muted-foreground hover:text-foreground">אודות</a>
+          <Link href="/blog">
+            <a className="text-muted-foreground hover:text-foreground">בלוג ועדכוני AI</a>
+          </Link>
+          <Link href="/courses">
+            <a className="text-muted-foreground hover:text-foreground">קורסים</a>
           </Link>
           <Link href="/services">
             <a className="text-muted-foreground hover:text-foreground">שירותים</a>
           </Link>
-          <Link href="/blog">
-            <a className="text-muted-foreground hover:text-foreground">בלוג</a>
+          <Link href="/about">
+            <a className="text-muted-foreground hover:text-foreground">אודות</a>
           </Link>
           <Link href="/contact">
             <Button>צור קשר</Button>
