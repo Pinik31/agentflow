@@ -23,41 +23,37 @@ const socialLinks = [
   {
     name: "WhatsApp",
     icon: SiWhatsapp,
-    href: "https://wa.me/972000000000",
-    color: "hover:text-[#25D366]"
+    href: "https://wa.me/972000000000?text=היי,%20אשמח%20לקבל%20מידע%20נוסף%20על%20השירותים%20שלכם",
+    color: "hover:text-[#25D366]",
+    description: "זמינים 24/7 בוואטסאפ"
   },
   {
     name: "Instagram",
     icon: SiInstagram,
     href: "https://instagram.com/agentflow",
-    color: "hover:text-[#E4405F]"
+    color: "hover:text-[#E4405F]",
+    description: "עקבו אחרינו באינסטגרם"
   },
   {
     name: "YouTube",
     icon: SiYoutube,
     href: "https://youtube.com/@agentflow",
-    color: "hover:text-[#FF0000]"
+    color: "hover:text-[#FF0000]",
+    description: "צפו בסרטוני הדרכה"
   },
   {
     name: "LinkedIn",
     icon: SiLinkedin,
     href: "https://linkedin.com/company/agentflow",
-    color: "hover:text-[#0A66C2]"
+    color: "hover:text-[#0A66C2]",
+    description: "התחברו אלינו בלינקדאין"
   }
 ];
 
 export default function Contact() {
   const { toast } = useToast();
   const form = useForm({
-    resolver: zodResolver(
-      insertLeadSchema.extend({
-        name: insertLeadSchema.shape.name,
-        email: insertLeadSchema.shape.email,
-        phone: insertLeadSchema.shape.phone.optional(),
-        company: insertLeadSchema.shape.company.optional(),
-        message: insertLeadSchema.shape.message,
-      })
-    ),
+    resolver: zodResolver(insertLeadSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -68,13 +64,7 @@ export default function Contact() {
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: {
-      name: string;
-      email: string;
-      phone?: string;
-      company?: string;
-      message: string;
-    }) => {
+    mutationFn: async (data) => {
       await apiRequest("POST", "/api/leads", data);
     },
     onSuccess: () => {
@@ -94,79 +84,120 @@ export default function Contact() {
   });
 
   return (
-    <div className="container py-12">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">צור קשר</h1>
-          <p className="text-xl text-muted-foreground">
-            רוצה לשמוע עוד על פתרונות האוטומציה שלנו? השאר פרטים ונחזור אליך בהקדם
-          </p>
+    <>
+      <div className="relative bg-primary/5 py-16">
+        <div className="absolute inset-0 bg-grid-white/10" />
+        <div className="container relative">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl font-bold mb-4">צור קשר</h1>
+            <p className="text-xl text-muted-foreground">
+              רוצה לשמוע עוד על פתרונות האוטומציה שלנו? השאר פרטים ונחזור אליך בהקדם
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="container -mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+          {socialLinks.map((social) => (
+            <a
+              key={social.name}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <Card className={`h-full hover:scale-105 transition-transform ${social.color}`}>
+                <CardContent className="p-6 text-center">
+                  <social.icon className="w-8 h-8 mx-auto mb-4" />
+                  <h3 className="font-semibold mb-2">{social.name}</h3>
+                  <p className="text-sm text-muted-foreground">{social.description}</p>
+                </CardContent>
+              </Card>
+            </a>
+          ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-3 text-primary">
-                <Phone className="h-5 w-5" />
-                <h3 className="font-semibold">טלפון</h3>
-              </div>
-              <p className="mt-2 text-muted-foreground">03-1234567</p>
-            </CardContent>
-          </Card>
+        <div className="max-w-4xl mx-auto">
+          <Card className="bg-card/50 backdrop-blur">
+            <CardContent className="p-8">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
+                  className="space-y-6"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>שם מלא</FormLabel>
+                          <FormControl>
+                            <Input placeholder="ישראל ישראלי" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-3 text-primary">
-                <Mail className="h-5 w-5" />
-                <h3 className="font-semibold">אימייל</h3>
-              </div>
-              <p className="mt-2 text-muted-foreground">contact@agentflow.co.il</p>
-            </CardContent>
-          </Card>
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>אימייל</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              placeholder="israel@example.com"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-3 text-primary">
-                <Building2 className="h-5 w-5" />
-                <h3 className="font-semibold">כתובת</h3>
-              </div>
-              <p className="mt-2 text-muted-foreground">רחוב הברזל 30, תל אביב</p>
-            </CardContent>
-          </Card>
-        </div>
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>טלפון</FormLabel>
+                          <FormControl>
+                            <Input placeholder="050-1234567" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-        <Card>
-          <CardContent className="pt-6">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
-                className="space-y-6"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="company"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>חברה</FormLabel>
+                          <FormControl>
+                            <Input placeholder="שם החברה" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
                   <FormField
                     control={form.control}
-                    name="name"
+                    name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>שם מלא</FormLabel>
+                        <FormLabel>הודעה</FormLabel>
                         <FormControl>
-                          <Input placeholder="ישראל ישראלי" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>אימייל</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="israel@example.com"
+                          <Textarea
+                            placeholder="איך נוכל לעזור לך?"
+                            className="min-h-[120px]"
                             {...field}
                           />
                         </FormControl>
@@ -175,85 +206,52 @@ export default function Contact() {
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>טלפון</FormLabel>
-                        <FormControl>
-                          <Input placeholder="050-1234567" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="company"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>חברה</FormLabel>
-                        <FormControl>
-                          <Input placeholder="שם החברה" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="message"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>הודעה</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="איך נוכל לעזור לך?"
-                          className="min-h-[120px]"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="flex justify-end">
                   <Button
                     type="submit"
                     size="lg"
                     disabled={mutation.isPending}
-                    className="min-w-[200px]"
+                    className="w-full"
                   >
-                    {mutation.isPending ? "שולח..." : "שלח"}
+                    {mutation.isPending ? "שולח..." : "שליחה"}
                   </Button>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
 
-        <div className="mt-12 text-center">
-          <h2 className="text-xl font-semibold mb-6">בואו נישאר בקשר</h2>
-          <div className="flex justify-center gap-6">
-            {socialLinks.map((social) => (
-              <a
-                key={social.name}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`text-muted-foreground transition-colors ${social.color}`}
-              >
-                <social.icon className="w-6 h-6" />
-              </a>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 text-primary mb-4">
+                  <Phone className="h-5 w-5" />
+                  <h3 className="font-semibold">טלפון</h3>
+                </div>
+                <p className="text-muted-foreground">03-1234567</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 text-primary mb-4">
+                  <Mail className="h-5 w-5" />
+                  <h3 className="font-semibold">אימייל</h3>
+                </div>
+                <p className="text-muted-foreground">contact@agentflow.co.il</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 text-primary mb-4">
+                  <Building2 className="h-5 w-5" />
+                  <h3 className="font-semibold">כתובת</h3>
+                </div>
+                <p className="text-muted-foreground">רחוב הברזל 30, תל אביב</p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
