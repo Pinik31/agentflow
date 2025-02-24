@@ -3,22 +3,6 @@ import { Button } from "@/components/ui/button";
 import { SiWhatsapp } from "react-icons/si";
 import { Bot, Brain, Rocket } from "lucide-react";
 
-const courses = [
-  {
-    title: "מבוא לכלי AI",
-    description: "למדו את היסודות של טכנולוגיות AI והשימושים העסקיים שלהן",
-    icon: Bot,
-    features: [
-      "הכרות עם כלי AI מובילים",
-      "שימושים עסקיים מעשיים",
-      "דוגמאות ותרגול מעשי",
-      "תמיכה אישית לאורך הקורס"
-    ],
-    price: "₪499",
-    level: "מתחילים"
-  }
-];
-
 export default function Services() {
   return (
     <div className="container py-12">
@@ -44,7 +28,7 @@ export default function Services() {
                   </ul>
                   <div className="mt-6">
                     <a 
-                      href="https://wa.me/972000000000?text=היי%2C%20אשמח%20לקבל%20הערכה%20עסקית%20חינמית"
+                      href={`https://wa.me/972000000000?text=${encodeURIComponent('היי, אשמח לקבל הערכה עסקית חינמית לעסק שלי')}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-block"
@@ -58,9 +42,9 @@ export default function Services() {
                 </div>
                 <div>
                   <img
-                    src="https://images.unsplash.com/photo-1677442136019-21780ecad995"
+                    src="https://images.unsplash.com/photo-1682687982501-1e58ab814714"
                     alt="בוט חכם לעסקים"
-                    className="rounded-lg shadow-xl"
+                    className="rounded-lg shadow-xl object-cover w-full aspect-video"
                   />
                 </div>
               </div>
