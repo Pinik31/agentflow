@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SiWhatsapp } from "react-icons/si";
-import { Link } from "wouter";
 
 export default function Services() {
   return (
@@ -27,12 +26,17 @@ export default function Services() {
                     <li>✓ תכנון דף נחיתה אופטימלי</li>
                   </ul>
                   <div className="mt-6">
-                    <Link href="https://wa.me/972000000000">
+                    <a 
+                      href="https://wa.me/972000000000?text=היי,%20אשמח%20לקבל%20מידע%20נוסף%20על%20השירותים%20שלכם"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block"
+                    >
                       <Button className="gap-2">
                         <SiWhatsapp className="w-5 h-5" />
                         התחל שיחה חינמית עם הבוט שלנו
                       </Button>
-                    </Link>
+                    </a>
                   </div>
                 </div>
                 <div>

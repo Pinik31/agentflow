@@ -4,7 +4,7 @@ import Logo from "./Logo";
 
 export default function Header() {
   return (
-    <header className="border-b">
+    <header className="border-b sticky top-0 bg-background/95 backdrop-blur z-50">
       <div className="container py-4 flex items-center justify-between">
         <Link href="/">
           <a className="hover:opacity-80 transition-opacity">
