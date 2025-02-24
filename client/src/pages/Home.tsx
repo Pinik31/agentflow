@@ -3,13 +3,23 @@ import { Link } from "wouter";
 import ServiceCard from "@/components/ServiceCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { SiWhatsapp } from "react-icons/si";
-import { Bot, MessageSquare, Users } from "lucide-react";
+import { Bot, MessageSquare, Users, Code, Rocket } from "lucide-react";
+import NewsletterPopup from "@/components/NewsletterPopup";
 
 export default function Home() {
   return (
     <>
+      <NewsletterPopup />
       <section className="hero bg-primary/5 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/10" />
+        <div 
+          className="absolute inset-0 opacity-20" 
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1677442136019-21780ecad995')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
         <div className="container relative">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl sm:text-6xl font-bold mb-6">
@@ -69,58 +79,72 @@ export default function Home() {
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-6">למה לבחור בנו?</h2>
-              <div className="space-y-6">
-                <Card>
-                  <CardContent className="p-6 flex gap-4">
-                    <div className="rounded-full bg-primary/10 p-3">
-                      <Bot className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-2">פתרונות AI מתקדמים</h3>
-                      <p className="text-muted-foreground">
-                        שימוש בטכנולוגיות AI מתקדמות להשגת תוצאות מיטביות עבור העסק שלך
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-6 flex gap-4">
-                    <div className="rounded-full bg-primary/10 p-3">
-                      <Users className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-2">ליווי אישי מקצועי</h3>
-                      <p className="text-muted-foreground">
-                        צוות מומחים שילווה אותך בכל שלב בתהליך האוטומציה
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-6 flex gap-4">
-                    <div className="rounded-full bg-primary/10 p-3">
-                      <SiWhatsapp className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-2">תמיכה 24/7</h3>
-                      <p className="text-muted-foreground">
-                        תמיכה זמינה בוואטסאפ ובמייל לכל שאלה או בקשה
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
+              <h2 className="text-3xl font-bold mb-6">אודותינו</h2>
+              <p className="text-lg text-muted-foreground mb-8">
+                אנחנו צוות של מומחי AI ואוטומציה עם ניסיון רב בפיתוח פתרונות חכמים לעסקים. 
+                המשימה שלנו היא לעזור לעסקים להתייעל ולצמוח באמצעות טכנולוגיות מתקדמות.
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-primary mb-2">150+</div>
+                  <div className="text-muted-foreground">לקוחות מרוצים</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-primary mb-2">98%</div>
+                  <div className="text-muted-foreground">שביעות רצון</div>
+                </div>
               </div>
             </div>
             <div>
               <img
                 src="https://images.unsplash.com/photo-1522071820081-009f0129c71c"
-                alt="צוות מקצועי"
+                alt="הצוות שלנו"
                 className="rounded-lg shadow-xl"
               />
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <h2 className="text-3xl font-bold text-center mb-12">למה לבחור בנו?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card>
+              <CardContent className="p-6">
+                <div className="rounded-full bg-primary/10 p-3 w-12 h-12 flex items-center justify-center mb-4">
+                  <Bot className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-semibold text-xl mb-2">פתרונות AI מתקדמים</h3>
+                <p className="text-muted-foreground">
+                  שימוש בטכנולוגיות AI מתקדמות להשגת תוצאות מיטביות עבור העסק שלך
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="rounded-full bg-primary/10 p-3 w-12 h-12 flex items-center justify-center mb-4">
+                  <Code className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-semibold text-xl mb-2">פיתוח מותאם אישית</h3>
+                <p className="text-muted-foreground">
+                  התאמה מדויקת של הפתרונות לצרכים הייחודיים של העסק שלך
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="rounded-full bg-primary/10 p-3 w-12 h-12 flex items-center justify-center mb-4">
+                  <Rocket className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-semibold text-xl mb-2">תוצאות מוכחות</h3>
+                <p className="text-muted-foreground">
+                  שיפור משמעותי ביעילות ובתוצאות העסקיות
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
