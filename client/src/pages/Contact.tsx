@@ -50,6 +50,24 @@ const socialLinks = [
   }
 ];
 
+const contactDetails = [
+  {
+    icon: Phone,
+    title: "טלפון",
+    details: ["03-1234567", "050-1234567"]
+  },
+  {
+    icon: Mail,
+    title: "אימייל",
+    details: ["contact@agentflow.co.il", "support@agentflow.co.il"]
+  },
+  {
+    icon: Building2,
+    title: "משרד ראשי",
+    details: ["רחוב הברזל 30", "תל אביב, ישראל"]
+  }
+];
+
 export default function Contact() {
   const { toast } = useToast();
   const form = useForm({
@@ -91,7 +109,7 @@ export default function Contact() {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl font-bold mb-4">צור קשר</h1>
             <p className="text-xl text-muted-foreground">
-              רוצה לשמוע עוד על פתרונות האוטומציה שלנו? השאר פרטים ונחזור אליך בהקדם
+              רוצה לשמוע עוד על פתרונות האוטומציה שלנו? בחר את הדרך הנוחה לך ליצירת קשר
             </p>
           </div>
         </div>
@@ -121,6 +139,18 @@ export default function Contact() {
         <div className="max-w-4xl mx-auto">
           <Card className="bg-card/50 backdrop-blur">
             <CardContent className="p-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                {contactDetails.map((detail) => (
+                  <div key={detail.title} className="text-center">
+                    <detail.icon className="w-8 h-8 mx-auto mb-4 text-primary" />
+                    <h3 className="font-semibold mb-2">{detail.title}</h3>
+                    {detail.details.map((text, i) => (
+                      <p key={i} className="text-muted-foreground">{text}</p>
+                    ))}
+                  </div>
+                ))}
+              </div>
+
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
@@ -218,38 +248,6 @@ export default function Contact() {
               </Form>
             </CardContent>
           </Card>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 text-primary mb-4">
-                  <Phone className="h-5 w-5" />
-                  <h3 className="font-semibold">טלפון</h3>
-                </div>
-                <p className="text-muted-foreground">03-1234567</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 text-primary mb-4">
-                  <Mail className="h-5 w-5" />
-                  <h3 className="font-semibold">אימייל</h3>
-                </div>
-                <p className="text-muted-foreground">contact@agentflow.co.il</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 text-primary mb-4">
-                  <Building2 className="h-5 w-5" />
-                  <h3 className="font-semibold">כתובת</h3>
-                </div>
-                <p className="text-muted-foreground">רחוב הברזל 30, תל אביב</p>
-              </CardContent>
-            </Card>
-          </div>
         </div>
       </div>
     </>
