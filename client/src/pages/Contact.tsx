@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Building2, Mail, MessageSquare, Phone } from "lucide-react";
+import { SiWhatsapp, SiInstagram, SiYoutube, SiLinkedin } from "react-icons/si";
 import {
   Form,
   FormControl,
@@ -17,6 +18,33 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+
+const socialLinks = [
+  {
+    name: "WhatsApp",
+    icon: SiWhatsapp,
+    href: "https://wa.me/972000000000",
+    color: "hover:text-[#25D366]"
+  },
+  {
+    name: "Instagram",
+    icon: SiInstagram,
+    href: "https://instagram.com/agentflow",
+    color: "hover:text-[#E4405F]"
+  },
+  {
+    name: "YouTube",
+    icon: SiYoutube,
+    href: "https://youtube.com/@agentflow",
+    color: "hover:text-[#FF0000]"
+  },
+  {
+    name: "LinkedIn",
+    icon: SiLinkedin,
+    href: "https://linkedin.com/company/agentflow",
+    color: "hover:text-[#0A66C2]"
+  }
+];
 
 export default function Contact() {
   const { toast } = useToast();
@@ -92,7 +120,7 @@ export default function Contact() {
                 <Mail className="h-5 w-5" />
                 <h3 className="font-semibold">אימייל</h3>
               </div>
-              <p className="mt-2 text-muted-foreground">contact@ai-automation.co.il</p>
+              <p className="mt-2 text-muted-foreground">contact@agentflow.co.il</p>
             </CardContent>
           </Card>
 
@@ -208,6 +236,23 @@ export default function Contact() {
             </Form>
           </CardContent>
         </Card>
+
+        <div className="mt-12 text-center">
+          <h2 className="text-xl font-semibold mb-6">בואו נישאר בקשר</h2>
+          <div className="flex justify-center gap-6">
+            {socialLinks.map((social) => (
+              <a
+                key={social.name}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-muted-foreground transition-colors ${social.color}`}
+              >
+                <social.icon className="w-6 h-6" />
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
