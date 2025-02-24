@@ -6,7 +6,7 @@
   :root {
     --font-sans: 'Assistant', system-ui, sans-serif;
   }
-  
+
   * {
     @apply border-border;
   }
@@ -24,12 +24,26 @@
   .container {
     @apply px-4 mx-auto max-w-7xl;
   }
-  
+
   .hero {
     @apply py-24 sm:py-32;
   }
 
   .section {
     @apply py-16 sm:py-24;
+  }
+}
+
+@layer utilities {
+  .bg-grid-white\/10 {
+    background-image: linear-gradient(to right, rgb(255 255 255 / 0.1) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .bg-grid-dark\/10 {
+    background-image: linear-gradient(to right, rgb(0 0 0 / 0.1) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(0 0 0 / 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
   }
 }
