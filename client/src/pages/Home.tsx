@@ -15,7 +15,7 @@ export default function Home() {
         <div 
           className="absolute inset-0 opacity-20" 
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1684163400422-35b048f26af3')", // AI visualization
+            backgroundImage: "url('https://images.unsplash.com/photo-1639322537228-f710d846310a')", // AI and business automation themed
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundBlendMode: "overlay"
@@ -64,7 +64,7 @@ export default function Home() {
             <ServiceCard
               title="צ'אטבוט WhatsApp חכם"
               description="צ'אטבוט AI לשירות לקוחות ומענה אוטומטי 24/7"
-              imageUrl="https://images.unsplash.com/photo-1633675254053-d96c7668c3b8" // WhatsApp themed image
+              imageUrl="https://images.unsplash.com/photo-1614680376573-df3480f0c6ff"
               href="/services#chatbot"
               className="aspect-video object-cover"
             />
