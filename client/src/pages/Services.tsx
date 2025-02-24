@@ -102,7 +102,7 @@ export default function Services() {
                 </div>
                 <div>
                   <img
-                    src="https://images.unsplash.com/photo-1614680376573-df3480f0c6ff"
+                    src="https://images.unsplash.com/photo-1677442136019-21780ecad995"
                     alt="צ'אטבוט לשירות לקוחות"
                     className="rounded-lg shadow-xl object-cover w-full aspect-video"
                   />
