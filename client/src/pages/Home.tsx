@@ -64,7 +64,7 @@ export default function Home() {
             <ServiceCard
               title="צ'אטבוט WhatsApp חכם"
               description="צ'אטבוט AI לשירות לקוחות ומענה אוטומטי 24/7"
-              imageUrl="https://images.unsplash.com/photo-1592748197482-4c814e8eb95f"
+              imageUrl="https://images.unsplash.com/photo-1633675254053-d96c7668c3b8" // WhatsApp themed image
               href="/services#chatbot"
               className="aspect-video object-cover"
             />

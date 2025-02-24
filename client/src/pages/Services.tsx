@@ -74,7 +74,7 @@ export default function Services() {
                   <img
                     src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7"
                     alt="ניהול רשתות חברתיות"
-                    className="rounded-lg shadow-xl"
+                    className="rounded-lg shadow-xl object-cover w-full aspect-video"
                   />
                 </div>
               </div>
@@ -102,9 +102,9 @@ export default function Services() {
                 </div>
                 <div>
                   <img
-                    src="https://images.unsplash.com/photo-1592748197482-4c814e8eb95f"
+                    src="https://images.unsplash.com/photo-1633675254053-d96c7668c3b8"
                     alt="צ'אטבוט לשירות לקוחות"
-                    className="rounded-lg shadow-xl"
+                    className="rounded-lg shadow-xl object-cover w-full aspect-video"
                   />
                 </div>
               </div>
@@ -133,7 +133,7 @@ export default function Services() {
                   <img
                     src="https://images.unsplash.com/photo-1644352744450-a391b8ce158d"
                     alt="ניהול לידים"
-                    className="rounded-lg shadow-xl"
+                    className="rounded-lg shadow-xl object-cover w-full aspect-video"
                   />
                 </div>
               </div>
