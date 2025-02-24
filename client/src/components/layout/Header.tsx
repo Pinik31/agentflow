@@ -19,11 +19,11 @@ export default function Header() {
           <Link href="/courses">
             <a className="text-muted-foreground hover:text-foreground">קורסים</a>
           </Link>
-          <Link href="/services">
-            <a className="text-muted-foreground hover:text-foreground">שירותים</a>
-          </Link>
           <Link href="/about">
             <a className="text-muted-foreground hover:text-foreground">אודות</a>
+          </Link>
+          <Link href="/services">
+            <a className="text-muted-foreground hover:text-foreground">שירותים</a>
           </Link>
           <Link href="/contact">
             <Button>צור קשר</Button>

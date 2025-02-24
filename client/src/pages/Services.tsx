@@ -1,6 +1,23 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SiWhatsapp } from "react-icons/si";
+import { Bot, Brain, Rocket } from "lucide-react";
+
+const courses = [
+  {
+    title: "מבוא לכלי AI",
+    description: "למדו את היסודות של טכנולוגיות AI והשימושים העסקיים שלהן",
+    icon: Bot,
+    features: [
+      "הכרות עם כלי AI מובילים",
+      "שימושים עסקיים מעשיים",
+      "דוגמאות ותרגול מעשי",
+      "תמיכה אישית לאורך הקורס"
+    ],
+    price: "₪499",
+    level: "מתחילים"
+  }
+];
 
 export default function Services() {
   return (
@@ -27,7 +44,7 @@ export default function Services() {
                   </ul>
                   <div className="mt-6">
                     <a 
-                      href="https://wa.me/972000000000?text=היי,%20אשמח%20לקבל%20מידע%20נוסף%20על%20השירותים%20שלכם"
+                      href="https://wa.me/972000000000?text=היי%2C%20אשמח%20לקבל%20הערכה%20עסקית%20חינמית"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-block"
@@ -41,9 +58,9 @@ export default function Services() {
                 </div>
                 <div>
                   <img
-                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f"
-                    alt="דפי נחיתה"
-                    className="rounded-lg"
+                    src="https://images.unsplash.com/photo-1677442136019-21780ecad995"
+                    alt="בוט חכם לעסקים"
+                    className="rounded-lg shadow-xl"
                   />
                 </div>
               </div>
@@ -73,7 +90,7 @@ export default function Services() {
                   <img
                     src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7"
                     alt="ניהול רשתות חברתיות"
-                    className="rounded-lg"
+                    className="rounded-lg shadow-xl"
                   />
                 </div>
               </div>
@@ -103,14 +120,13 @@ export default function Services() {
                   <img
                     src="https://images.unsplash.com/photo-1592748197482-4c814e8eb95f"
                     alt="צ'אטבוט לשירות לקוחות"
-                    className="rounded-lg"
+                    className="rounded-lg shadow-xl"
                   />
                 </div>
               </div>
             </CardContent>
           </Card>
         </section>
-
         <section id="leads">
           <Card>
             <CardHeader>
@@ -133,7 +149,7 @@ export default function Services() {
                   <img
                     src="https://images.unsplash.com/photo-1644352744450-a391b8ce158d"
                     alt="ניהול לידים"
-                    className="rounded-lg"
+                    className="rounded-lg shadow-xl"
                   />
                 </div>
               </div>
