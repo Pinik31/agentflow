@@ -58,11 +58,13 @@ export default function Home() {
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
         <div className="container relative">
-          <h2 className="text-3xl font-bold text-center mb-4">הפתרונות שלנו</h2>
-          <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-            פתרונות אוטומציה מבוססי AI המותאמים במיוחד לעסקים קטנים ובינוניים, לחיסכון בזמן ומשאבים
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-center mb-4">הפתרונות שלנו</h2>
+            <p className="text-muted-foreground text-center mb-12">
+              פתרונות אוטומציה מבוססי AI המותאמים במיוחד לעסקים קטנים ובינוניים, לחיסכון בזמן ומשאבים
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
             <ServiceCard
               title="סוכן AI לרשתות חברתיות"
               description="ניהול תוכן אוטומטי, SEO ופרסום ברשתות החברתיות באמצעות AI"
@@ -88,8 +90,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-background" />
+      <section className="py-24 relative overflow-hidden bg-gradient-to-br from-primary/5 to-background">
         <div className="container relative">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
@@ -99,13 +100,13 @@ export default function Home() {
                 המשימה שלנו היא לעזור לעסקים להתייעל ולצמוח באמצעות טכנולוגיות מתקדמות.
               </p>
               <div className="grid grid-cols-2 gap-4">
-                <Card className="group hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-background to-primary/5 border-primary/10">
+                <Card className="group hover:shadow-lg transition-all duration-300">
                   <CardContent className="p-6 text-center">
                     <div className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 group-hover:scale-110 transition-transform">150+</div>
                     <div className="text-muted-foreground">לקוחות מרוצים</div>
                   </CardContent>
                 </Card>
-                <Card className="group hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-background to-primary/5 border-primary/10">
+                <Card className="group hover:shadow-lg transition-all duration-300">
                   <CardContent className="p-6 text-center">
                     <div className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 group-hover:scale-110 transition-transform">98%</div>
                     <div className="text-muted-foreground">שביעות רצון</div>
@@ -126,40 +127,39 @@ export default function Home() {
       </section>
 
       <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-background" />
         <div className="container relative">
           <h2 className="text-3xl font-bold text-center mb-12">למה לבחור בנו?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="group hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-background to-primary/5 border-primary/10">
-              <CardContent className="p-6">
-                <div className="rounded-full bg-gradient-to-br from-primary/20 to-primary/5 p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Bot className="w-6 h-6 text-primary" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="group hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-8">
+                <div className="rounded-full bg-gradient-to-br from-primary/20 to-primary/5 p-3 w-14 h-14 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Bot className="w-7 h-7 text-primary" />
                 </div>
-                <h3 className="font-semibold text-xl mb-2">פתרונות AI מתקדמים</h3>
+                <h3 className="font-semibold text-xl mb-3">פתרונות AI מתקדמים</h3>
                 <p className="text-muted-foreground">
                   שימוש בטכנולוגיות AI מתקדמות להשגת תוצאות מיטביות עבור העסק שלך
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="group hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-background to-primary/5 border-primary/10">
-              <CardContent className="p-6">
-                <div className="rounded-full bg-gradient-to-br from-primary/20 to-primary/5 p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Code className="w-6 h-6 text-primary" />
+            <Card className="group hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-8">
+                <div className="rounded-full bg-gradient-to-br from-primary/20 to-primary/5 p-3 w-14 h-14 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Code className="w-7 h-7 text-primary" />
                 </div>
-                <h3 className="font-semibold text-xl mb-2">פיתוח מותאם אישית</h3>
+                <h3 className="font-semibold text-xl mb-3">פיתוח מותאם אישית</h3>
                 <p className="text-muted-foreground">
                   התאמה מדויקת של הפתרונות לצרכים הייחודיים של העסק שלך
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="group hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-background to-primary/5 border-primary/10">
-              <CardContent className="p-6">
-                <div className="rounded-full bg-gradient-to-br from-primary/20 to-primary/5 p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Rocket className="w-6 h-6 text-primary" />
+            <Card className="group hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-8">
+                <div className="rounded-full bg-gradient-to-br from-primary/20 to-primary/5 p-3 w-14 h-14 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Rocket className="w-7 h-7 text-primary" />
                 </div>
-                <h3 className="font-semibold text-xl mb-2">תוצאות מוכחות</h3>
+                <h3 className="font-semibold text-xl mb-3">תוצאות מוכחות</h3>
                 <p className="text-muted-foreground">
                   שיפור משמעותי ביעילות ובתוצאות העסקיות
                 </p>
