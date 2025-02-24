@@ -1,7 +1,7 @@
-import { BlogPost, InsertBlogPost, Lead, InsertLead, Newsletter, InsertNewsletter, BusinessAssessment, InsertBusinessAssessment, BusinessNeed, InsertBusinessNeed } from "@shared/schema";
-import { blogPosts, leads, newsletter, businessAssessments, businessNeeds } from "@shared/schema";
+import { BlogPost, InsertBlogPost, Lead, InsertLead, Newsletter, InsertNewsletter, BusinessAssessment, InsertBusinessAssessment, BusinessNeed, InsertBusinessNeed, WhatsappSession, InsertWhatsappSession, WhatsappMessage, InsertWhatsappMessage, WhatsappTemplate } from "@shared/schema";
+import { blogPosts, leads, newsletter, businessAssessments, businessNeeds, whatsappSessions, whatsappMessages, whatsappTemplates } from "@shared/schema";
 import { db } from "./db";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, and } from "drizzle-orm";
 
 export interface IStorage {
   // Blog posts
@@ -24,6 +24,12 @@ export interface IStorage {
   // Business Needs
   createBusinessNeed(need: InsertBusinessNeed): Promise<BusinessNeed>;
   getBusinessNeedsByAssessmentId(assessmentId: number): Promise<BusinessNeed[]>;
+
+  // WhatsApp Integration
+  createWhatsappSession(session: InsertWhatsappSession): Promise<WhatsappSession>;
+  getActiveWhatsappSession(phoneNumber: string): Promise<WhatsappSession | undefined>;
+  createWhatsappMessage(message: InsertWhatsappMessage): Promise<WhatsappMessage>;
+  getWhatsappTemplate(name: string): Promise<WhatsappTemplate | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -81,6 +87,43 @@ export class DatabaseStorage implements IStorage {
 
   async getBusinessNeedsByAssessmentId(assessmentId: number): Promise<BusinessNeed[]> {
     return await db.select().from(businessNeeds).where(eq(businessNeeds.assessmentId, assessmentId));
+  }
+
+  // WhatsApp Integration Methods
+  async createWhatsappSession(session: InsertWhatsappSession): Promise<WhatsappSession> {
+    const [newSession] = await db.insert(whatsappSessions).values(session).returning();
+    return newSession;
+  }
+
+  async getActiveWhatsappSession(phoneNumber: string): Promise<WhatsappSession | undefined> {
+    const [session] = await db
+      .select()
+      .from(whatsappSessions)
+      .where(
+        and(
+          eq(whatsappSessions.phoneNumber, phoneNumber),
+          eq(whatsappSessions.status, "active")
+        )
+      );
+    return session;
+  }
+
+  async createWhatsappMessage(message: InsertWhatsappMessage): Promise<WhatsappMessage> {
+    const [newMessage] = await db.insert(whatsappMessages).values(message).returning();
+    return newMessage;
+  }
+
+  async getWhatsappTemplate(name: string): Promise<WhatsappTemplate | undefined> {
+    const [template] = await db
+      .select()
+      .from(whatsappTemplates)
+      .where(
+        and(
+          eq(whatsappTemplates.name, name),
+          eq(whatsappTemplates.isActive, true)
+        )
+      );
+    return template;
   }
 }
 
