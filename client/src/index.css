@@ -1,29 +1,31 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --font-sans: 'Assistant', system-ui, sans-serif;
-    --background: 210 30% 97%;
-    --foreground: 210 60% 12%;
-    --primary: 210 90% 50%;
+    --font-sans: 'Exo 2', 'Space Grotesk', 'Assistant', system-ui, sans-serif;
+    --background: 240 30% 99%;
+    --foreground: 266 60% 15%;
+    --primary: 266 90% 55%;
     --primary-foreground: 0 0% 100%;
-    --card: 210 35% 98%;
-    --card-foreground: 210 50% 15%;
-    --popover: 210 30% 99%;
-    --popover-foreground: 210 30% 15%;
-    --muted: 210 30% 92%;
-    --muted-foreground: 210 35% 45%;
-    --accent: 150 85% 95%;
-    --accent-foreground: 150 85% 40%;
+    --card: 266 35% 99%;
+    --card-foreground: 266 50% 15%;
+    --popover: 266 30% 99%;
+    --popover-foreground: 266 30% 15%;
+    --muted: 266 20% 96%;
+    --muted-foreground: 266 30% 45%;
+    --accent: 330 85% 60%;
+    --accent-foreground: 330 85% 97%;
     --destructive: 0 95% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 210 30% 85%;
-    --input: 210 30% 90%;
-    --ring: 210 90% 60%;
-    --secondary: 270 70% 55%;
+    --border: 266 30% 90%;
+    --input: 266 30% 95%;
+    --ring: 266 90% 60%;
+    --secondary: 190 90% 50%;
     --secondary-foreground: 0 0% 100%;
   }
 
@@ -102,6 +104,32 @@
   .bg-dots {
     background-image: radial-gradient(rgb(var(--primary) / 0.2) 1px, transparent 1px);
     background-size: 16px 16px;
+  }
+  
+  /* AI-themed background patterns */
+  .bg-ai-pattern {
+    background-image: 
+      radial-gradient(circle at 25px 25px, rgb(var(--primary) / 0.15) 2px, transparent 0),
+      radial-gradient(circle at 75px 75px, rgb(var(--secondary) / 0.15) 2px, transparent 0);
+    background-size: 100px 100px;
+  }
+  
+  .bg-ai-grid {
+    background-size: 50px 50px;
+    background-image: 
+      linear-gradient(to right, rgb(var(--primary) / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--primary) / 0.05) 1px, transparent 1px),
+      linear-gradient(to right, rgb(var(--primary) / 0.1) 2px, transparent 2px),
+      linear-gradient(to bottom, rgb(var(--primary) / 0.1) 2px, transparent 2px);
+    background-position: 0 0, 0 0, 25px 25px, 25px 25px;
+  }
+  
+  .bg-neural {
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%238258fc' stroke-width='1' stroke-opacity='0.2'%3E%3Ccircle cx='25' cy='25' r='5'/%3E%3Ccircle cx='75' cy='25' r='5'/%3E%3Ccircle cx='25' cy='75' r='5'/%3E%3Ccircle cx='75' cy='75' r='5'/%3E%3Cpath d='M25 25 L75 75 M75 25 L25 75 M25 50 L75 50 M50 25 L50 75'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  
+  .bg-circuit {
+    background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%238258fc' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
   }
 
   .glow {
