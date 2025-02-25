@@ -51,12 +51,12 @@ export default function BlogCard({ post }: BlogCardProps) {
           <p className="text-muted-foreground line-clamp-3 mb-4">{post.excerpt}</p>
         </div>
         <Link href={`/blog/${post.slug}`}>
-          <a className="text-primary font-medium hover:underline inline-flex items-center">
+          <span className="text-primary font-medium hover:underline inline-flex items-center cursor-pointer">
             קרא עוד
             <svg className="w-4 h-4 mr-1 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
             </svg>
-          </a>
+          </span>
         </Link>
       </CardContent>
     </Card>

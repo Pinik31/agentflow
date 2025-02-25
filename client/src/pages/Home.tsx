@@ -5,7 +5,10 @@ import ServicesSection from '@/components/ServicesSection';
 import CtaSection from '@/components/CtaSection';
 import NewsletterPopup from '@/components/NewsletterPopup';
 import { Card, CardContent } from '@/components/ui/card';
-import { Shield, Zap, Bot } from 'lucide-react';
+import { Shield, Zap, Bot, Users, Quote, Star, Gift, Heart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { SiPatreon, SiDiscord, SiSlack } from 'react-icons/si';
 
 // Animation variants for staggered animations
 const containerVariants = {
@@ -166,6 +169,285 @@ export default function Home() {
                 </CardContent>
               </Card>
             </motion.div>
+          </motion.div>
+        </div>
+      </section>
+      
+      {/* Testimonials Section */}
+      <section className="py-24 bg-primary/5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid opacity-30" />
+        <div className="absolute top-40 left-10 w-64 h-64 rounded-full bg-primary/5 blur-3xl opacity-50" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-primary/5 blur-3xl opacity-40" />
+        
+        <div className="container relative">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="max-w-2xl mx-auto text-center mb-16"
+          >
+            <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary mb-6 animate-float">לקוחות ממליצים</div>
+            <h2 className="text-4xl font-bold text-center mb-6 text-gradient">מה הלקוחות שלנו אומרים</h2>
+            <p className="text-lg text-muted-foreground">
+              הצלחנו לעזור למאות עסקים לצמוח ולהתייעל באמצעות הפתרונות המתקדמים שלנו
+            </p>
+          </motion.div>
+          
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {/* Testimonial 1 */}
+            <motion.div variants={itemVariants}>
+              <Card className="relative h-full overflow-visible">
+                <div className="absolute -top-6 right-8">
+                  <div className="rounded-full bg-background shadow-lg p-2 border border-primary/10">
+                    <Quote className="w-6 h-6 text-primary" />
+                  </div>
+                </div>
+                <CardContent className="pt-8 pb-8">
+                  <div className="flex flex-col h-full">
+                    <div className="mb-6">
+                      <div className="flex mb-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                        ))}
+                      </div>
+                      <p className="italic text-muted-foreground mb-6">
+                        "הבוט לשירות לקוחות שפיתחה עבורנו Agent Flow הביא לשיפור משמעותי בשביעות רצון הלקוחות. המערכת מספקת מענה מהיר ומדויק 24/7 וחסכה לנו עשרות אלפי שקלים בחודש."
+                      </p>
+                    </div>
+                    <div className="mt-auto flex items-center">
+                      <Avatar className="w-12 h-12 border-2 border-primary/20">
+                        <AvatarImage src="https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" />
+                        <AvatarFallback>דנ</AvatarFallback>
+                      </Avatar>
+                      <div className="mr-4">
+                        <p className="font-medium">דניאל כהן</p>
+                        <p className="text-sm text-muted-foreground">מנכ"ל, מטריקס טכנולוגיות</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            {/* Testimonial 2 */}
+            <motion.div variants={itemVariants}>
+              <Card className="relative h-full overflow-visible">
+                <div className="absolute -top-6 right-8">
+                  <div className="rounded-full bg-background shadow-lg p-2 border border-primary/10">
+                    <Quote className="w-6 h-6 text-primary" />
+                  </div>
+                </div>
+                <CardContent className="pt-8 pb-8">
+                  <div className="flex flex-col h-full">
+                    <div className="mb-6">
+                      <div className="flex mb-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                        ))}
+                      </div>
+                      <p className="italic text-muted-foreground mb-6">
+                        "פתרונות האוטומציה של Agent Flow שינו לחלוטין את אופן העבודה של הצוות שלנו. המערכת אוטומטית מטפלת ב-80% מהפניות וחסכה לנו הרבה זמן עבודה. ביצועים מדהימים!"
+                      </p>
+                    </div>
+                    <div className="mt-auto flex items-center">
+                      <Avatar className="w-12 h-12 border-2 border-primary/20">
+                        <AvatarImage src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" />
+                        <AvatarFallback>עג</AvatarFallback>
+                      </Avatar>
+                      <div className="mr-4">
+                        <p className="font-medium">עדי גולדשטיין</p>
+                        <p className="text-sm text-muted-foreground">סמנכ"לית שיווק, חברת התוכנה קודטק</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            {/* Testimonial 3 */}
+            <motion.div variants={itemVariants}>
+              <Card className="relative h-full overflow-visible">
+                <div className="absolute -top-6 right-8">
+                  <div className="rounded-full bg-background shadow-lg p-2 border border-primary/10">
+                    <Quote className="w-6 h-6 text-primary" />
+                  </div>
+                </div>
+                <CardContent className="pt-8 pb-8">
+                  <div className="flex flex-col h-full">
+                    <div className="mb-6">
+                      <div className="flex mb-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                        ))}
+                      </div>
+                      <p className="italic text-muted-foreground mb-6">
+                        "עברנו תהליך אוטומציה מלא של מחלקת השיווק שלנו באמצעות Agent Flow. התוצאות היו מעבר לציפיות - הגדלנו את מספר הלידים ב-35% תוך חודשיים. חברה מקצועית ומעולה!"
+                      </p>
+                    </div>
+                    <div className="mt-auto flex items-center">
+                      <Avatar className="w-12 h-12 border-2 border-primary/20">
+                        <AvatarImage src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" />
+                        <AvatarFallback>אב</AvatarFallback>
+                      </Avatar>
+                      <div className="mr-4">
+                        <p className="font-medium">אלון ברוך</p>
+                        <p className="text-sm text-muted-foreground">בעלים, רשת חנויות דיגיטליות</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
+          
+          {/* Clients logos */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="mt-20"
+          >
+            <h3 className="text-xl font-semibold text-center mb-8">אנחנו גאים לעבוד עם החברות המובילות בשוק</h3>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+              <div className="opacity-50 hover:opacity-100 transition-opacity duration-300 flex items-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft" className="h-10" />
+              </div>
+              <div className="opacity-50 hover:opacity-100 transition-opacity duration-300 flex items-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" className="h-8" />
+              </div>
+              <div className="opacity-50 hover:opacity-100 transition-opacity duration-300 flex items-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple" className="h-10" />
+              </div>
+              <div className="opacity-50 hover:opacity-100 transition-opacity duration-300 flex items-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" className="h-8" />
+              </div>
+              <div className="opacity-50 hover:opacity-100 transition-opacity duration-300 flex items-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix" className="h-6" />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+      
+      {/* Community Section */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid opacity-25" />
+        
+        <div className="container relative">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="max-w-2xl mx-auto text-center mb-16"
+          >
+            <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary mb-6 animate-float">הקהילה שלנו</div>
+            <h2 className="text-4xl font-bold text-center mb-6 text-gradient">הצטרפו לקהילת Agent Flow</h2>
+            <p className="text-lg text-muted-foreground">
+              הצטרפו לקהילה שלנו המונה אלפי חברים ותיהנו משיתוף ידע, עדכונים שוטפים ותמיכה מקצועית
+            </p>
+          </motion.div>
+          
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {/* Community Option 1: Discord */}
+            <motion.div variants={itemVariants}>
+              <Card className="group border border-primary/10 hover:border-primary/30 transition-all duration-300 shadow-sm hover:shadow-md h-full overflow-hidden">
+                <CardContent className="p-8">
+                  <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+                    <SiDiscord className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">קהילת Discord</h3>
+                  <p className="text-muted-foreground mb-6">
+                    הצטרפו לקהילת ה-Discord שלנו עם יותר מ-5,000 חברים פעילים. שאלו שאלות, קבלו תמיכה ותתעדכנו בחידושים האחרונים.
+                  </p>
+                  <Button className="w-full gap-2 group-hover:bg-primary/90 transition-colors duration-300">
+                    <Users className="w-4 h-4" />
+                    הצטרפו לקהילה
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            {/* Community Option 2: Patreon */}
+            <motion.div variants={itemVariants}>
+              <Card className="group border border-primary/10 hover:border-primary/30 transition-all duration-300 shadow-sm hover:shadow-md h-full overflow-hidden">
+                <CardContent className="p-8">
+                  <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+                    <SiPatreon className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">תמכו בנו ב-Patreon</h3>
+                  <p className="text-muted-foreground mb-6">
+                    תמכו בפיתוח כלים חדשים ובקהילת Agent Flow. תומכים מקבלים גישה מוקדמת לכלים חדשים ותוכן בלעדי.
+                  </p>
+                  <Button className="w-full gap-2 group-hover:bg-primary/90 transition-colors duration-300">
+                    <Gift className="w-4 h-4" />
+                    תמכו בפרויקט
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            {/* Community Option 3: Slack */}
+            <motion.div variants={itemVariants}>
+              <Card className="group border border-primary/10 hover:border-primary/30 transition-all duration-300 shadow-sm hover:shadow-md h-full overflow-hidden">
+                <CardContent className="p-8">
+                  <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+                    <SiSlack className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">קהילת Slack למפתחים</h3>
+                  <p className="text-muted-foreground mb-6">
+                    הצטרפו לקהילת Slack המיועדת למפתחים. שתפו קוד, התייעצו עם מומחים ולמדו מניסיונם של אחרים.
+                  </p>
+                  <Button className="w-full gap-2 group-hover:bg-primary/90 transition-colors duration-300">
+                    <Heart className="w-4 h-4" />
+                    הצטרפו למפתחים
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
+          
+          {/* Community Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8"
+          >
+            <Card className="text-center p-6 border-primary/10">
+              <h3 className="text-3xl font-bold text-primary mb-2">5,000+</h3>
+              <p className="text-muted-foreground">חברי קהילה</p>
+            </Card>
+            
+            <Card className="text-center p-6 border-primary/10">
+              <h3 className="text-3xl font-bold text-primary mb-2">200+</h3>
+              <p className="text-muted-foreground">תורמים פעילים</p>
+            </Card>
+            
+            <Card className="text-center p-6 border-primary/10">
+              <h3 className="text-3xl font-bold text-primary mb-2">50+</h3>
+              <p className="text-muted-foreground">וובינרים ואירועים</p>
+            </Card>
+            
+            <Card className="text-center p-6 border-primary/10">
+              <h3 className="text-3xl font-bold text-primary mb-2">3,000+</h3>
+              <p className="text-muted-foreground">מאמרים ומדריכים</p>
+            </Card>
           </motion.div>
         </div>
       </section>
