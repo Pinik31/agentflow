@@ -186,6 +186,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       <style jsx global>{`
         @keyframes float {
           0% { transform: translateY(0px); }
@@ -194,6 +195,34 @@ export default function Home() {
         }
         .animate-float {
           animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+          0% { transform: rotate(0deg); }
+          50% { transform: rotate(10deg); }
+          100% { transform: rotate(0deg); }
+        }
+        .wave {
+          animation: wave 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+          100% { transform: scale(1); }
+        }
+        .pulse {
+          animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+          0% { background-position: -1000px 0; }
+          100% { background-position: 1000px 0; }
+        }
+        .shimmer {
+          animation: shimmer 2s linear infinite;
+          background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+          background-size: 1000px 100%;
         }
       `}</style>
     </>
