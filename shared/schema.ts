@@ -1,4 +1,4 @@
-import { pgTable, text, serial, timestamp, jsonb, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, jsonb, boolean, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -9,8 +9,14 @@ export const blogPosts = pgTable("blog_posts", {
   excerpt: text("excerpt").notNull(),
   slug: text("slug").notNull().unique(),
   imageUrl: text("image_url").notNull(),
+  thumbnailUrl: text("thumbnail_url").notNull(),
   category: text("category").notNull(),
+  author: text("author").notNull(),
+  readingTime: integer("reading_time"),
+  isFeatured: boolean("is_featured").default(false),
   publishedAt: timestamp("published_at").notNull(),
+  language: text("language").default("he").notNull(),
+  viewCount: integer("view_count").default(0),
 });
 
 export const leads = pgTable("leads", {
@@ -63,7 +69,7 @@ export const businessNeeds = pgTable("business_needs", {
 export const whatsappSessions = pgTable("whatsapp_sessions", {
   id: serial("id").primaryKey(),
   phoneNumber: text("phone_number").notNull(),
-  status: text("status").notNull(), 
+  status: text("status").notNull(),
   leadId: serial("lead_id").references(() => leads.id),
   metadata: jsonb("metadata"),
   lastInteraction: timestamp("last_interaction").defaultNow(),
@@ -73,11 +79,11 @@ export const whatsappSessions = pgTable("whatsapp_sessions", {
 export const whatsappMessages = pgTable("whatsapp_messages", {
   id: serial("id").primaryKey(),
   sessionId: serial("session_id").references(() => whatsappSessions.id),
-  direction: text("direction").notNull(), 
-  messageType: text("message_type").notNull(), 
+  direction: text("direction").notNull(),
+  messageType: text("message_type").notNull(),
   content: text("content").notNull(),
   metadata: jsonb("metadata"),
-  status: text("status").notNull(), 
+  status: text("status").notNull(),
   timestamp: timestamp("timestamp").defaultNow(),
 });
 
@@ -92,7 +98,10 @@ export const whatsappTemplates = pgTable("whatsapp_templates", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const insertBlogPostSchema = createInsertSchema(blogPosts).omit({ id: true });
+export const insertBlogPostSchema = createInsertSchema(blogPosts).omit({ 
+  id: true,
+  viewCount: true 
+});
 export const insertLeadSchema = createInsertSchema(leads).omit({ id: true, createdAt: true });
 export const insertNewsletterSchema = createInsertSchema(newsletter).omit({ id: true, createdAt: true });
 export const insertBusinessAssessmentSchema = createInsertSchema(businessAssessments).omit({ id: true, createdAt: true, updatedAt: true });
