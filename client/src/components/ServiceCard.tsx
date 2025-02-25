@@ -10,13 +10,14 @@ interface ServiceCardProps {
   imageUrl: string;
   href: string;
   className?: string;
+  icon?: React.ReactNode;
 }
 
-export default function ServiceCard({ title, description, imageUrl, href, className }: ServiceCardProps) {
+export default function ServiceCard({ title, description, imageUrl, href, className, icon }: ServiceCardProps) {
   const [imageError, setImageError] = useState(false);
 
   return (
-    <Card className="overflow-hidden group transition-all hover:shadow-lg">
+    <Card className="overflow-hidden group transition-all hover:shadow-lg border border-primary/5 hover:border-primary/20">
       <div className="aspect-video relative overflow-hidden">
         <img 
           src={imageError ? "https://images.unsplash.com/photo-1682687982501-1e58ab814714" : imageUrl} 
@@ -25,16 +26,21 @@ export default function ServiceCard({ title, description, imageUrl, href, classN
           onError={() => setImageError(true)}
           loading="lazy"
         />
+        {icon && (
+          <div className="absolute bottom-4 right-4 bg-background/80 backdrop-blur-sm rounded-full p-2 shadow-lg transition-transform duration-300 group-hover:scale-110">
+            {icon}
+          </div>
+        )}
       </div>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+      <CardHeader className="pb-2">
+        <CardTitle className="group-hover:text-primary transition-colors duration-300">{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-muted-foreground mb-4">{description}</p>
         <Link href={href}>
-          <Button className="w-full gap-2 group-hover:gap-4 transition-all">
+          <Button className="w-full gap-2 group-hover:gap-4 transition-all duration-300">
             <span>למד עוד</span>
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-[-4px]" />
           </Button>
         </Link>
       </CardContent>
