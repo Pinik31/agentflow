@@ -31,7 +31,7 @@ export default function Home() {
               </div>
             </div>
             <h1 className="mt-6 text-4xl sm:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/90 to-primary/70">
-              אוטומציה חכמה לעסק שלך
+              Agent Flow
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
               פתרונות AI מתקדמים לייעול תהליכים, חיסכון בזמן והגדלת הרווחיות
@@ -186,6 +186,16 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <style jsx global>{`
+        @keyframes float {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+          100% { transform: translateY(0px); }
+        }
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+      `}</style>
     </>
   );
 }
