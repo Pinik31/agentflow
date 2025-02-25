@@ -30,12 +30,12 @@ server.listen({
   log(`Server started quickly on port ${port}`);
 });
 
-// Create a dummy server that just responds on port 5000 to satisfy the workflow check
-const dummyApp = express();
-const dummyServer = createServer(dummyApp);
-dummyApp.use('*', (_, res) => res.send('Redirecting to main app'));
-dummyServer.listen(5000, '0.0.0.0', () => {
-  log('Dummy server started on port 5000 for workflow checks');
+// Create a server on port 5000 that serves the same application
+// This is a workaround to satisfy the workflow check (expecting port 5000)
+// while still using our main application
+const port5000 = 5000;
+server.listen(port5000, '0.0.0.0', () => {
+  log(`Server also listening on port ${port5000} for workflow checks`);
 });
 
 // AFTER the server is listening, initialize the rest of the application
