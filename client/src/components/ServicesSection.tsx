@@ -32,42 +32,42 @@ export default function ServicesSection() {
     {
       title: 'סוכני AI',
       description: 'פתרונות AI חכמים לאוטומציה של תהליכים ומתן מענה ללקוחות 24/7.',
-      imageUrl: 'https://images.unsplash.com/photo-1639803990627-741dec1955f9',
+      imageUrl: 'https://images.unsplash.com/photo-1639803990627-741dec1955f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80',
       href: '/services/ai-agents',
       icon: <Bot className="w-10 h-10" />
     },
     {
       title: 'צ\'אטבוטים',
       description: 'שירות לקוחות מתקדם עם צ\'אטבוטים חכמים המסוגלים להבין שפה טבעית ולפתור בעיות.',
-      imageUrl: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2',
+      imageUrl: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80',
       href: '/services/chatbots',
       icon: <Code className="w-10 h-10" />
     },
     {
       title: 'אוטומציה',
       description: 'אוטומציה של תהליכים עסקיים חוזרים לחיסכון בזמן והגדלת היעילות.',
-      imageUrl: 'https://images.unsplash.com/photo-1516110833967-0b5716ca1387',
+      imageUrl: 'https://images.unsplash.com/photo-1516110833967-0b5716ca1387?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80',
       href: '/services/automation',
       icon: <Zap className="w-10 h-10" />
     },
     {
       title: 'פיתוח אפליקציות',
       description: 'פיתוח אפליקציות חכמות ומותאמות אישית לצרכים העסקיים שלך.',
-      imageUrl: 'https://images.unsplash.com/photo-1555774698-0b77e0d5fac6',
+      imageUrl: 'https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80',
       href: '/services/app-development',
       icon: <PenTool className="w-10 h-10" />
     },
     {
       title: 'אינטגרציות',
       description: 'חיבור בין מערכות קיימות ליצירת סביבת עבודה אחודה ויעילה.',
-      imageUrl: 'https://images.unsplash.com/photo-1603322327561-68cb649b1a56',
+      imageUrl: 'https://images.unsplash.com/photo-1603322327561-68cb649b1a56?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80',
       href: '/services/integrations',
       icon: <Share2 className="w-10 h-10" />
     },
     {
       title: 'תשתיות ענן',
       description: 'תשתיות מתקדמות בענן להגדלת הביצועים, האבטחה והיציבות של המערכות.',
-      imageUrl: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3',
+      imageUrl: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80',
       href: '/services/cloud',
       icon: <Server className="w-10 h-10" />
     }
