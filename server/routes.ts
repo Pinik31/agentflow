@@ -1,11 +1,11 @@
 import type { Express } from "express";
-import { createServer, type Server } from "http";
+import type { Server } from "http";
 import { storage } from "./storage";
 import { insertLeadSchema, insertNewsletterSchema } from "@shared/schema";
 import { z } from "zod";
 import { whatsapp } from "./services/whatsapp";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export function registerRoutes(app: Express, server: Server): void {
   // Blog routes
   app.get("/api/blog", async (_req, res) => {
     const posts = await storage.getBlogPosts();
@@ -152,6 +152,5 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  const httpServer = createServer(app);
-  return httpServer;
+  // No need to create or return a server as it's passed in
 }
