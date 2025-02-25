@@ -9,17 +9,22 @@ import { Button } from "@/components/ui/button";
 import { Search, Newspaper, Lightbulb, Star, Clock } from "lucide-react";
 import NewsletterForm from "@/components/NewsletterForm";
 
+// Create a partial type that allows string for date in our mock data
+type MockBlogPost = Omit<BlogPost, 'publishedAt'> & {
+  publishedAt: Date | string;
+};
+
 // Mock data for development
-const mockPosts: BlogPost[] = [
+const mockPosts: MockBlogPost[] = [
   {
     id: 1,
     title: "השילוב המושלם בין AI לאוטומציה של תהליכים עסקיים",
     content: "כיצד בינה מלאכותית יכולה לשפר תהליכים עסקיים ולהביא לחסכון משמעותי בזמן ובמשאבים.",
     excerpt: "כיצד בינה מלאכותית יכולה לשפר תהליכים עסקיים ולהביא לחסכון משמעותי בזמן ובמשאבים.",
     slug: "ai-business-automation",
-    imageUrl: "https://images.unsplash.com/photo-1589254065878-42c9da997008?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1589254065878-42c9da997008?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
     category: "ai-tools",
-    publishedAt: new Date("2025-02-10").toISOString(),
+    publishedAt: new Date("2025-02-10"),
   },
   {
     id: 2,
@@ -27,9 +32,9 @@ const mockPosts: BlogPost[] = [
     content: "סקירה מעמיקה של הכלים החדשים של OpenAI שיכולים לשדרג את הפעילות העסקית שלכם.",
     excerpt: "סקירה מעמיקה של הכלים החדשים של OpenAI שיכולים לשדרג את הפעילות העסקית שלכם.",
     slug: "openai-new-tools",
-    imageUrl: "https://images.unsplash.com/photo-1655720828083-8a3a840631f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1655720828083-8a3a840631f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
     category: "ai-news",
-    publishedAt: new Date("2025-02-15").toISOString(),
+    publishedAt: new Date("2025-02-15"),
   },
   {
     id: 3,
@@ -37,9 +42,9 @@ const mockPosts: BlogPost[] = [
     content: "כיצד בינה מלאכותית משנה את עולם השיווק הדיגיטלי בשנת 2025.",
     excerpt: "כיצד בינה מלאכותית משנה את עולם השיווק הדיגיטלי בשנת 2025.",
     slug: "ai-marketing-trends-2025",
-    imageUrl: "https://images.unsplash.com/photo-1677442135133-4da37d49c421?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1677442135133-4da37d49c421?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
     category: "industry",
-    publishedAt: new Date("2025-02-18").toISOString(),
+    publishedAt: new Date("2025-02-18"),
   },
   {
     id: 4,
@@ -47,9 +52,9 @@ const mockPosts: BlogPost[] = [
     content: "מחקר חדש מראה כיצד צ'אטבוטים מבוססי AI משפרים את שביעות רצון הלקוחות ומפחיתים עלויות.",
     excerpt: "מחקר חדש מראה כיצד צ'אטבוטים מבוססי AI משפרים את שביעות רצון הלקוחות ומפחיתים עלויות.",
     slug: "ai-chatbots-customer-experience",
-    imageUrl: "https://images.unsplash.com/photo-1680695918853-b938379906c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1680695918853-b938379906c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
     category: "ai-tools",
-    publishedAt: new Date("2025-02-20").toISOString(),
+    publishedAt: new Date("2025-02-20"),
   },
   {
     id: 5,
@@ -57,9 +62,9 @@ const mockPosts: BlogPost[] = [
     content: "הפלטפורמה החדשה שלנו מאפשרת לכם לייעל תהליכים עסקיים באמצעות סוכני AI חכמים.",
     excerpt: "הפלטפורמה החדשה שלנו מאפשרת לכם לייעל תהליכים עסקיים באמצעות סוכני AI חכמים.",
     slug: "agent-flow-new-platform",
-    imageUrl: "https://images.unsplash.com/photo-1661347334036-d484f970ebc7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1661347334036-d484f970ebc7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
     category: "company",
-    publishedAt: new Date("2025-02-22").toISOString(),
+    publishedAt: new Date("2025-02-22"),
   },
   {
     id: 6,
@@ -67,9 +72,9 @@ const mockPosts: BlogPost[] = [
     content: "דוח מקיף על ההשפעה של בינה מלאכותית על שוק העבודה בישראל בשנים הקרובות.",
     excerpt: "דוח מקיף על ההשפעה של בינה מלאכותית על שוק העבודה בישראל בשנים הקרובות.",
     slug: "ai-impact-on-jobs-israel",
-    imageUrl: "https://images.unsplash.com/photo-1668869713519-9bcbb0da7171?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1668869713519-9bcbb0da7171?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
     category: "ai-news",
-    publishedAt: new Date("2025-02-24").toISOString(),
+    publishedAt: new Date("2025-02-24"),
   }
 ];
 

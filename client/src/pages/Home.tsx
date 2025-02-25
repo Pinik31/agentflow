@@ -83,7 +83,7 @@ export default function Home() {
               <div className="absolute inset-0 rounded-lg overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10"></div>
                 <img
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c"
+                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80"
                   alt="הצוות שלנו"
                   className="rounded-lg shadow-xl w-full aspect-video object-cover relative transition-transform duration-700 group-hover:scale-105"
                 />
