@@ -9,7 +9,7 @@ const api = axios.create({
 });
 
 api.interceptors.response.use(
-  response => response,
+  response => response.data,
   error => {
     const message = error.response?.data?.message || 'An error occurred';
     console.error(message);
@@ -18,11 +18,27 @@ api.interceptors.response.use(
 );
 
 export const ApiService = {
+  // Blog
   getBlogPosts: () => api.get('/blog'),
   getBlogPost: (slug: string) => api.get(`/blog/${slug}`),
+  
+  // Leads
   createLead: (data: any) => api.post('/leads', data),
+  
+  // Newsletter
   subscribeNewsletter: (email: string) => api.post('/newsletter', { email }),
-  sendWhatsAppMessage: (data: any) => api.post('/whatsapp/send', data)
+  
+  // WhatsApp
+  sendWhatsAppMessage: (data: any) => api.post('/whatsapp/send', data),
+  
+  // Business needs
+  createBusinessNeed: (data: any) => api.post('/business-needs', data),
+  
+  // General method for any endpoint
+  get: (url: string, params?: any) => api.get(url, { params }),
+  post: (url: string, data: any) => api.post(url, data),
+  put: (url: string, data: any) => api.put(url, data),
+  delete: (url: string) => api.delete(url)
 };
 
 export default ApiService;

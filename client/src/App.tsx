@@ -11,6 +11,8 @@ import Contact from "@/pages/Contact";
 import Services from "@/pages/Services";
 import About from "@/pages/About";
 import Courses from "@/pages/Courses";
+import AIAgents from "@/pages/services/ai-agents";
+import Automation from "@/pages/services/automation";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import ChatBot from "@/components/ChatBot";
@@ -32,6 +34,8 @@ function Router() {
             <Route path="/blog" component={Blog} />
             <Route path="/about" component={About} />
             <Route path="/services" component={Services} />
+            <Route path="/services/ai-agents" component={AIAgents} />
+            <Route path="/services/automation" component={Automation} />
             <Route path="/contact" component={Contact} />
             <Route path="/courses" component={Courses} />
             <Route component={NotFound} />

@@ -50,7 +50,8 @@ export default function AIAgentsPage() {
       businessType: '',
       businessNeed: '',
       category: 'ai-agents',
-      status: 'new',
+      priority: 'high',
+      description: '',
     },
   });
 
@@ -60,7 +61,7 @@ export default function AIAgentsPage() {
     
     try {
       // First create a lead
-      const leadResponse = await ApiService.post('/api/leads', {
+      const leadResponse = await ApiService.createLead({
         name: values.name,
         email: values.email, 
         phone: values.phone,
@@ -69,12 +70,13 @@ export default function AIAgentsPage() {
       
       if (leadResponse && leadResponse.id) {
         // Then create business need with lead ID
-        await ApiService.post('/api/business-needs', {
+        await ApiService.createBusinessNeed({
+          assessmentId: null, // We're creating a direct need without assessment
           leadId: leadResponse.id,
           category: values.category,
+          priority: values.priority,
           businessType: values.businessType,
           description: values.businessNeed,
-          status: values.status
         });
         
         toast({
