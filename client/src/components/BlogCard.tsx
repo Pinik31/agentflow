@@ -5,7 +5,16 @@ import { Link } from "wouter";
 import type { BlogPost } from "@shared/schema";
 
 interface BlogCardProps {
-  post: BlogPost;
+  post: BlogPost | { 
+    id: number; 
+    title: string; 
+    content: string; 
+    category: string; 
+    slug: string; 
+    excerpt: string; 
+    imageUrl: string; 
+    publishedAt: Date | string; 
+  };
 }
 
 export default function BlogCard({ post }: BlogCardProps) {
