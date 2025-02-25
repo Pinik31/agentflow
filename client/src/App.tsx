@@ -8,9 +8,9 @@ import Blog from "@/pages/Blog";
 import Contact from "@/pages/Contact";
 import Services from "@/pages/Services";
 import About from "@/pages/About";
-import Courses from "@/pages/Courses";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
+import ChatBot from "@/components/ChatBot";
 
 function Router() {
   return (
@@ -27,6 +27,7 @@ function Router() {
         </Switch>
       </main>
       <Footer />
+      <ChatBot />
     </div>
   );
 }
