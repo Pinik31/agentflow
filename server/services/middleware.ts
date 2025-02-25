@@ -17,8 +17,21 @@ const limiter = rateLimit({
 export { limiter };
 
 export const setupMiddleware = (app: Express) => {
-  // Security
-  app.use(helmet());
+  // Security with development-friendly CSP for Vite
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+          styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+          fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+          imgSrc: ["'self'", 'data:', 'blob:'],
+          connectSrc: ["'self'", 'ws:', 'wss:'],
+        },
+      },
+    })
+  );
   app.use(cors());
 
   // Rate limiting

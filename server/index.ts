@@ -8,9 +8,6 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.listen({ port: 5000, host: '0.0.0.0' }, () => {
-  console.log('Server running on http://0.0.0.0:5000');
-});
 
 // Fix for express-rate-limit in Replit environment
 // Trust proxy - needed for X-Forwarded-For header
