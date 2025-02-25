@@ -17,13 +17,38 @@ api.interceptors.response.use(
   }
 );
 
+export interface LeadResponse {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  message?: string;
+  metadata?: any;
+  businessSize?: string;
+  industry?: string;
+  website?: string;
+  createdAt: string;
+}
+
+export interface BusinessNeedResponse {
+  id: number;
+  assessmentId: number;
+  category: string;
+  description: string;
+  priority: string;
+  recommendedSolution?: string;
+  estimatedCost?: string;
+  createdAt: string;
+}
+
 export const ApiService = {
   // Blog
   getBlogPosts: () => api.get('/blog'),
   getBlogPost: (slug: string) => api.get(`/blog/${slug}`),
   
   // Leads
-  createLead: (data: any) => api.post('/leads', data),
+  createLead: (data: any): Promise<LeadResponse> => api.post('/leads', data),
   
   // Newsletter
   subscribeNewsletter: (email: string) => api.post('/newsletter', { email }),
@@ -32,7 +57,7 @@ export const ApiService = {
   sendWhatsAppMessage: (data: any) => api.post('/whatsapp/send', data),
   
   // Business needs
-  createBusinessNeed: (data: any) => api.post('/business-needs', data),
+  createBusinessNeed: (data: any): Promise<BusinessNeedResponse> => api.post('/business-needs', data),
   
   // General method for any endpoint
   get: (url: string, params?: any) => api.get(url, { params }),

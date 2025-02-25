@@ -50,7 +50,8 @@ export default function AutomationPage() {
       businessType: '',
       businessNeed: '',
       category: 'automation',
-      status: 'new',
+      priority: 'high',
+      description: '',
     },
   });
 
@@ -60,7 +61,7 @@ export default function AutomationPage() {
     
     try {
       // First create a lead
-      const leadResponse = await ApiService.post('/api/leads', {
+      const leadResponse = await ApiService.createLead({
         name: values.name,
         email: values.email, 
         phone: values.phone,
@@ -69,12 +70,11 @@ export default function AutomationPage() {
       
       if (leadResponse && leadResponse.id) {
         // Then create business need with lead ID
-        await ApiService.post('/api/business-needs', {
-          leadId: leadResponse.id,
+        await ApiService.createBusinessNeed({
+          assessmentId: 0, // We're creating a direct need without assessment
           category: values.category,
-          businessType: values.businessType,
+          priority: values.priority,
           description: values.businessNeed,
-          status: values.status
         });
         
         toast({

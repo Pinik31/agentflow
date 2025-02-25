@@ -71,11 +71,9 @@ export default function AIAgentsPage() {
       if (leadResponse && leadResponse.id) {
         // Then create business need with lead ID
         await ApiService.createBusinessNeed({
-          assessmentId: null, // We're creating a direct need without assessment
-          leadId: leadResponse.id,
+          assessmentId: 0, // We're creating a direct need without assessment
           category: values.category,
           priority: values.priority,
-          businessType: values.businessType,
           description: values.businessNeed,
         });
         
