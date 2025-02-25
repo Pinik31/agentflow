@@ -6,12 +6,12 @@
 @layer base {
   :root {
     --font-sans: 'Assistant', system-ui, sans-serif;
-    --background: 220 25% 97%;
-    --foreground: 230 25% 15%;
-    --primary: 230 90% 60%;
+    --background: 230 30% 95%;
+    --foreground: 230 40% 15%;
+    --primary: 230 80% 50%;
     --primary-foreground: 0 0% 100%;
-    --card: 220 25% 99%;
-    --card-foreground: 230 25% 15%;
+    --card: 220 30% 98%;
+    --card-foreground: 230 40% 15%;
     --popover: 220 25% 99%;
     --popover-foreground: 230 25% 15%;
     --muted: 230 25% 95%;
@@ -45,7 +45,10 @@
 
   .hero {
     @apply py-24 sm:py-32 relative overflow-hidden;
-    background: radial-gradient(circle at 50% 50%, rgba(var(--primary) / 0.1), transparent 50%);
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(var(--primary) / 0.15), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(var(--primary) / 0.1), transparent 40%),
+      linear-gradient(120deg, rgba(var(--primary) / 0.05), rgba(var(--primary) / 0.1));
   }
 
   .section {
