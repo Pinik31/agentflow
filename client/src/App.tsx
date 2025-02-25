@@ -9,18 +9,17 @@ import Contact from "@/pages/Contact";
 import Services from "@/pages/Services";
 import About from "@/pages/About";
 import Courses from "@/pages/Courses";
-import Header from "@/components/layout/Header";
+import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 
 function Router() {
   return (
     <div dir="rtl" className="min-h-screen flex flex-col">
-      <Header />
+      <Navigation />
       <main className="flex-1">
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/blog" component={Blog} />
-          <Route path="/courses" component={Courses} />
           <Route path="/about" component={About} />
           <Route path="/services" component={Services} />
           <Route path="/contact" component={Contact} />
