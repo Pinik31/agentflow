@@ -8,6 +8,7 @@ import Blog from "@/pages/Blog";
 import Contact from "@/pages/Contact";
 import Services from "@/pages/Services";
 import About from "@/pages/About";
+import Courses from "@/pages/Courses";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import ChatBot from "@/components/ChatBot";
@@ -23,6 +24,7 @@ function Router() {
           <Route path="/about" component={About} />
           <Route path="/services" component={Services} />
           <Route path="/contact" component={Contact} />
+          <Route path="/courses" component={Courses} />
           <Route component={NotFound} />
         </Switch>
       </main>
