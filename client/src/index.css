@@ -6,10 +6,23 @@
 @layer base {
   :root {
     --font-sans: 'Assistant', system-ui, sans-serif;
-    --background: 240 20% 3%;
-    --foreground: 0 0% 98%;
-    --primary: 142 71% 45%;
-    --primary-foreground: 144 100% 98%;
+    --background: 220 25% 97%;
+    --foreground: 230 25% 15%;
+    --primary: 230 90% 60%;
+    --primary-foreground: 0 0% 100%;
+    --card: 220 25% 99%;
+    --card-foreground: 230 25% 15%;
+    --popover: 220 25% 99%;
+    --popover-foreground: 230 25% 15%;
+    --muted: 230 25% 95%;
+    --muted-foreground: 230 25% 45%;
+    --accent: 230 90% 95%;
+    --accent-foreground: 230 90% 50%;
+    --destructive: 0 90% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 230 25% 90%;
+    --input: 230 25% 90%;
+    --ring: 230 90% 60%;
   }
 
   * {
