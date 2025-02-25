@@ -84,7 +84,7 @@ export default function Blog() {
 
   // In a real implementation, we'd fetch data from the API
   // For now, using mock data and simulating loading state
-  const { data: posts = mockPosts, isLoading } = useQuery<BlogPost[]>({
+  const { data: posts = mockPosts as BlogPost[], isLoading } = useQuery<BlogPost[]>({
     queryKey: ["/api/blog"],
     enabled: false, // Disable actual API call while using mock data
   });

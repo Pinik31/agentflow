@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Bot, Zap, Code, BarChart } from 'lucide-react';
+import { Link as WouterLink } from 'wouter';
 
 export default function HeroSection() {
   // Animation variants for staggered animations
@@ -71,13 +72,17 @@ export default function HeroSection() {
               מאתרים חכמים ועד אוטומציה של תהליכים עסקיים.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-end">
-              <Button size="lg" className="gap-2 text-base animate-shimmer">
-                התחל עכשיו 
-                <ArrowRight className="h-5 w-5" />
-              </Button>
-              <Button size="lg" variant="outline" className="gap-2 text-base border-primary/20 hover:bg-primary/5">
-                צור קשר
-              </Button>
+              <WouterLink href="/services">
+                <Button size="lg" className="gap-2 text-base animate-shimmer">
+                  התחל עכשיו 
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </WouterLink>
+              <WouterLink href="/contact">
+                <Button size="lg" variant="outline" className="gap-2 text-base border-primary/20 hover:bg-primary/5">
+                  צור קשר
+                </Button>
+              </WouterLink>
             </div>
           </motion.div>
           

@@ -30,14 +30,18 @@ export default function Navigation() {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger>השירותים שלנו</NavigationMenuTrigger>
+                <NavigationMenuTrigger>
+                  <Link href="/services">
+                    <span className="cursor-pointer">השירותים שלנו</span>
+                  </Link>
+                </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 w-[400px]">
                     <li className="row-span-3">
-                      <Link href="/services/ai-agents">
+                      <Link href="/services">
                         <div className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-primary/50 to-primary p-6 no-underline outline-none focus:shadow-md hover:scale-[1.02] transition-transform cursor-pointer">
                           <div className="mb-2 text-lg font-medium text-white">
-                            סוכני AI
+                            כל השירותים שלנו
                           </div>
                           <p className="text-sm leading-tight text-white/90">
                             פתרונות אוטומציה חכמים לעסק שלך
@@ -46,7 +50,7 @@ export default function Navigation() {
                       </Link>
                     </li>
                     <li>
-                      <Link href="/services/chatbots">
+                      <Link href="/services#chatbot">
                         <div className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground hover:scale-[1.02] cursor-pointer">
                           <div className="text-sm font-medium">צ'אטבוטים</div>
                           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -56,9 +60,9 @@ export default function Navigation() {
                       </Link>
                     </li>
                     <li>
-                      <Link href="/services/automation">
+                      <Link href="/services#leads">
                         <div className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground hover:scale-[1.02] cursor-pointer">
-                          <div className="text-sm font-medium">אוטומציה</div>
+                          <div className="text-sm font-medium">ניהול לידים</div>
                           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                             ייעול תהליכים עסקיים
                           </p>
