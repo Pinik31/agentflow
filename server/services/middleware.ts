@@ -17,22 +17,32 @@ const limiter = rateLimit({
 export { limiter };
 
 export const setupMiddleware = (app: Express) => {
-  // Security with development-friendly CSP for Vite
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-          styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-          fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-          imgSrc: ["'self'", 'data:', 'blob:'],
-          connectSrc: ["'self'", 'ws:', 'wss:'],
+  // In development mode, disable helmet to avoid CSP issues with Vite
+  if (process.env.NODE_ENV === 'production') {
+    app.use(
+      helmet({
+        contentSecurityPolicy: {
+          directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+            styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+            fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+            imgSrc: ["'self'", 'data:', 'blob:'],
+            connectSrc: ["'self'", 'ws:', 'wss:'],
+          },
         },
-      },
-    })
-  );
-  app.use(cors());
+      })
+    );
+  } else {
+    // For development, completely disable helmet to avoid CSP issues
+    console.log('Development mode: Helmet disabled for Vite compatibility');
+  }
+  
+  // Configure CORS to be permissive in development
+  app.use(cors({
+    origin: true,
+    credentials: true
+  }));
 
   // Rate limiting
   app.use(limiter);
