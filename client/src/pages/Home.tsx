@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import ServiceCard from "@/components/ServiceCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { SiWhatsapp } from "react-icons/si";
-import { Bot, MessageSquare, Users, Code, Rocket } from "lucide-react";
+import { Bot, Brain, Cpu, Code, Rocket, Database, Server, BarChart3 } from "lucide-react";
 import NewsletterPopup from "@/components/NewsletterPopup";
 
 export default function Home() {
@@ -15,7 +15,7 @@ export default function Home() {
         <div 
           className="absolute inset-0 opacity-30 mix-blend-soft-light" 
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1676389761175-b17c641b3120')",
+            backgroundImage: "url('https://images.unsplash.com/photo-1676632254893-c5572e0e55ae')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             filter: "saturate(1.2) contrast(1.1)"
@@ -46,7 +46,7 @@ export default function Home() {
               </Link>
               <Link href="/contact">
                 <Button size="lg" variant="outline" className="gap-2 border-primary/20 hover:bg-primary/5 backdrop-blur-sm">
-                  <MessageSquare className="w-5 h-5" />
+                  <Brain className="w-5 h-5" />
                   צור קשר
                 </Button>
               </Link>
@@ -68,7 +68,7 @@ export default function Home() {
             <ServiceCard
               title="סוכן AI לרשתות חברתיות"
               description="ניהול תוכן אוטומטי, SEO ופרסום ברשתות החברתיות באמצעות AI"
-              imageUrl="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7"
+              imageUrl="https://images.unsplash.com/photo-1686572603111-d3cbe7b25068"
               href="/services#social"
               className="aspect-video object-cover"
             />
@@ -82,7 +82,7 @@ export default function Home() {
             <ServiceCard
               title="ניהול לידים אוטומטי"
               description="מערכת AI לניהול וטיפול בלידים לשיפור אחוזי המרה"
-              imageUrl="https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+              imageUrl="https://images.unsplash.com/photo-1655721530791-59f5bbd64a48"
               href="/services#leads"
               className="aspect-video object-cover"
             />
@@ -117,8 +117,8 @@ export default function Home() {
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary/50 to-primary/30 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
               <img
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c"
-                alt="הצוות שלנו"
+                src="https://images.unsplash.com/photo-1683739803245-fd4da8b29ea6"
+                alt="AI Technology Team"
                 className="rounded-lg shadow-xl w-full aspect-video object-cover relative"
               />
             </div>
@@ -133,7 +133,7 @@ export default function Home() {
             <Card className="group hover:shadow-xl transition-all duration-300">
               <CardContent className="p-8">
                 <div className="rounded-full bg-gradient-to-br from-primary/20 to-primary/5 p-3 w-14 h-14 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <Bot className="w-7 h-7 text-primary" />
+                  <Cpu className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="font-semibold text-xl mb-3">פתרונות AI מתקדמים</h3>
                 <p className="text-muted-foreground">
@@ -145,7 +145,7 @@ export default function Home() {
             <Card className="group hover:shadow-xl transition-all duration-300">
               <CardContent className="p-8">
                 <div className="rounded-full bg-gradient-to-br from-primary/20 to-primary/5 p-3 w-14 h-14 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <Code className="w-7 h-7 text-primary" />
+                  <Database className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="font-semibold text-xl mb-3">פיתוח מותאם אישית</h3>
                 <p className="text-muted-foreground">
@@ -157,7 +157,7 @@ export default function Home() {
             <Card className="group hover:shadow-xl transition-all duration-300">
               <CardContent className="p-8">
                 <div className="rounded-full bg-gradient-to-br from-primary/20 to-primary/5 p-3 w-14 h-14 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <Rocket className="w-7 h-7 text-primary" />
+                  <BarChart3 className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="font-semibold text-xl mb-3">תוצאות מוכחות</h3>
                 <p className="text-muted-foreground">
@@ -179,14 +179,13 @@ export default function Home() {
             </p>
             <Link href="/contact">
               <Button size="lg" variant="secondary" className="gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-colors">
-                <MessageSquare className="w-5 h-5" />
+                <Server className="w-5 h-5" />
                 דברו איתנו
               </Button>
             </Link>
           </div>
         </div>
       </section>
-
       <style jsx global>{`
         @keyframes float {
           0% { transform: translateY(0px); }
