@@ -26,6 +26,18 @@ export function registerRoutes(app: Express, server: Server): void {
     try {
       const lead = insertLeadSchema.parse(req.body);
       const newLead = await storage.createLead(lead);
+      
+      // Create business assessment
+      if (lead.metadata?.automationNeeds) {
+        await storage.createBusinessAssessment({
+          leadId: newLead.id,
+          currentMarketingEfforts: lead.metadata.automationNeeds.includes('שיווק') ? 'needs_automation' : 'not_specified',
+          mainChallenges: lead.metadata.automationNeeds.join(', '),
+          status: 'new',
+          preferences: lead.metadata
+        });
+      }
+      
       res.json(newLead);
     } catch (error) {
       if (error instanceof z.ZodError) {
