@@ -8,6 +8,10 @@ const app = express();
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Fix for express-rate-limit in Replit environment
+// Trust proxy - needed for X-Forwarded-For header
+app.set('trust proxy', 1);
+
 setupMiddleware(app);
 
 app.use((req, res, next) => {
@@ -57,7 +61,7 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  const port = 5000;
+  const port = process.env.PORT || 5000;
   await new Promise<void>((resolve) => {
     server.listen({
       port,
