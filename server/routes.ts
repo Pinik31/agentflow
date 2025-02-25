@@ -51,68 +51,104 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // WhatsApp webhook routes
-  app.post("/api/whatsapp/webhook", async (req, res) => {
-    try {
-      const { entry } = req.body;
-
-      if (!entry || !Array.isArray(entry)) {
-        res.status(400).json({ message: "Invalid webhook data" });
-        return;
-      }
-
-      for (const e of entry) {
-        if (e.changes) {
-          for (const change of e.changes) {
-            if (change.value && change.value.messages) {
-              for (const message of change.value.messages) {
-                const { from, type, text } = message;
-                if (type === "text" && text) {
-                  await whatsapp.sendMessage(from, "תודה על פנייתך! נציג יחזור אליך בהקדם.");
+  // WhatsApp webhook routes - respond immediately and process asynchronously
+  app.post("/api/whatsapp/webhook", (req, res) => {
+    // Respond to the webhook immediately
+    res.status(200).json({ message: "Webhook received" });
+    
+    // Process the webhook asynchronously
+    setImmediate(async () => {
+      try {
+        const { entry } = req.body;
+        
+        if (!entry || !Array.isArray(entry)) {
+          console.log("Invalid webhook data received");
+          return;
+        }
+        
+        // Process messages
+        const messages = [];
+        
+        // Extract all messages that need processing
+        for (const e of entry) {
+          if (e.changes) {
+            for (const change of e.changes) {
+              if (change.value && change.value.messages) {
+                for (const message of change.value.messages) {
+                  if (message.type === "text" && message.text) {
+                    messages.push({
+                      from: message.from,
+                      text: message.text.body
+                    });
+                  }
                 }
               }
             }
           }
         }
+        
+        // Process each message sequentially
+        for (const msg of messages) {
+          try {
+            await whatsapp.sendMessage(
+              msg.from, 
+              "תודה על פנייתך! נציג יחזור אליך בהקדם."
+            );
+          } catch (err) {
+            console.error("Failed to send response to WhatsApp message:", err);
+          }
+        }
+      } catch (error) {
+        console.error("WhatsApp webhook processing error:", error);
       }
-
-      res.status(200).json({ message: "Webhook processed successfully" });
-    } catch (error) {
-      console.error("WhatsApp webhook error:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
+    });
   });
 
-  // WhatsApp verification route
+  // WhatsApp verification route - optimized to respond quickly
   app.get("/api/whatsapp/webhook", (req, res) => {
     const mode = req.query["hub.mode"];
     const token = req.query["hub.verify_token"];
     const challenge = req.query["hub.challenge"];
+    
+    const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN;
 
-    if (mode === "subscribe" && token === process.env.WHATSAPP_VERIFY_TOKEN) {
+    if (mode === "subscribe" && token === verifyToken) {
       res.status(200).send(challenge);
     } else {
       res.sendStatus(403);
     }
   });
 
-  // Message sending route
+  // Message sending route - with improved validation and error handling
   app.post("/api/whatsapp/send", async (req, res) => {
+    const { to, text, templateName, variables } = req.body;
+    
+    // Basic validation
+    if (!to || (!text && !templateName)) {
+      return res.status(400).json({ 
+        message: "Missing required fields. 'to' and either 'text' or 'templateName' are required" 
+      });
+    }
+    
     try {
-      const { to, text, templateName, variables } = req.body;
-
+      let message;
+      
       if (templateName) {
-        const message = await whatsapp.sendTemplate(to, templateName, variables);
-        res.json(message);
-      } else if (text) {
-        const message = await whatsapp.sendMessage(to, text);
-        res.json(message);
+        message = await whatsapp.sendTemplate(to, templateName, variables || {});
       } else {
-        res.status(400).json({ message: "Either text or templateName is required" });
+        message = await whatsapp.sendMessage(to, text);
       }
+      
+      res.json(message);
     } catch (error) {
       console.error("Error sending WhatsApp message:", error);
-      res.status(500).json({ message: "Failed to send message" });
+      
+      // More descriptive error message
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      res.status(500).json({ 
+        message: "Failed to send message", 
+        error: errorMessage 
+      });
     }
   });
 

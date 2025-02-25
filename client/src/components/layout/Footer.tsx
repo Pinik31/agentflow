@@ -41,21 +41,11 @@ export default function Footer() {
           <div className="md:col-span-2">
             <h3 className="font-semibold mb-6 text-primary">קישורים מהירים</h3>
             <div className="flex flex-col gap-3">
-              <Link href="/">
-                <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">בית</a>
-              </Link>
-              <Link href="/services">
-                <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">שירותים</a>
-              </Link>
-              <Link href="/blog">
-                <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">בלוג</a>
-              </Link>
-              <Link href="/about">
-                <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">אודות</a>
-              </Link>
-              <Link href="/contact">
-                <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">צור קשר</a>
-              </Link>
+              <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors duration-200">בית</Link>
+              <Link href="/services" className="text-muted-foreground hover:text-foreground transition-colors duration-200">שירותים</Link>
+              <Link href="/blog" className="text-muted-foreground hover:text-foreground transition-colors duration-200">בלוג</Link>
+              <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors duration-200">אודות</Link>
+              <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors duration-200">צור קשר</Link>
             </div>
           </div>
 
@@ -63,18 +53,10 @@ export default function Footer() {
           <div className="md:col-span-2">
             <h3 className="font-semibold mb-6 text-primary">השירותים שלנו</h3>
             <div className="flex flex-col gap-3">
-              <Link href="/services#chatbot">
-                <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">צ'אטבוט חכם</a>
-              </Link>
-              <Link href="/services#social">
-                <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">אוטומציה לרשתות חברתיות</a>
-              </Link>
-              <Link href="/services#leads">
-                <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">ניהול לידים</a>
-              </Link>
-              <Link href="/services#analytics">
-                <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">ניתוח נתונים</a>
-              </Link>
+              <Link href="/services#chatbot" className="text-muted-foreground hover:text-foreground transition-colors duration-200">צ'אטבוט חכם</Link>
+              <Link href="/services#social" className="text-muted-foreground hover:text-foreground transition-colors duration-200">אוטומציה לרשתות חברתיות</Link>
+              <Link href="/services#leads" className="text-muted-foreground hover:text-foreground transition-colors duration-200">ניהול לידים</Link>
+              <Link href="/services#analytics" className="text-muted-foreground hover:text-foreground transition-colors duration-200">ניתוח נתונים</Link>
             </div>
           </div>
 
@@ -110,12 +92,8 @@ export default function Footer() {
             © {currentYear} Agent Flow. כל הזכויות שמורות.
           </p>
           <div className="flex gap-6">
-            <Link href="/privacy">
-              <a className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200">מדיניות פרטיות</a>
-            </Link>
-            <Link href="/terms">
-              <a className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200">תנאי שימוש</a>
-            </Link>
+            <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200">מדיניות פרטיות</Link>
+            <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200">תנאי שימוש</Link>
           </div>
         </div>
       </div>

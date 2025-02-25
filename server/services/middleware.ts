@@ -5,13 +5,24 @@ import helmet from 'helmet';
 import { Express, Request, Response, NextFunction } from 'express';
 import NodeCache from 'node-cache';
 
-export const cache = new NodeCache({ stdTTL: 300 }); // 5 minutes default TTL
+// Create cache with increased TTL for better performance
+export const cache = new NodeCache({ 
+  stdTTL: 600, // 10 minutes default TTL
+  checkperiod: 120, // Check for expired keys every 2 minutes instead of every 60 seconds
+  useClones: false // Disable cloning for better performance
+}); 
 
+// Create a more permissive rate limiter for development
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: process.env.NODE_ENV === 'production' ? 100 : 1000, // Higher limit in development
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting for local development
+    const ip = req.ip || req.connection.remoteAddress;
+    return ip === '127.0.0.1' || ip === '::1';
+  }
 });
 
 export { limiter };
@@ -38,21 +49,34 @@ export const setupMiddleware = (app: Express) => {
     console.log('Development mode: Helmet disabled for Vite compatibility');
   }
   
-  // Configure CORS to be permissive in development
+  // Configure CORS to be permissive
   app.use(cors({
     origin: true,
     credentials: true
   }));
 
-  // Rate limiting
-  app.use(limiter);
+  // Apply compression but only to text-based responses
+  app.use(compression({
+    level: 6, // Balance between compression ratio and CPU usage (default is 6)
+    filter: (req: Request, res: Response) => {
+      // Only compress responses with content types that benefit from compression
+      const contentType = res.getHeader('Content-Type') as string || '';
+      return /text|javascript|json|xml|html|css/i.test(contentType);
+    }
+  }));
+  
+  // Apply rate limiting only in production
+  if (process.env.NODE_ENV === 'production') {
+    app.use(limiter);
+  }
 
-  // Compression
-  app.use(compression());
-
-  // Cache middleware
+  // Optimize cache middleware: Only apply to specific API routes that benefit from caching
   app.use((req: Request, res: Response, next: NextFunction) => {
+    // Only cache GET requests for specific routes
     if (req.method !== 'GET') return next();
+    
+    // Only cache certain API endpoints (blog posts, templates, etc)
+    if (!req.path.match(/^\/api\/(blog|whatsapp\/template)/)) return next();
 
     const key = req.originalUrl;
     const cachedResponse = cache.get(key);
@@ -61,9 +85,15 @@ export const setupMiddleware = (app: Express) => {
       return res.json(cachedResponse);
     }
 
+    // Store the original json method
     const originalJson = res.json;
+    
+    // Override the json method
     res.json = function(body) {
-      cache.set(key, body);
+      // Only cache successful responses
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        cache.set(key, body);
+      }
       return originalJson.call(this, body);
     };
 
