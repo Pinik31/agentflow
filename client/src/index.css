@@ -6,23 +6,25 @@
 @layer base {
   :root {
     --font-sans: 'Assistant', system-ui, sans-serif;
-    --background: 230 30% 95%;
-    --foreground: 230 40% 15%;
-    --primary: 230 80% 50%;
+    --background: 210 30% 97%;
+    --foreground: 210 60% 12%;
+    --primary: 210 90% 50%;
     --primary-foreground: 0 0% 100%;
-    --card: 220 30% 98%;
-    --card-foreground: 230 40% 15%;
-    --popover: 220 25% 99%;
-    --popover-foreground: 230 25% 15%;
-    --muted: 230 25% 95%;
-    --muted-foreground: 230 25% 45%;
-    --accent: 230 90% 95%;
-    --accent-foreground: 230 90% 50%;
-    --destructive: 0 90% 60%;
+    --card: 210 35% 98%;
+    --card-foreground: 210 50% 15%;
+    --popover: 210 30% 99%;
+    --popover-foreground: 210 30% 15%;
+    --muted: 210 30% 92%;
+    --muted-foreground: 210 35% 45%;
+    --accent: 150 85% 95%;
+    --accent-foreground: 150 85% 40%;
+    --destructive: 0 95% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 230 25% 90%;
-    --input: 230 25% 90%;
-    --ring: 230 90% 60%;
+    --border: 210 30% 85%;
+    --input: 210 30% 90%;
+    --ring: 210 90% 60%;
+    --secondary: 270 70% 55%;
+    --secondary-foreground: 0 0% 100%;
   }
 
   * {
@@ -46,17 +48,47 @@
   .hero {
     @apply py-24 sm:py-32 relative overflow-hidden;
     background: 
-      radial-gradient(circle at 20% 20%, rgba(var(--primary) / 0.15), transparent 40%),
-      radial-gradient(circle at 80% 80%, rgba(var(--primary) / 0.1), transparent 40%),
-      linear-gradient(120deg, rgba(var(--primary) / 0.05), rgba(var(--primary) / 0.1));
+      radial-gradient(circle at 15% 15%, rgba(var(--primary) / 0.35), transparent 45%),
+      radial-gradient(circle at 85% 85%, rgba(var(--secondary) / 0.3), transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(var(--accent-foreground) / 0.1), transparent 70%),
+      linear-gradient(120deg, rgba(var(--primary) / 0.15), rgba(var(--secondary) / 0.15), rgba(var(--accent-foreground) / 0.2));
+  }
+  
+  .hero-content {
+    @apply relative z-10;
+  }
+  
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
   }
 
   .section {
-    @apply py-16 sm:py-24;
+    @apply py-16 sm:py-24 relative overflow-hidden;
+  }
+  
+  .section-alt {
+    @apply py-16 sm:py-24 relative overflow-hidden;
+    background: 
+      linear-gradient(135deg, rgba(var(--primary) / 0.08), rgba(var(--secondary) / 0.08));
   }
 
   .social-icon {
-    @apply w-6 h-6 text-primary hover:text-primary/80 transition-colors;
+    @apply w-6 h-6 text-primary hover:text-primary/80 transition-all duration-300 transform hover:scale-110;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 transform hover:scale-105 hover:shadow-md;
   }
 }
 
@@ -67,7 +99,161 @@
     background-size: 40px 40px;
   }
 
+  .bg-dots {
+    background-image: radial-gradient(rgb(var(--primary) / 0.2) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
   .glow {
     box-shadow: 0 0 80px -20px rgb(var(--primary) / 0.5);
+  }
+  
+  .glow-hover {
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .glow-hover:hover {
+    box-shadow: 0 0 25px -5px rgb(var(--primary) / 0.6);
+  }
+  
+  /* Floating animations with different patterns */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-float-slow {
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .animate-float-fast {
+    animation: float 4s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  
+  /* Pulse animations */
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.85;
+      transform: scale(1.05);
+    }
+  }
+  
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+  
+  /* Slide animations */
+  .animate-slide-in {
+    animation: slide-in 0.5s ease-out forwards;
+  }
+  
+  @keyframes slide-in {
+    0% {
+      transform: translateX(-20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Glass effect */
+  .glass {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Gradient text effect */
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(90deg, rgb(var(--primary)), rgb(var(--secondary)));
+  }
+  
+  /* Shimmer effect */
+  .animate-shimmer {
+    background-image: linear-gradient(
+      to right,
+      rgb(var(--primary)) 0%,
+      rgb(var(--primary) / 0.8) 20%,
+      rgb(var(--primary)) 40%,
+      rgb(var(--primary)) 100%
+    );
+    background-size: 200% auto;
+    animation: shimmer 3s linear infinite;
+  }
+  
+  @keyframes shimmer {
+    to {
+      background-position: 200% center;
+    }
+  }
+  
+  /* Highlight on hover effect */
+  .highlight-hover {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .highlight-hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 65%, rgb(var(--primary) / 0.2) 75%, transparent 85%);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+  }
+  
+  .highlight-hover:hover::after {
+    transform: translateX(100%);
+  }
+  
+  /* Scale and rotate subtly on hover */
+  .scale-rotate-hover {
+    transition: transform 0.5s ease;
+  }
+  
+  .scale-rotate-hover:hover {
+    transform: scale(1.05) rotate(1deg);
+  }
+  
+  /* Hebrew RTL support */
+  [dir="rtl"] .flip-in-rtl {
+    transform: scaleX(-1);
   }
 }

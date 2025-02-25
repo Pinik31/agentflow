@@ -62,7 +62,7 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  const port = process.env.PORT || 5000;
+  const port = process.env.PORT || 3000;
   await new Promise<void>((resolve) => {
     server.listen({
       port,
