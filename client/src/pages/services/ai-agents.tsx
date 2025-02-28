@@ -69,9 +69,15 @@ export default function AIAgentsPage() {
       });
       
       if (leadResponse && leadResponse.id) {
-        // Then create business need with lead ID
+        // Create a business assessment first
+        const assessmentResponse = await ApiService.post('/api/business-assessments', {
+          leadId: leadResponse.id,
+          status: 'new'
+        });
+        
+        // Then create business need with the real assessment ID
         await ApiService.createBusinessNeed({
-          assessmentId: 0, // We're creating a direct need without assessment
+          assessmentId: assessmentResponse.id || 0, 
           category: values.category,
           priority: values.priority,
           description: values.businessNeed,

@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import type { Server } from "http";
 import { storage } from "./storage";
-import { insertLeadSchema, insertNewsletterSchema } from "@shared/schema";
+import { insertLeadSchema, insertNewsletterSchema, insertBusinessNeedsSchema, insertBusinessAssessmentSchema } from "@shared/schema";
 import { z } from "zod";
 import { whatsapp } from "./services/whatsapp";
 
@@ -28,7 +28,7 @@ export function registerRoutes(app: Express, server: Server): void {
       const newLead = await storage.createLead(lead);
       
       // Create business assessment
-      if (lead.metadata?.automationNeeds) {
+      if (typeof lead.metadata === 'object' && lead.metadata !== null && Array.isArray(lead.metadata.automationNeeds)) {
         await storage.createBusinessAssessment({
           leadId: newLead.id,
           currentMarketingEfforts: lead.metadata.automationNeeds.includes('שיווק') ? 'needs_automation' : 'not_specified',
@@ -57,6 +57,86 @@ export function registerRoutes(app: Express, server: Server): void {
     } catch (error) {
       if (error instanceof z.ZodError) {
         res.status(400).json({ message: "Invalid email", errors: error.errors });
+        return;
+      }
+      throw error;
+    }
+  });
+
+  // Business needs routes
+  app.post("/api/business-needs", async (req, res) => {
+    try {
+      const need = insertBusinessNeedsSchema.parse(req.body);
+      const newNeed = await storage.createBusinessNeed(need);
+      res.json(newNeed);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid business need data", errors: error.errors });
+        return;
+      }
+      throw error;
+    }
+  });
+
+  app.get("/api/business-needs/:assessmentId", async (req, res) => {
+    try {
+      const assessmentId = parseInt(req.params.assessmentId, 10);
+      if (isNaN(assessmentId)) {
+        res.status(400).json({ message: "Invalid assessment ID" });
+        return;
+      }
+      const needs = await storage.getBusinessNeedsByAssessmentId(assessmentId);
+      res.json(needs);
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  // Business assessment routes
+  app.post("/api/business-assessments", async (req, res) => {
+    try {
+      const assessment = insertBusinessAssessmentSchema.parse(req.body);
+      const newAssessment = await storage.createBusinessAssessment(assessment);
+      res.json(newAssessment);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid business assessment data", errors: error.errors });
+        return;
+      }
+      throw error;
+    }
+  });
+
+  app.get("/api/business-assessments/:leadId", async (req, res) => {
+    try {
+      const leadId = parseInt(req.params.leadId, 10);
+      if (isNaN(leadId)) {
+        res.status(400).json({ message: "Invalid lead ID" });
+        return;
+      }
+      const assessment = await storage.getBusinessAssessmentByLeadId(leadId);
+      if (!assessment) {
+        res.status(404).json({ message: "Assessment not found" });
+        return;
+      }
+      res.json(assessment);
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  app.patch("/api/business-assessments/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        res.status(400).json({ message: "Invalid assessment ID" });
+        return;
+      }
+      const assessment = await storage.updateBusinessAssessment(id, req.body);
+      res.json(assessment);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid business assessment data", errors: error.errors });
         return;
       }
       throw error;
