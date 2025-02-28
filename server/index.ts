@@ -48,11 +48,19 @@ setTimeout(() => {
 // This function will run after the server is already listening
 async function initializeFullApplication() {
   try {
-    // Add API routes
-    await import("./routes").then(({ registerRoutes }) => {
-      registerRoutes(app, server);
+    // First, set up Vite or static serving - this should come BEFORE API routes
+    // This ensures the root path handler is registered before any other routes
+    if (app.get("env") === "development") {
+      await setupVite(app, server);
+    } else {
+      serveStatic(app);
+    }
+
+    // Set up middleware
+    await import("./services/middleware").then(({ setupMiddleware }) => {
+      setupMiddleware(app);
     });
-    
+
     // Simple request logger for API routes only
     app.use((req, res, next) => {
       if (req.path.startsWith("/api")) {
@@ -65,25 +73,18 @@ async function initializeFullApplication() {
       next();
     });
     
-    // Set up more middleware asynchronously
-    import("./services/middleware").then(({ setupMiddleware }) => {
-      setupMiddleware(app);
+    // Add API routes - these should be registered AFTER frontend routing
+    await import("./routes").then(({ registerRoutes }) => {
+      registerRoutes(app, server);
     });
     
-    // Error handler
+    // Error handler - should be the last middleware
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
       res.status(status).json({ message });
       console.error("API Error:", err);
     });
-    
-    // Set up Vite or static file serving
-    if (app.get("env") === "development") {
-      await setupVite(app, server);
-    } else {
-      serveStatic(app);
-    }
     
     log("Full application initialization complete");
   } catch (err) {
