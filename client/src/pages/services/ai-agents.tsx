@@ -75,9 +75,13 @@ export default function AIAgentsPage() {
           status: 'new'
         });
         
+        // Extract the assessment ID properly
+        const assessmentId = assessmentResponse && typeof assessmentResponse === 'object' ? 
+          (assessmentResponse.id || 0) : 0;
+        
         // Then create business need with the real assessment ID
         await ApiService.createBusinessNeed({
-          assessmentId: assessmentResponse.id || 0, 
+          assessmentId: assessmentId,
           category: values.category,
           priority: values.priority,
           description: values.businessNeed,

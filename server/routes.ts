@@ -27,14 +27,18 @@ export function registerRoutes(app: Express, server: Server): void {
       const lead = insertLeadSchema.parse(req.body);
       const newLead = await storage.createLead(lead);
       
-      // Create business assessment
-      if (typeof lead.metadata === 'object' && lead.metadata !== null && Array.isArray(lead.metadata.automationNeeds)) {
+      // Create business assessment with better type checking
+      if (typeof lead.metadata === 'object' && lead.metadata !== null) {
+        // Check if automationNeeds exists and is an array
+        const metadata = lead.metadata as Record<string, any>;
+        const automationNeeds = Array.isArray(metadata.automationNeeds) ? metadata.automationNeeds : [];
+        
         await storage.createBusinessAssessment({
           leadId: newLead.id,
-          currentMarketingEfforts: lead.metadata.automationNeeds.includes('שיווק') ? 'needs_automation' : 'not_specified',
-          mainChallenges: lead.metadata.automationNeeds.join(', '),
+          currentMarketingEfforts: automationNeeds.includes('שיווק') ? 'needs_automation' : 'not_specified',
+          mainChallenges: automationNeeds.length > 0 ? automationNeeds.join(', ') : 'Not specified',
           status: 'new',
-          preferences: lead.metadata
+          preferences: metadata
         });
       }
       
