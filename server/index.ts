@@ -3,8 +3,15 @@ import { createServer } from "http";
 import { setupVite, serveStatic, log } from "./vite";
 import compression from "compression";
 import cors from "cors";
+import { fileURLToPath } from "url";
+import { dirname, resolve } from "path";
+import { existsSync } from "fs";
 import { setupMiddleware } from "./services/middleware";
 import { registerRoutes } from "./routes";
+
+// Get current file location for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Create Express application
 const app = express();
@@ -97,6 +104,19 @@ server.listen({
   reusePort: true,
 }, () => {
   log(`Server started on port ${port}`);
+  log(`Working directory: ${process.cwd()}`);
+  log(`Environment: ${app.get('env')}`);
+  log(`Node version: ${process.version}`);
+  
+  // Check if the client directory exists
+  const clientDir = resolve(__dirname, '..', 'client');
+  const indexPath = resolve(clientDir, 'index.html');
+  
+  const clientDirExists = existsSync(clientDir);
+  const indexExists = existsSync(indexPath);
+  
+  log(`Client directory exists: ${clientDirExists}`);
+  log(`Index.html exists: ${indexExists}`);
 });
 
 // Also listen on port 5000 for workflow checks
