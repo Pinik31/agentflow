@@ -216,37 +216,58 @@ function completeAppSetup() {
   log("Full application initialization complete");
 }
 
-// Start the server on main port
-const port = process.env.PORT || 3000;
-server.listen({
-  port,
-  host: "0.0.0.0",
-  reusePort: true,
-}, () => {
-  log(`Server started on port ${port}`);
-  log(`Working directory: ${process.cwd()}`);
-  log(`Environment: ${app.get('env')}`);
-  log(`Node version: ${process.version}`);
-  
-  // Check if the client directory exists
-  const clientDir = resolve(__dirname, '..', 'client');
-  const indexPath = resolve(clientDir, 'index.html');
-  
-  const clientDirExists = existsSync(clientDir);
-  const indexExists = existsSync(indexPath);
-  
-  log(`Client directory exists: ${clientDirExists}`);
-  log(`Index.html exists: ${indexExists}`);
-  
-  // Only try to listen on port 5000 if it's different from the main port
-  if (port !== 5000) {
-    // Try listening on port 5000 for workflow checks (if available)
-    const server5000 = createServer(app);
-    server5000.listen(5000, '0.0.0.0', () => {
-      log(`Server also listening on port 5000 for workflow checks`);
-    }).on('error', (err) => {
-      log(`Could not start server on port 5000: ${err.message}`);
-      log(`Continuing with just port ${port}`);
+// Start the server on main port with fallback
+const tryPort = (portToTry: number): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    server.listen({
+      port: portToTry,
+      host: "0.0.0.0",
+      reusePort: true,
+    }, () => {
+      log(`Server started on port ${portToTry}`);
+      resolve(portToTry);
+    }).on('error', (err: any) => {
+      if (err.code === 'EADDRINUSE') {
+        log(`Port ${portToTry} is in use, trying next port...`);
+        // Try the next port
+        resolve(tryPort(portToTry + 1));
+      } else {
+        reject(err);
+      }
     });
-  }
-});
+  });
+};
+
+const initialPort = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+tryPort(initialPort)
+  .then(port => {
+    log(`Working directory: ${process.cwd()}`);
+    log(`Environment: ${app.get('env')}`);
+    log(`Node version: ${process.version}`);
+    
+    // Check if the client directory exists
+    const clientDir = resolve(__dirname, '..', 'client');
+    const indexPath = resolve(clientDir, 'index.html');
+    
+    const clientDirExists = existsSync(clientDir);
+    const indexExists = existsSync(indexPath);
+    
+    log(`Client directory exists: ${clientDirExists}`);
+    log(`Index.html exists: ${indexExists}`);
+    
+    // Only try to listen on port 5000 if it's different from the port we're using
+    if (port !== 5000) {
+      // Try listening on port 5000 for workflow checks (if available)
+      const server5000 = createServer(app);
+      server5000.listen(5000, '0.0.0.0', () => {
+        log(`Server also listening on port 5000 for workflow checks`);
+      }).on('error', (err) => {
+        log(`Could not start server on port 5000: ${err.message}`);
+        log(`Continuing with just port ${port}`);
+      });
+    }
+  })
+  .catch(err => {
+    log(`Failed to start server: ${err.message}`);
+    process.exit(1);
+  });
