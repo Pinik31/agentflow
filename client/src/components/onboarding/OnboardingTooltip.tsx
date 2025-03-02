@@ -57,15 +57,20 @@ export default function OnboardingTooltip({ step }: OnboardingTooltipProps) {
     };
   }, [target]);
 
-  // Handle keyboard navigation
+  // Handle keyboard navigation - Since we're in RTL mode, navigation is reversed
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         endOnboarding();
       } else if (e.key === 'ArrowRight') {
+        // In RTL, Right arrow navigates to previous
         prevStep();
       } else if (e.key === 'ArrowLeft') {
+        // In RTL, Left arrow navigates to next
         nextStep();
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        // Complete current step on Enter or Space
+        completeStep(step.id);
       }
     };
     
@@ -73,7 +78,7 @@ export default function OnboardingTooltip({ step }: OnboardingTooltipProps) {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [endOnboarding, nextStep, prevStep]);
+  }, [endOnboarding, nextStep, prevStep, completeStep, step.id]);
 
   // Calculate progress
   const progress = ((currentStepIndex + 1) / steps.length) * 100;
