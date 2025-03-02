@@ -1,13 +1,13 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
-import { setupVite, serveStatic, log } from "./vite";
+import { setupVite, serveStatic, log } from "./vite.js";
 import compression from "compression";
 import cors from "cors";
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
 import { existsSync } from "fs";
-import { setupMiddleware } from "./services/middleware";
-import { registerRoutes } from "./routes";
+import { setupMiddleware } from "./services/middleware.js";
+import { registerRoutes } from "./routes.js";
 
 // Get current file location for ESM
 const __filename = fileURLToPath(import.meta.url);
