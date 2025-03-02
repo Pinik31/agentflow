@@ -42,6 +42,10 @@ if (isDevelopment) {
   // Set up a temporary loading route
   let viteFailedToSetup = false;
   
+  // Create a loading middleware with timeout to handle longer Vite setup times
+  let viteSetupComplete = false;
+  let viteMiddlewareTimer = null;
+  
   app.use('*', (req, res, next) => {
     // Always allow API requests to pass through
     if (req.originalUrl.startsWith('/api')) {
@@ -86,18 +90,87 @@ if (isDevelopment) {
         console.error('Error serving fallback page:', error);
         res.status(500).send('Internal Server Error: Failed to serve the application');
       }
+    } else if (viteSetupComplete) {
+      // If Vite is set up, let the next middleware handle it
+      next();
     } else {
-      // If Vite is still setting up, show a loading message
-      res.send('Loading application, please wait...');
+      // If Vite is still setting up, show an auto-refreshing loading page
+      res.type('html').send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Loading - Agent Flow</title>
+          <style>
+            body { 
+              font-family: system-ui, sans-serif; 
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              height: 100vh;
+              margin: 0;
+              background-color: #f9fafb;
+              color: #1f2937;
+            }
+            .loader {
+              border: 5px solid #f3f3f3;
+              border-radius: 50%;
+              border-top: 5px solid #3498db;
+              width: 50px;
+              height: 50px;
+              animation: spin 1s linear infinite;
+              margin-bottom: 20px;
+            }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            .message {
+              font-size: 1.2rem;
+              margin-bottom: 1rem;
+            }
+            .submessage {
+              font-size: 0.9rem;
+              color: #6b7280;
+            }
+          </style>
+          <script>
+            // Auto-refresh the page every 2 seconds until Vite is ready
+            setTimeout(function() {
+              window.location.reload();
+            }, 2000);
+          </script>
+        </head>
+        <body>
+          <div class="loader"></div>
+          <div class="message">Loading application...</div>
+          <div class="submessage">This might take a few moments on first startup</div>
+        </body>
+        </html>
+      `);
     }
   });
   
-  // Then set up Vite asynchronously
+  // Then set up Vite asynchronously with a timeout
+  const viteSetupTimeout = setTimeout(() => {
+    if (!viteSetupComplete) {
+      console.error("Vite setup is taking too long, proceeding with fallback");
+      viteFailedToSetup = true;
+      log("Serving static files as fallback due to timeout");
+      completeAppSetup();
+    }
+  }, 30000); // 30 second timeout
+  
   setupVite(app, server).then(() => {
+    clearTimeout(viteSetupTimeout);
     log("Vite middleware setup complete");
+    viteSetupComplete = true;
     // Now set up the rest of the application AFTER Vite is ready
     completeAppSetup();
   }).catch(err => {
+    clearTimeout(viteSetupTimeout);
     console.error("Failed to set up Vite:", err);
     viteFailedToSetup = true;
     log("Serving static files as fallback");
