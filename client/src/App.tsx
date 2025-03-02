@@ -16,6 +16,7 @@ import Automation from "@/pages/services/automation";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import ChatBot from "@/components/ChatBot";
+import OnboardingProvider from "@/components/onboarding/OnboardingProvider";
 
 const seoDefaults = {
   title: "Agent Flow - פתרונות AI מתקדמים",
@@ -62,6 +63,7 @@ function App() {
         <link rel="canonical" href="https://agentflow.ai" />
       </Helmet>
       <Router />
+      <OnboardingProvider />
       <Toaster />
     </QueryClientProvider>
   );
