@@ -216,7 +216,7 @@ function completeAppSetup() {
   log("Full application initialization complete");
 }
 
-// Start the server on both required ports
+// Start the server on main port
 const port = process.env.PORT || 3000;
 server.listen({
   port,
@@ -237,10 +237,16 @@ server.listen({
   
   log(`Client directory exists: ${clientDirExists}`);
   log(`Index.html exists: ${indexExists}`);
-});
-
-// Also listen on port 5000 for workflow checks
-const port5000 = 5000;
-server.listen(port5000, '0.0.0.0', () => {
-  log(`Server also listening on port ${port5000} for workflow checks`);
+  
+  // Only try to listen on port 5000 if it's different from the main port
+  if (port !== 5000) {
+    // Try listening on port 5000 for workflow checks (if available)
+    const server5000 = createServer(app);
+    server5000.listen(5000, '0.0.0.0', () => {
+      log(`Server also listening on port 5000 for workflow checks`);
+    }).on('error', (err) => {
+      log(`Could not start server on port 5000: ${err.message}`);
+      log(`Continuing with just port ${port}`);
+    });
+  }
 });
