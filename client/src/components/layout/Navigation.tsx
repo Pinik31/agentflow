@@ -1,6 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, HelpCircle, Lightbulb } from "lucide-react";
+import { useOnboardingStore } from "@/store/useOnboardingStore";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,6 +13,7 @@ import {
 
 export default function Navigation() {
   const [location] = useLocation();
+  const { startOnboarding, showWelcomeModalAgain, isActive } = useOnboardingStore();
   
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -101,6 +103,19 @@ export default function Navigation() {
         </div>
 
         <div className="flex items-center gap-4">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={showWelcomeModalAgain}
+            className="relative hover:bg-primary/5 hover:scale-[1.02] transition-all duration-200"
+            title="סיור מודרך"
+          >
+            <Lightbulb className="w-5 h-5 text-primary" />
+            {!isActive && (
+              <span className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full animate-pulse-slow"></span>
+            )}
+          </Button>
+          
           <Link href="/contact">
             <Button 
               variant="outline" 
