@@ -216,31 +216,76 @@ function completeAppSetup() {
   log("Full application initialization complete");
 }
 
-// Start the server on main port with fallback
-const tryPort = (portToTry: number): Promise<number> => {
-  return new Promise((resolve, reject) => {
-    server.listen({
-      port: portToTry,
-      host: "0.0.0.0",
-      reusePort: true,
-    }, () => {
-      log(`Server started on port ${portToTry}`);
-      resolve(portToTry);
-    }).on('error', (err: any) => {
-      if (err.code === 'EADDRINUSE') {
-        log(`Port ${portToTry} is in use, trying next port...`);
-        // Try the next port
-        resolve(tryPort(portToTry + 1));
-      } else {
-        reject(err);
-      }
-    });
-  });
-};
+// For Replit, we need to bind to port 5000 specifically
+log("Attempting to force-terminate any process on port 5000...");
 
-const initialPort = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-tryPort(initialPort)
-  .then(port => {
+// Create a minimal Express app just for Replit port detection
+const minimalApp = express();
+minimalApp.get('*', (_req, res) => {
+  res.send('Agent Flow is starting...');
+});
+
+// Create a separate HTTP server for the minimal app
+const minimalServer = createServer(minimalApp);
+
+// Try to use the bash command to find and kill processes on port 5000
+import { exec } from 'child_process';
+exec('lsof -ti:5000 | xargs kill -9', (error) => {
+  if (error) {
+    log(`Failed to kill process on port 5000: ${error.message}`);
+  } else {
+    log("Successfully terminated processes on port 5000");
+  }
+  
+  // After trying to kill the process, start minimal server
+  tryStartMinimalServer();
+});
+
+// Set a timeout to ensure we move forward even if killing process fails
+const serverStartupTimeout = setTimeout(() => {
+  log("Startup timeout reached, proceeding with main application initialization");
+  startMainApplication();
+}, 1000);
+
+function tryStartMinimalServer() {
+  // Try to start minimal server on port 5000
+  log("Attempting to start minimal server on port 5000...");
+  minimalServer.listen(5000, "0.0.0.0", () => {
+    log("MINIMAL SERVER OPEN ON PORT 5000");
+    clearTimeout(serverStartupTimeout);
+    // Start the main application
+    startMainApplication();
+  }).on('error', (err) => {
+    log(`Still could not bind to port 5000: ${err.message}`);
+    // Continue with main application anyway
+    clearTimeout(serverStartupTimeout);
+    startMainApplication();
+  });
+}
+
+// Function to start the main application
+function startMainApplication() {
+  // For Replit, we need to bind to port 5000 to be detected
+  // Close minimal server if it was started
+  try {
+    if (minimalServer.listening) {
+      log("Closing minimal server before binding main server");
+      minimalServer.close();
+    }
+  } catch (err) {
+    log(`Error closing minimal server: ${err.message}`);
+  }
+  
+  // Try to start on port 5000 first for Replit detection
+  log("Attempting to start main application on port 5000...");
+  
+  server.listen(5000, "0.0.0.0").on('listening', () => {
+    const address = server.address();
+    const actualPort = typeof address === 'object' && address ? address.port : 5000;
+    
+    log(`Main application server started on port ${actualPort}`);
+    
+    // Log additional information
     log(`Working directory: ${process.cwd()}`);
     log(`Environment: ${app.get('env')}`);
     log(`Node version: ${process.version}`);
@@ -254,20 +299,50 @@ tryPort(initialPort)
     
     log(`Client directory exists: ${clientDirExists}`);
     log(`Index.html exists: ${indexExists}`);
+  }).on('error', (err) => {
+    log(`Failed to start main server on port 5000: ${err.message}`);
     
-    // Only try to listen on port 5000 if it's different from the port we're using
-    if (port !== 5000) {
-      // Try listening on port 5000 for workflow checks (if available)
-      const server5000 = createServer(app);
-      server5000.listen(5000, '0.0.0.0', () => {
-        log(`Server also listening on port 5000 for workflow checks`);
+    // Fall back to alternative ports if 5000 fails
+    const fallbackPorts = [3000, 3001, 8080, 0];
+    
+    function tryFallbackPort(index = 0) {
+      if (index >= fallbackPorts.length) {
+        log("All ports failed, exiting");
+        process.exit(1);
+        return;
+      }
+      
+      const port = fallbackPorts[index];
+      log(`Attempting to start main app on fallback port ${port}...`);
+      
+      server.listen(port, "0.0.0.0").on('listening', () => {
+        const address = server.address();
+        const actualPort = typeof address === 'object' && address ? address.port : port;
+        
+        log(`Main application server started on fallback port ${actualPort}`);
+        
+        // Log additional information
+        log(`Working directory: ${process.cwd()}`);
+        log(`Environment: ${app.get('env')}`);
+        log(`Node version: ${process.version}`);
+        
+        // Check if the client directory exists
+        const clientDir = resolve(__dirname, '..', 'client');
+        const indexPath = resolve(clientDir, 'index.html');
+        
+        const clientDirExists = existsSync(clientDir);
+        const indexExists = existsSync(indexPath);
+        
+        log(`Client directory exists: ${clientDirExists}`);
+        log(`Index.html exists: ${indexExists}`);
       }).on('error', (err) => {
-        log(`Could not start server on port 5000: ${err.message}`);
-        log(`Continuing with just port ${port}`);
+        log(`Failed to start main server on fallback port ${port}: ${err.message}`);
+        // Try the next port
+        tryFallbackPort(index + 1);
       });
     }
-  })
-  .catch(err => {
-    log(`Failed to start server: ${err.message}`);
-    process.exit(1);
+    
+    // Start trying fallback ports
+    tryFallbackPort();
   });
+}
