@@ -23,6 +23,11 @@ import { Layout } from '@/components/layout/Layout';
 import { BlogPost as BasePostType } from '@shared/schema';
 import BlogCard from '@/components/BlogCard';
 import { Link } from 'wouter';
+import { 
+  getOptimizedImageUrl, 
+  generateSrcSet,
+  getAuthorPlaceholder 
+} from '@/lib/imageUtils';
 
 // Extended blog post type that includes the author field
 interface BlogPostType extends BasePostType {

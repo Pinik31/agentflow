@@ -8,6 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Newspaper, Lightbulb, Star, Clock } from "lucide-react";
 import NewsletterForm from "@/components/NewsletterForm";
+import { 
+  getCategoryImage, 
+  getOptimizedImageUrl, 
+  generateSrcSet 
+} from "@/lib/imageUtils";
 
 // Create a partial type that allows string for date in our mock data
 type MockBlogPost = Omit<BlogPost, 'publishedAt'> & {
@@ -193,8 +198,11 @@ export default function Blog() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-muted/20 rounded-xl p-6">
                     <div className="aspect-video overflow-hidden rounded-lg">
                       <img 
-                        src={featuredPost.imageUrl} 
+                        src={getOptimizedImageUrl(featuredPost.imageUrl, 800, 450)} 
                         alt={featuredPost.title} 
+                        srcSet={generateSrcSet(featuredPost.imageUrl)}
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        loading="lazy"
                         className="object-cover w-full h-full transition-transform hover:scale-105"
                       />
                     </div>
@@ -206,7 +214,9 @@ export default function Blog() {
                       </div>
                       <h3 className="text-2xl font-bold mb-3">{featuredPost.title}</h3>
                       <p className="text-muted-foreground mb-4">{featuredPost.excerpt}</p>
-                      <Button className="self-start" variant="outline">קרא עוד</Button>
+                      <Button asChild className="self-start" variant="outline">
+                        <a href={`/blog/${featuredPost.slug}`}>קרא עוד</a>
+                      </Button>
                     </div>
                   </div>
                 </div>
