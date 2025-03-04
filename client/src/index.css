@@ -1314,3 +1314,18 @@ html, body {
 [dir="rtl"] .fm-slide-x-reverse {
   --x-direction: 1;
 }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: 33 150 243;   /* Blue */
+  --color-secondary: 156 39 176; /* Purple */
+  --color-accent: 76 175 80;     /* Green */
+}
+
+@layer base {
+  body {
+    @apply bg-gray-50 dark:bg-gray-900;
+  }
+}
