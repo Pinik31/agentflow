@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card } from './ui/card';
-import { Send } from 'lucide-react';
+import { Send, X, MessageSquare } from 'lucide-react';
 
 interface Message {
   text: string;
@@ -28,6 +28,29 @@ export default function ChatBot() {
   const [input, setInput] = useState("");
   const [businessData, setBusinessData] = useState<BusinessData>({});
   const [stage, setStage] = useState("company");
+  
+  // Load saved chat session from localStorage on component mount
+  useEffect(() => {
+    try {
+      const savedSession = localStorage.getItem('chatbot_session');
+      if (savedSession) {
+        const parsedSession = JSON.parse(savedSession);
+        const sessionAge = new Date().getTime() - new Date(parsedSession.timestamp).getTime();
+        
+        // Only restore session if it's less than 24 hours old
+        if (sessionAge < 24 * 60 * 60 * 1000) {
+          setBusinessData(parsedSession.businessData);
+          setMessages(parsedSession.messages);
+          setStage(parsedSession.businessData.automationNeeds ? "complete" : "company");
+        } else {
+          // Clear expired session
+          localStorage.removeItem('chatbot_session');
+        }
+      }
+    } catch (error) {
+      console.error('Error loading chat session:', error);
+    }
+  }, []);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -58,11 +81,26 @@ export default function ChatBot() {
         updatedBusinessData.automationNeeds = input.split(",").map(need => need.trim());
         botResponse = "תודה על המידע! אחד המומחים שלנו יצור איתך קשר בקרוב עם הצעה מותאמת אישית. בינתיים, אשמח לענות על שאלות נוספות שיש לך על שירותי האוטומציה שלנו.";
         setStage("complete");
-        // Save to Supabase
-        await saveToDatabase(updatedBusinessData);
+        
+        // Save the updated messages including this last exchange
+        const updatedMessages = [...messages, userMessage, { text: botResponse, isBot: true }];
+        
+        // Save to database with the complete conversation history
+        await saveToDatabase({
+          ...updatedBusinessData,
+          // Include the complete message history for context
+          messages: updatedMessages
+        });
         break;
       case "complete":
         botResponse = getServiceInfo(input);
+        
+        // Update localStorage with the latest message even after completion
+        const updatedChatSession = JSON.parse(localStorage.getItem('chatbot_session') || '{}');
+        if (updatedChatSession.messages) {
+          updatedChatSession.messages = [...updatedChatSession.messages, userMessage, { text: botResponse, isBot: true }];
+          localStorage.setItem('chatbot_session', JSON.stringify(updatedChatSession));
+        }
         break;
     }
 
@@ -73,23 +111,46 @@ export default function ChatBot() {
 
   const saveToDatabase = async (data: BusinessData) => {
     try {
+      // Create a structured data object that can be easily used by AI agents
+      const structuredData = {
+        name: data.companyName,
+        industry: data.industry,
+        businessSize: data.employees,
+        metadata: {
+          automationNeeds: data.automationNeeds,
+          chatHistory: messages, // Include chat history for context
+          leadSource: 'chatbot',
+          timestamp: new Date().toISOString(),
+          stage: stage,
+          intentAnalysis: {
+            primaryIntent: 'automation_inquiry',
+            topNeeds: data.automationNeeds || [],
+            businessContext: {
+              size: data.employees,
+              industry: data.industry
+            }
+          }
+        }
+      };
+      
+      // Save to database
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name: data.companyName,
-          industry: data.industry,
-          businessSize: data.employees,
-          metadata: {
-            automationNeeds: data.automationNeeds
-          }
-        }),
+        body: JSON.stringify(structuredData),
       });
       
       if (!response.ok) {
         console.error('Failed to save lead data');
+      } else {
+        // Also store in localStorage for easy retrieval in case of page refresh
+        localStorage.setItem('chatbot_session', JSON.stringify({
+          businessData: data,
+          messages: messages,
+          timestamp: new Date().toISOString()
+        }));
       }
     } catch (error) {
       console.error('Error saving lead:', error);
@@ -111,8 +172,19 @@ export default function ChatBot() {
   return (
     <div className="fixed bottom-4 left-4 z-50">
       {isOpen ? (
-        <Card className="w-80 p-4">
-          <div className="h-96 overflow-y-auto mb-4">
+        <Card className="w-80 p-4 relative shadow-lg">
+          {/* Close button */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setIsOpen(false)} 
+            className="absolute top-2 right-2 h-8 w-8 p-1"
+            aria-label="סגור צ'אט"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+          
+          <div className="h-96 overflow-y-auto mb-4 pt-4">
             {messages.map((message, index) => (
               <div
                 key={index}
@@ -141,8 +213,11 @@ export default function ChatBot() {
           </div>
         </Card>
       ) : (
-        <Button onClick={() => setIsOpen(true)} className="rounded-full">
-          💬 צ'אט
+        <Button 
+          onClick={() => setIsOpen(true)} 
+          className="rounded-full h-12 w-12 p-0 shadow-lg flex items-center justify-center"
+        >
+          <MessageSquare className="h-6 w-6" />
         </Button>
       )}
     </div>
