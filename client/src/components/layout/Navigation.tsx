@@ -33,9 +33,7 @@ export default function Navigation() {
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuTrigger>
-                  <Link href="/services">
-                    <span className="cursor-pointer">השירותים שלנו</span>
-                  </Link>
+                  <span className="cursor-pointer">השירותים שלנו</span>
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 w-[400px]">
