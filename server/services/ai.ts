@@ -7,7 +7,7 @@ import { AppError, ErrorCode } from './errorHandler';
 import { apiCache } from './cache';
 
 // Types for AI responses
-interface AIAnalysisResult {
+export interface AIAnalysisResult {
   intent: string;
   entities: Record<string, any>;
   sentiment: number;
@@ -15,7 +15,7 @@ interface AIAnalysisResult {
   language: string;
 }
 
-interface AIResponseOptions {
+export interface AIResponseOptions {
   language?: string;
   tone?: 'professional' | 'friendly' | 'technical';
   maxLength?: number;
@@ -23,6 +23,10 @@ interface AIResponseOptions {
   enhanceWithAI?: boolean;
 }
 
+/**
+ * Handles AI-related operations including intent detection,
+ * response generation, and content enhancement
+ */
 class AIService {
   private isConfigured: boolean = false;
   private apiKey: string | null = null;
@@ -57,6 +61,8 @@ class AIService {
   
   /**
    * Analyze user input to extract intent and entities
+   * @param text The user's input text to analyze
+   * @returns An analysis result containing intent, entities, and other metadata
    */
   public async analyzeInput(text: string): Promise<AIAnalysisResult> {
     const cacheKey = `ai:analysis:${text}`;
@@ -116,6 +122,10 @@ class AIService {
   
   /**
    * Generate an AI response based on user input and analysis
+   * @param userInput The original user input
+   * @param analysis The analysis result from analyzeInput
+   * @param options Response generation options
+   * @returns A generated response string
    */
   public async generateResponse(
     userInput: string, 
@@ -163,6 +173,10 @@ class AIService {
   
   /**
    * Generate an enhanced response with AI features
+   * @param baseResponse The original response to enhance
+   * @param context Additional context for enhancement
+   * @param options Enhancement options
+   * @returns An enhanced response string
    */
   public async enhanceResponse(
     baseResponse: string,
@@ -207,6 +221,8 @@ class AIService {
   
   /**
    * Extract service type from text (simplified implementation)
+   * @param text The text to analyze for service mentions
+   * @returns The extracted service name or empty string
    */
   private extractService(text: string): string {
     // Simplified entity extraction based on keywords
@@ -225,6 +241,8 @@ class AIService {
   
   /**
    * Simple language detection based on character sets
+   * @param text The text to detect language for
+   * @returns The detected language code (he or en)
    */
   private detectLanguage(text: string): string {
     // Check if text contains Hebrew characters
@@ -239,6 +257,8 @@ class AIService {
   
   /**
    * Get a fallback analysis when AI service is unavailable
+   * @param text The text to analyze
+   * @returns A basic analysis result
    */
   private getFallbackAnalysis(text: string): AIAnalysisResult {
     return {
@@ -252,6 +272,9 @@ class AIService {
   
   /**
    * Get a fallback response when AI service is unavailable
+   * @param intent The detected intent
+   * @param language The detected language
+   * @returns A fallback response string
    */
   private getFallbackResponse(intent: string, language?: string): string {
     // Default responses when AI is not available

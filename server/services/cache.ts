@@ -81,7 +81,7 @@ class CacheService {
    */
   set<T>(key: string, value: T, ttl?: number): boolean {
     const namespacedKey = this.getNamespacedKey(key);
-    return this.cache.set(namespacedKey, value, ttl);
+    return this.cache.set(namespacedKey, value, ttl || undefined);
   }
   
   /**

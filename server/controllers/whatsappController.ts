@@ -88,12 +88,15 @@ async function processWhatsAppMessage(from: string, text: string, messageId: str
   try {
     // Store the incoming message
     await storage.createWhatsappMessage({
-      phoneNumber: from,
-      messageId,
       content: text,
       direction: 'incoming',
       status: 'delivered',
-      timestamp: timestamp ? new Date(timestamp) : new Date(),
+      messageType: 'text',
+      metadata: {
+        from,
+        messageId,
+        timestamp: timestamp ? new Date(timestamp).toISOString() : new Date().toISOString()
+      }
     });
     
     // Get or create a session

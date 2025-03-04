@@ -206,9 +206,9 @@ function completeAppSetup() {
   registerRoutes(app, server);
   
   // 7. Error handler must be last
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+  app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+    const status = err instanceof Error && 'statusCode' in err ? (err as any).statusCode : 500;
+    const message = err instanceof Error ? err.message : "Internal Server Error";
     res.status(status).json({ message });
     console.error("API Error:", err);
   });
@@ -273,7 +273,8 @@ function startMainApplication() {
       minimalServer.close();
     }
   } catch (err) {
-    log(`Error closing minimal server: ${err.message}`);
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    log(`Error closing minimal server: ${errorMessage}`);
   }
   
   // Try to start on port 5000 first for Replit detection
