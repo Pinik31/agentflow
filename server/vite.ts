@@ -1,18 +1,17 @@
-
 import express, { type Express } from "express";
 import { createServer, type Server } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
-import { createServer as createViteServer } from "vite";
-import { createLogger } from "vite";
+import { createServer as createViteServer, type ViteDevServer } from "vite";
+import { createLogger, Logger } from "vite";
 import { nanoid } from "nanoid";
 import viteConfig from "../vite.config.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const viteLogger = createLogger();
+const viteLogger: Logger = createLogger();
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -32,7 +31,7 @@ export async function setupVite(app: Express, server: Server) {
     allowedHosts: true,
   };
 
-  const vite = await createViteServer({
+  const vite: ViteDevServer = await createViteServer({
     ...viteConfig,
     configFile: false,
     customLogger: {
@@ -73,29 +72,29 @@ export async function setupVite(app: Express, server: Server) {
   });
 }
 
-// Add the missing serveStatic function
+
 export function serveStatic(app: Express) {
   const publicDir = path.resolve(__dirname, "..", "dist", "public");
-  
+
   // Create a health check endpoint before static files
   app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
   });
-  
+
   // Serve static files
   app.use(express.static(publicDir, {
     index: false // Don't serve index.html for / automatically
   }));
-  
+
   // Serve index.html for all routes for SPA routing
   app.get('*', (req, res) => {
     // Skip API routes
     if (req.path.startsWith('/api')) {
       return res.status(404).json({ error: 'API endpoint not found' });
     }
-    
+
     const indexPath = path.join(publicDir, 'index.html');
-    
+
     if (fs.existsSync(indexPath)) {
       res.sendFile(indexPath);
     } else {

@@ -1,39 +1,17 @@
-import pkg from 'pg';
-const { Pool } = pkg;
+import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import * as schema from "@shared/schema"; // Assuming this schema is compatible with node-postgres
 
-// Create a connection pool
+// Create a PostgreSQL pool with connection configuration
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
-  max: 10, // Maximum number of clients in the pool
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  max: 20, // Maximum connection pool size
+  idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
+  connectionTimeoutMillis: 10000 // Return error after 10 seconds if can't connect
 });
 
-// Create drizzle instance
-export const db = drizzle(pool, { schema });
-
-// Health check function
-export async function getDbHealth() {
-  let client;
-  try {
-    client = await pool.connect();
-    const result = await client.query('SELECT NOW() as current_time');
-    return { 
-      healthy: true, 
-      message: `Database connected, current time: ${result.rows[0].current_time}` 
-    };
-  } catch (err) {
-    return { 
-      healthy: false, 
-      message: err instanceof Error ? err.message : 'Unknown database error' 
-    };
-  } finally {
-    if (client) client.release();
-  }
-}
+// Create drizzle instance with the PostgreSQL pool
+const db = drizzle(pool);
 
 // Setup connection testing on startup
 (async function testConnection() {

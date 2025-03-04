@@ -32,18 +32,18 @@ export const validateMiddleware = (schema: AnyZodObject) =>
  * Validates data against a Zod schema
  * @param schema The Zod schema to validate against
  * @param data The data to validate
- * @returns Validation result with success status and either validated data or errors
+ * @returns Validation result object
  */
-export function validate<T>(schema: z.ZodType<T>, data: unknown): { 
-  success: boolean; 
-  data?: T; 
-  errors?: { path: string; message: string }[] 
+export function validate<T>(schema: z.ZodSchema<T>, data: unknown): { 
+  success: boolean;
+  data?: T;
+  errors?: Array<{ path: string; message: string }>;
 } {
   try {
-    const validatedData = schema.parse(data);
+    const validData = schema.parse(data);
     return {
-      success: true,
-      data: validatedData
+      success: true, 
+      data: validData
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
