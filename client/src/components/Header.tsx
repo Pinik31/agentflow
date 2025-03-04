@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'wouter';
 import { Button } from './ui/button';
@@ -9,21 +8,21 @@ const Header: React.FC = () => {
       <div className="container flex items-center justify-between py-4">
         <div className="flex items-center">
           <Link href="/">
-            <a className="text-2xl font-bold">Agent Flow</a>
+            <span className="text-2xl font-bold">Agent Flow</span>
           </Link>
         </div>
         <nav className="hidden md:flex items-center space-x-6">
           <Link href="/about">
-            <a className="text-sm font-medium hover:text-primary">אודות</a>
+            <span className="text-sm font-medium hover:text-primary">אודות</span>
           </Link>
           <Link href="/services">
-            <a className="text-sm font-medium hover:text-primary">שירותים</a>
+            <span className="text-sm font-medium hover:text-primary">שירותים</span>
           </Link>
           <Link href="/blog">
-            <a className="text-sm font-medium hover:text-primary">בלוג</a>
+            <span className="text-sm font-medium hover:text-primary">בלוג</span>
           </Link>
           <Link href="/contact">
-            <a className="text-sm font-medium hover:text-primary">צור קשר</a>
+            <span className="text-sm font-medium hover:text-primary">צור קשר</span>
           </Link>
         </nav>
         <div>

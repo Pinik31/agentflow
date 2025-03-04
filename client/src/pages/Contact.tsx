@@ -399,7 +399,7 @@ export default function Contact() {
       </div>
 
       {/* Global animations for the page */}
-      <style data-jsx="true" data-global="true">{`
+      <style jsx global>{`
         @keyframes float {
           0% { transform: translateY(0px); }
           50% { transform: translateY(-10px); }

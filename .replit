@@ -25,6 +25,13 @@ externalPort = 80
 [env]
 PORT = "5000"
 
-[workflows.main]
-run = "npm run dev"
-run_button = true
+[workflows]
+runButton = "dev"
+
+[[workflows.workflow]]
+name = "dev"
+author = 38908678
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
