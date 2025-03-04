@@ -13,6 +13,7 @@ import { AppError } from './services/errorHandler';
 import * as blogController from './controllers/blogController';
 import * as leadController from './controllers/leadController';
 import * as whatsappController from './controllers/whatsappController';
+import * as adminController from './controllers/adminController';
 
 export function registerRoutes(app: Express, server: Server): void {
   // Apply common middleware to all API routes
@@ -146,6 +147,13 @@ export function registerRoutes(app: Express, server: Server): void {
   // Protected API routes (requires API key in production)
   app.use('/api/admin', validateApiKey);
   
+  // Admin routes
+  app.get('/api/admin/health', adminController.getSystemHealth);
+  app.post('/api/admin/cache/clear', adminController.clearCache);
+  app.post('/api/admin/service/restart', adminController.restartService);
+  app.get('/api/admin/logs', adminController.getLogs);
+  
+  // Admin content management routes
   app.post('/api/admin/blog', 
     validate(insertBlogPostSchema),
     blogController.createBlogPost

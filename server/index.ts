@@ -8,6 +8,7 @@ import { dirname, resolve } from "path";
 import { existsSync, readFileSync } from "fs";
 import { setupMiddleware } from "./services/middleware";
 import { registerRoutes } from "./routes";
+import { startPerformanceMonitoring } from "./services/performance";
 
 // Get current file location for ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -212,6 +213,9 @@ function completeAppSetup() {
     res.status(status).json({ message });
     console.error("API Error:", err);
   });
+  
+  // Start performance monitoring
+  startPerformanceMonitoring();
   
   log("Full application initialization complete");
 }
