@@ -54,6 +54,77 @@ class WhatsAppService {
       throw error;
     }
   }
+  
+  /**
+   * Send a plain text message
+   * @param to Recipient phone number (with country code)
+   * @param text Message text
+   * @returns Response from the WhatsApp API
+   */
+  async sendMessage(to: string, text: string) {
+    // Ensure phone number is in the right format
+    const formattedPhone = to.startsWith('+') ? to.substring(1) : to;
+    
+    const data = {
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to: formattedPhone,
+      type: 'text',
+      text: {
+        preview_url: false,
+        body: text
+      }
+    };
+    
+    return this.sendRequest(`${this.phoneNumber}/messages`, data);
+  }
+  
+  /**
+   * Send a template message
+   * @param to Recipient phone number (with country code)
+   * @param templateName Name of the template to use
+   * @param variables Variables to use in the template
+   * @returns Response from the WhatsApp API
+   */
+  async sendTemplate(to: string, templateName: string, variables: Record<string, string>) {
+    // Ensure phone number is in the right format
+    const formattedPhone = to.startsWith('+') ? to.substring(1) : to;
+    
+    // Format variables into components
+    const components = [];
+    
+    if (Object.keys(variables).length > 0) {
+      const parameters = Object.entries(variables).map(([_, value]) => ({
+        type: 'text',
+        text: value
+      }));
+      
+      components.push({
+        type: 'body',
+        parameters
+      });
+    }
+    
+    const data = {
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to: formattedPhone,
+      type: 'template',
+      template: {
+        name: templateName,
+        language: {
+          code: 'he' // Default to Hebrew
+        },
+        components
+      }
+    };
+    
+    return this.sendRequest(`${this.phoneNumber}/messages`, data);
+  }
+}
+
+// Export a singleton instance
+export const whatsapp = new WhatsAppService();
 
   async sendMessage(to: string, text: string) {
     // Format the phone number if needed
