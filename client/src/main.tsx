@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Switch, Route } from 'wouter';
@@ -22,7 +21,6 @@ const Services = React.lazy(() => import('@/pages/Services'));
 // Create a client for React Query
 const queryClient = new QueryClient();
 
-// Mount React to DOM
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
@@ -45,33 +43,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           </main>
           <Footer />
         </div>
-      </LazyMotion>
-    </QueryClientProvider>
-  </React.StrictMode>
-);
-
-const queryClient = new QueryClient();
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <LazyMotion features={domAnimation}>
-        <Header />
-        <main className="min-h-screen pt-20 pb-16">
-          <AnimatePresence mode="wait">
-            <Suspense fallback={<div className="flex justify-center items-center min-h-[50vh]">Loading...</div>}>
-              <Switch>
-                <Route path="/" component={Home} />
-                <Route path="/about" component={About} />
-                <Route path="/contact" component={Contact} />
-                <Route path="/blog" component={Blog} />
-                {/* Commenting out the Features route to fix the error */}
-                {/* <Route path="/features" component={Features} /> */}
-              </Switch>
-            </Suspense>
-          </AnimatePresence>
-        </main>
-        <Footer />
       </LazyMotion>
     </QueryClientProvider>
   </React.StrictMode>
