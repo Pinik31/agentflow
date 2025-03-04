@@ -56,66 +56,50 @@ class WhatsAppService {
   }
 
   async sendMessage(to: string, text: string) {
-    if (!this.checkInitialization()) {
-      return { success: false, error: "WhatsApp service not properly configured" };
-    }
+    // Format the phone number if needed
+    const formattedNumber = to.startsWith('+') ? to.substring(1) : to;
 
-    try {
-      const data = {
-        messaging_product: "whatsapp",
-        recipient_type: "individual",
-        to,
-        type: "text",
-        text: {
-          body: text
-        }
-      };
+    const data = {
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to: formattedNumber,
+      type: 'text',
+      text: {
+        body: text
+      }
+    };
 
-      const result = await this.sendRequest(`${this.phoneNumber}/messages`, data);
-      return { success: true, data: result };
-    } catch (error) {
-      console.error("Failed to send WhatsApp message:", error);
-      return { success: false, error: error instanceof Error ? error.message : String(error) };
-    }
+    return this.sendRequest(`${this.phoneNumber}/messages`, data);
   }
 
-  async sendTemplate(to: string, templateName: string, variables: Record<string, string>) {
-    if (!this.checkInitialization()) {
-      return { success: false, error: "WhatsApp service not properly configured" };
-    }
+  async sendTemplate(to: string, templateName: string, variables: Record<string, string> = {}) {
+    // Format the phone number if needed
+    const formattedNumber = to.startsWith('+') ? to.substring(1) : to;
 
-    try {
-      // Convert variables to components format expected by WhatsApp API
-      const components = Object.entries(variables).map(([key, value]) => ({
-        type: "body",
-        parameters: [
-          {
-            type: "text",
-            text: value
-          }
-        ]
-      }));
+    // Convert variables to components format expected by WhatsApp API
+    const components = Object.keys(variables).length > 0 ? [{
+      type: 'body',
+      parameters: Object.entries(variables).map(([_, value]) => ({
+        type: 'text',
+        text: value
+      }))
+    }] : [];
 
-      const data = {
-        messaging_product: "whatsapp",
-        recipient_type: "individual",
-        to,
-        type: "template",
-        template: {
-          name: templateName,
-          language: {
-            code: "he" // Default to Hebrew, can be parameterized
-          },
-          components
-        }
-      };
+    const data = {
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to: formattedNumber,
+      type: 'template',
+      template: {
+        name: templateName,
+        language: {
+          code: 'he' // Default to Hebrew, could be made configurable
+        },
+        components
+      }
+    };
 
-      const result = await this.sendRequest(`${this.phoneNumber}/messages`, data);
-      return { success: true, data: result };
-    } catch (error) {
-      console.error("Failed to send WhatsApp template:", error);
-      return { success: false, error: error instanceof Error ? error.message : String(error) };
-    }
+    return this.sendRequest(`${this.phoneNumber}/messages`, data);
   }
   private async getOrCreateSession(phoneNumber: string): Promise<number> {
     try {

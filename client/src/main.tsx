@@ -1,4 +1,3 @@
-
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Switch, Route } from 'wouter';
@@ -30,117 +29,72 @@ const queryClient = new QueryClient({
 });
 
 // Error boundary component to prevent the entire app from crashing
-class ErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { hasError: boolean; error: Error | null }
-> {
-  constructor(props: { children: React.ReactNode }) {
+class ErrorBoundary extends React.Component {
+  constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error: Error) {
+  static getDerivedStateFromError(error) {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('React Error Boundary caught an error:', error, errorInfo);
+  componentDidCatch(error, errorInfo) {
+    console.error("Error caught by boundary:", error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center p-4">
-          <div className="max-w-md p-6 bg-red-50 rounded-lg shadow-lg border border-red-200">
-            <h2 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h2>
-            <p className="text-gray-700 mb-4">
-              We apologize for the inconvenience. Please try refreshing the page.
-            </p>
-            {this.state.error && (
-              <div className="p-3 bg-white rounded text-sm font-mono overflow-auto">
-                {this.state.error.toString()}
-              </div>
-            )}
-            <button
-              onClick={() => window.location.reload()}
-              className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90 transition-colors"
-            >
-              Refresh Page
-            </button>
-          </div>
+        <div className="error-container">
+          <h2>Something went wrong</h2>
+          <p>We're sorry for the inconvenience. Please try refreshing the page.</p>
+          <button onClick={() => window.location.reload()}>
+            Refresh Page
+          </button>
         </div>
       );
     }
-
     return this.props.children;
   }
 }
 
-// Main App component
-function App() {
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-grow">
-        <AnimatePresence mode="wait">
-          <Switch>
-            <Route path="/" exact>
+// Root component with error boundary and providers
+const App = () => (
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <LazyMotion features={domAnimation}>
+          <div className="app-container">
+            <Header />
+            <AnimatePresence mode="wait">
               <Suspense fallback={<LoadingFallback />}>
-                <Home />
+                <Switch>
+                  <Route path="/" component={Home} />
+                  <Route path="/about" component={About} />
+                  <Route path="/contact" component={Contact} />
+                  <Route path="/blog" component={Blog} />
+                  <Route path="/features" component={Features} />
+                  <Route>
+                    <div className="not-found">
+                      <h1>404 - Page Not Found</h1>
+                      <p>Sorry, the page you are looking for does not exist.</p>
+                    </div>
+                  </Route>
+                </Switch>
               </Suspense>
-            </Route>
-            <Route path="/about">
-              <Suspense fallback={<LoadingFallback />}>
-                <About />
-              </Suspense>
-            </Route>
-            <Route path="/contact">
-              <Suspense fallback={<LoadingFallback />}>
-                <Contact />
-              </Suspense>
-            </Route>
-            <Route path="/blog">
-              <Suspense fallback={<LoadingFallback />}>
-                <Blog />
-              </Suspense>
-            </Route>
-            <Route path="/features">
-              <Suspense fallback={<LoadingFallback />}>
-                <Features />
-              </Suspense>
-            </Route>
-            <Route>
-              <div className="min-h-screen flex items-center justify-center">
-                <div className="max-w-md p-6 bg-gray-50 rounded-lg shadow-lg text-center">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-4">Page Not Found</h2>
-                  <p className="text-gray-600 mb-6">The page you are looking for does not exist.</p>
-                  <a href="/" className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90 transition-colors">
-                    Go Home
-                  </a>
-                </div>
-              </div>
-            </Route>
-          </Switch>
-        </AnimatePresence>
-      </main>
-      <Footer />
-    </div>
-  );
-}
+            </AnimatePresence>
+            <Footer />
+          </div>
+        </LazyMotion>
+      </ThemeProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
+);
 
-// Root render
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-
-root.render(
+// Mount the app to the DOM
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <LazyMotion features={domAnimation}>
-            <App />
-          </LazyMotion>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <App />
   </React.StrictMode>
 );

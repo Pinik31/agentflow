@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { AnyZodObject } from "zod";
 import { AppError } from "./errorHandler";
 import { z } from 'zod';
-import { fromZodError } from 'zod-validation-error';
 
 export type ValidationResult<T> = {
   success: true;
@@ -15,7 +14,7 @@ export type ValidationResult<T> = {
   }>;
 };
 
-export const validate = (schema: AnyZodObject) => 
+export const validate = (schema: AnyZodObject) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await schema.parseAsync({
@@ -30,31 +29,32 @@ export const validate = (schema: AnyZodObject) =>
   };
 
 /**
- * Validates data against a Zod schema
- * @param schema Zod schema to validate against
- * @param data Data to validate
- * @returns Validation result with parsed data or errors
+ * Validates data against a Zod schema with enhanced error handling
+ * @param schema The Zod schema to validate against
+ * @param data The data to validate
+ * @returns Object with success status and either validated data or errors
  */
-export function validate<T>(schema: z.ZodType<T>, data: unknown): ValidationResult<T> {
+export function validate<T>(schema: z.Schema<T>, data: unknown): {
+  success: true;
+  data: T;
+} | {
+  success: false;
+  errors: Array<{ path: string; message: string }>;
+} {
   try {
-    const result = schema.parse(data);
+    const validData = schema.parse(data);
     return {
       success: true,
-      data: result,
+      data: validData,
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const validationError = fromZodError(error);
-
-      // Format errors for better readability
-      const formattedErrors = error.errors.map(err => ({
-        path: err.path.join('.'),
-        message: err.message
-      }));
-
       return {
         success: false,
-        errors: formattedErrors,
+        errors: error.errors.map(err => ({
+          path: err.path.join('.'),
+          message: err.message,
+        })),
       };
     }
 
@@ -76,7 +76,7 @@ export function validate<T>(schema: z.ZodType<T>, data: unknown): ValidationResu
  */
 export function sanitizeString(input: string): string {
   if (!input) return '';
-  
+
   // Replace potentially dangerous characters
   return input
     .replace(/</g, '&lt;')
@@ -107,12 +107,12 @@ export function validateEmail(email: string): string | null {
 export function validatePhone(phone: string): string | null {
   // Strip non-digits
   const digits = phone.replace(/\D/g, '');
-  
+
   // Check if we have a reasonable number of digits
   if (digits.length < 10 || digits.length > 15) {
     return null;
   }
-  
+
   // Return formatted phone number
   return digits;
 }
