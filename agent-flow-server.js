@@ -1,15 +1,20 @@
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
+import express from 'express';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import fs from 'fs';
 
 // Log server startup for debugging
-console.log("Starting Simple Server...");
+console.log("Starting Agent Flow server...");
 console.log(`Current working directory: ${process.cwd()}`);
 console.log(`Node.js version: ${process.version}`);
 console.log(`Environment variables: PORT=${process.env.PORT}, NODE_ENV=${process.env.NODE_ENV}`);
 
+// Resolve the directory name in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 // Basic middleware
 app.use(express.json());
@@ -19,7 +24,7 @@ app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'ok', 
     timestamp: new Date().toISOString(),
-    message: 'Simple server is running!'
+    message: 'Agent Flow server is running!'
   });
 });
 
@@ -139,6 +144,28 @@ app.get('/db-status', async (req, res) => {
   }
 });
 
+// Check if the client/dist directory exists to serve static files
+const distPath = join(__dirname, 'client', 'dist');
+try {
+  if (fs.existsSync(distPath)) {
+    console.log(`Serving static files from ${distPath}`);
+    app.use(express.static(distPath));
+    
+    // For SPA - redirect all non-API requests to index.html
+    app.get('*', (req, res, next) => {
+      // Skip API routes and direct file requests
+      if (req.path.startsWith('/api') || req.path.includes('.')) {
+        return next();
+      }
+      res.sendFile(join(distPath, 'index.html'));
+    });
+  } else {
+    console.log(`Static file directory ${distPath} not found`);
+  }
+} catch (err) {
+  console.error('Error setting up static file serving:', err);
+}
+
 // Catch-all route for 404s
 app.use((req, res) => {
   res.status(404).json({
@@ -159,6 +186,6 @@ app.use((err, req, res, next) => {
 
 // Start server
 app.listen(port, '0.0.0.0', () => {
-  console.log(`Simple server is running at http://localhost:${port}`);
+  console.log(`Agent Flow server is running at http://localhost:${port}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });

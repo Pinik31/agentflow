@@ -1,9 +1,7 @@
 {
-  "name": "Simple Server",
-  "tasks": [
-    {
-      "task": "shell.exec",
-      "args": "node simple-server.cjs"
-    }
-  ]
+  "name": "Simple",
+  "description": "Run the Simple server using CommonJS",
+  "runs": {
+    "command": "node simple-server.cjs"
+  }
 }
