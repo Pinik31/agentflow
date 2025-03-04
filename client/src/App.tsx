@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Blog from "@/pages/Blog";
+import BlogPost from "@/pages/BlogPost";
 import Contact from "@/pages/Contact";
 import Services from "@/pages/Services";
 import About from "@/pages/About";
@@ -32,6 +33,7 @@ function Router() {
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/blog" component={Blog} />
+            <Route path="/blog/:slug" component={BlogPost} />
             <Route path="/about" component={About} />
             <Route path="/services" component={Services} />
             <Route path="/services/ai-agents" component={AIAgents} />

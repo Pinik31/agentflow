@@ -15,6 +15,7 @@ interface BusinessData {
   industry?: string;
   employees?: string;
   automationNeeds?: string[];
+  messages?: any[]; // Add messages field for storing conversation history
 }
 
 export default function ChatBot() {
