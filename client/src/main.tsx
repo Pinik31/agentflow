@@ -59,105 +59,7 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// Define App component with fixed nesting
-const App = () => {
-  return (
-    <div className="app-container">
-      <Header />
-      <Suspense fallback={<LoadingFallback />}>
-        <AnimatePresence mode="wait">
-          <Switch>
-            <Route path="/" component={Home} />
-            <Route path="/about" component={About} />
-            <Route path="/contact" component={Contact} />
-            <Route path="/blog" component={Blog} />
-            <Route path="/features" component={Features} />
-            <Route>Not Found</Route>
-          </Switch>
-        </AnimatePresence>
-      </Suspense>
-      <Footer />
-    </div>
-  );
-};
-
-// Root component with all providers
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error("Error caught by boundary:", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="error-container p-4 mx-auto my-8 max-w-md text-center bg-red-50 rounded-lg shadow">
-          <h2 className="text-xl font-bold text-red-700 mb-2">Something went wrong</h2>
-          <p className="text-gray-700 mb-4">We're sorry for the inconvenience. Please try refreshing the page.</p>
-          <button 
-            onClick={() => window.location.reload()}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded"
-          >
-            Refresh Page
-          </button>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error("Error caught by boundary:", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="error-container">
-          <h2>Something went wrong</h2>
-          <p>We're sorry for the inconvenience. Please try refreshing the page.</p>
-          <button onClick={() => window.location.reload()}>
-            Refresh Page
-          </button>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
-
-// Mount the application
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <LazyMotion features={domAnimation}>
-            <App />
-          </LazyMotion>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
-  </React.StrictMode>
-);
+// App component
 const App = () => {
   return (
     <ErrorBoundary>
@@ -169,31 +71,31 @@ const App = () => {
               <main className="flex-grow">
                 <AnimatePresence mode="wait">
                   <Switch>
-                    <Route path="/" component={() => (
+                    <Route path="/" exact>
                       <Suspense fallback={<LoadingFallback />}>
                         <Home />
                       </Suspense>
-                    )} />
-                    <Route path="/about" component={() => (
+                    </Route>
+                    <Route path="/about">
                       <Suspense fallback={<LoadingFallback />}>
                         <About />
                       </Suspense>
-                    )} />
-                    <Route path="/contact" component={() => (
+                    </Route>
+                    <Route path="/contact">
                       <Suspense fallback={<LoadingFallback />}>
                         <Contact />
                       </Suspense>
-                    )} />
-                    <Route path="/blog" component={() => (
+                    </Route>
+                    <Route path="/blog">
                       <Suspense fallback={<LoadingFallback />}>
                         <Blog />
                       </Suspense>
-                    )} />
-                    <Route path="/features" component={() => (
+                    </Route>
+                    <Route path="/features">
                       <Suspense fallback={<LoadingFallback />}>
                         <Features />
                       </Suspense>
-                    )} />
+                    </Route>
                     <Route>
                       <div className="error-page">
                         <h1>404 - Page Not Found</h1>
@@ -212,57 +114,9 @@ const App = () => {
   );
 };
 
-// Render application
+// Mount the application
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 );
-const App = () => (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <LazyMotion features={domAnimation}>
-          <div className="app-container">
-            <Header />
-            <AnimatePresence mode="wait">
-              <Suspense fallback={<LoadingFallback />}>
-                <Switch>
-                  <Route path="/" component={Home} />
-                  <Route path="/about" component={About} />
-                  <Route path="/contact" component={Contact} />
-                  <Route path="/blog" component={Blog} />
-                  <Route path="/features" component={Features} />
-                  <Route>
-                    <div className="not-found">
-                      <h1>404 - Page Not Found</h1>
-                      <p>Sorry, the page you are looking for does not exist.</p>
-                    </div>
-                  </Route>
-                </Switch>
-              </Suspense>
-            </AnimatePresence>
-            <Footer />
-          </div>
-        </LazyMotion>
-      </ThemeProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
-);
-
-// Mount the app to the DOM
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import './index.css'
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
