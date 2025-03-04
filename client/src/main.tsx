@@ -1,4 +1,3 @@
-
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Switch, Route } from 'wouter';
