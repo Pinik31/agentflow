@@ -65,36 +65,67 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// Create the root element
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// Main app component
+const App = () => {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <div className="flex-grow">
+        <AnimatePresence mode="wait">
+          <Switch>
+            <Route path="/" exact>
+              <Suspense fallback={<LoadingFallback />}>
+                <Home />
+              </Suspense>
+            </Route>
+            <Route path="/about">
+              <Suspense fallback={<LoadingFallback />}>
+                <About />
+              </Suspense>
+            </Route>
+            <Route path="/contact">
+              <Suspense fallback={<LoadingFallback />}>
+                <Contact />
+              </Suspense>
+            </Route>
+            <Route path="/blog">
+              <Suspense fallback={<LoadingFallback />}>
+                <Blog />
+              </Suspense>
+            </Route>
+            <Route path="/features">
+              <Suspense fallback={<LoadingFallback />}>
+                <Features />
+              </Suspense>
+            </Route>
+            <Route>
+              <div className="container mx-auto py-20 text-center">
+                <h1 className="text-4xl font-bold mb-4">404 - Page Not Found</h1>
+                <p className="mb-8">The page you're looking for doesn't exist.</p>
+                <a href="/" className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-all">
+                  Return Home
+                </a>
+              </div>
+            </Route>
+          </Switch>
+        </AnimatePresence>
+      </div>
+      <Footer />
+    </div>
+  );
+};
 
 // Render the app
-root.render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
           <LazyMotion features={domAnimation}>
-            <div className="min-h-screen flex flex-col bg-background text-foreground">
-              <Header />
-              <main className="flex-grow">
-                <AnimatePresence mode="wait">
-                  <Suspense fallback={<LoadingFallback />}>
-                    <Switch>
-                      <Route path="/" component={Home} />
-                      <Route path="/about" component={About} />
-                      <Route path="/contact" component={Contact} />
-                      <Route path="/blog" component={Blog} />
-                      <Route path="/features" component={Features} />
-                    </Switch>
-                  </Suspense>
-                </AnimatePresence>
-              </main>
-              <Footer />
-            </div>
+            <App />
           </LazyMotion>
-        </ThemeProvider>
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   </React.StrictMode>
 );
