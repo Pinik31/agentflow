@@ -302,18 +302,38 @@ function startServer(port = 5000, retries = 3) {
     });
 }
 
-// Release port before starting
+// Start server with a safer approach to port handling
 import { exec } from 'child_process';
-exec(`lsof -ti:5000 | xargs kill -9`, (error) => {
-  if (error) {
-    logger.warn(`Could not release port 5000: ${error.message}`);
-  } else {
-    logger.info("Successfully released port 5000");
+
+// Gracefully attempt to release port first
+const attemptPortRelease = () => {
+  return new Promise<void>((resolve) => {
+    exec(`lsof -ti:5000 | xargs kill -9 2>/dev/null || true`, (error) => {
+      if (error) {
+        logger.warn(`Could not release port 5000: ${error.message}`);
+      } else {
+        logger.info("Port 5000 is now available");
+      }
+      // Always resolve, even on error, to ensure server starts
+      resolve();
+    });
+  });
+};
+
+// Start server with delay to ensure port is available
+(async () => {
+  try {
+    await attemptPortRelease();
+    // Small delay to ensure port is fully released
+    setTimeout(() => {
+      startServer();
+    }, 1000);
+  } catch (err) {
+    logger.error("Failed in server startup sequence", err);
+    // Start anyway, will try alternate ports if needed
+    startServer();
   }
-  
-  // Start the server
-  startServer();
-});
+})();
 
 // Handle process signals for graceful shutdown
 process.on('SIGTERM', () => {

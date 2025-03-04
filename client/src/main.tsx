@@ -76,59 +76,68 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+// Main App component
+function App() {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <main className="flex-grow">
+        <AnimatePresence mode="wait">
+          <Switch>
+            <Route path="/" exact>
+              <Suspense fallback={<LoadingFallback />}>
+                <Home />
+              </Suspense>
+            </Route>
+            <Route path="/about">
+              <Suspense fallback={<LoadingFallback />}>
+                <About />
+              </Suspense>
+            </Route>
+            <Route path="/contact">
+              <Suspense fallback={<LoadingFallback />}>
+                <Contact />
+              </Suspense>
+            </Route>
+            <Route path="/blog">
+              <Suspense fallback={<LoadingFallback />}>
+                <Blog />
+              </Suspense>
+            </Route>
+            <Route path="/features">
+              <Suspense fallback={<LoadingFallback />}>
+                <Features />
+              </Suspense>
+            </Route>
+            <Route>
+              <div className="min-h-screen flex items-center justify-center">
+                <div className="max-w-md p-6 bg-gray-50 rounded-lg shadow-lg text-center">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-4">Page Not Found</h2>
+                  <p className="text-gray-600 mb-6">The page you are looking for does not exist.</p>
+                  <a href="/" className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90 transition-colors">
+                    Go Home
+                  </a>
+                </div>
+              </div>
+            </Route>
+          </Switch>
+        </AnimatePresence>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+// Root render
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+
+root.render(
   <React.StrictMode>
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <LazyMotion features={domAnimation}>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <main className="flex-grow">
-                <AnimatePresence mode="wait">
-                  <Switch>
-                    <Route path="/" element={
-                      <Suspense fallback={<LoadingFallback />}>
-                        <Home />
-                      </Suspense>
-                    } />
-                    <Route path="/about" element={
-                      <Suspense fallback={<LoadingFallback />}>
-                        <About />
-                      </Suspense>
-                    } />
-                    <Route path="/contact" element={
-                      <Suspense fallback={<LoadingFallback />}>
-                        <Contact />
-                      </Suspense>
-                    } />
-                    <Route path="/blog" element={
-                      <Suspense fallback={<LoadingFallback />}>
-                        <Blog />
-                      </Suspense>
-                    } />
-                    <Route path="/features" element={
-                      <Suspense fallback={<LoadingFallback />}>
-                        <Features />
-                      </Suspense>
-                    } />
-                    <Route path="/:path*">
-                      <div className="container mx-auto px-4 py-12 text-center">
-                        <h1 className="text-4xl font-bold mb-4">Page Not Found</h1>
-                        <p className="mb-8">Sorry, we couldn't find the page you're looking for.</p>
-                        <a 
-                          href="/" 
-                          className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90"
-                        >
-                          Return Home
-                        </a>
-                      </div>
-                    </Route>
-                  </Switch>
-                </AnimatePresence>
-              </main>
-              <Footer />
-            </div>
+            <App />
           </LazyMotion>
         </ThemeProvider>
       </QueryClientProvider>
