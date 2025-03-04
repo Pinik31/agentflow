@@ -1,7 +1,19 @@
-
 import { Request, Response, NextFunction } from "express";
 import { AnyZodObject } from "zod";
 import { AppError } from "./errorHandler";
+import { z } from 'zod';
+import { fromZodError } from 'zod-validation-error';
+
+export type ValidationResult<T> = {
+  success: true;
+  data: T;
+} | {
+  success: false;
+  errors: Array<{
+    path: string;
+    message: string;
+  }>;
+};
 
 export const validate = (schema: AnyZodObject) => 
   async (req: Request, res: Response, next: NextFunction) => {
@@ -15,41 +27,44 @@ export const validate = (schema: AnyZodObject) =>
     } catch (error) {
       next(new AppError(400, 'Validation Error'));
     }
-};
-import { z } from "zod";
+  };
 
 /**
- * Validates input data against a Zod schema
- * @param schema The Zod schema to validate against
- * @param data The data to validate
- * @returns Object containing success status, validated data, and any errors
+ * Validates data against a Zod schema
+ * @param schema Zod schema to validate against
+ * @param data Data to validate
+ * @returns Validation result with parsed data or errors
  */
-export function validate<T>(schema: z.ZodType<T>, data: unknown): {
-  success: boolean;
-  data?: T;
-  errors?: z.ZodError['errors'];
-} {
+export function validate<T>(schema: z.ZodType<T>, data: unknown): ValidationResult<T> {
   try {
-    const validData = schema.parse(data);
+    const result = schema.parse(data);
     return {
       success: true,
-      data: validData
+      data: result,
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
+      const validationError = fromZodError(error);
+
+      // Format errors for better readability
+      const formattedErrors = error.errors.map(err => ({
+        path: err.path.join('.'),
+        message: err.message
+      }));
+
       return {
         success: false,
-        errors: error.errors
+        errors: formattedErrors,
       };
     }
-    
-    // For non-Zod errors, return a generic error
+
+    // Fallback for non-Zod errors
     return {
       success: false,
-      errors: [{ 
-        path: ["_general"], 
-        message: "An unexpected validation error occurred" 
-      }]
+      errors: [{
+        path: 'unknown',
+        message: error instanceof Error ? error.message : 'Unknown validation error',
+      }],
     };
   }
 }

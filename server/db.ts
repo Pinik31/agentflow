@@ -1,84 +1,38 @@
+import { Pool } from 'pg';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import * as schema from "@shared/schema"; // Assuming this schema is compatible with node-postgres
 
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { drizzle, NeonDatabase } from 'drizzle-orm/neon-serverless';
-import ws from "ws";
-import * as schema from "@shared/schema";
-
-// Configure Neon serverless to use WebSockets
-neonConfig.webSocketConstructor = ws;
-
-// Validate database URL is present
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
-}
-
-// Set up connection pooling with optimized configuration
-export const pool = new Pool({ 
+// Create a connection pool
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
   max: 10, // Maximum number of clients in the pool
-  idleTimeoutMillis: 30000, // How long a client is allowed to remain idle before being closed
-  connectionTimeoutMillis: 5000, // How long to wait for a connection
-  ssl: process.env.NODE_ENV === 'production' ? true : false, // Enable SSL in production
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
 });
 
-// Connection event handling for better monitoring
-pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
-  process.exit(-1);
-});
+// Create drizzle instance
+export const db = drizzle(pool, { schema });
 
-// Add basic health metrics
-let totalQueries = 0;
-let failedQueries = 0;
-
-const originalConnect = pool.connect;
-pool.connect = function(...args: any[]) {
-  totalQueries++;
-  return originalConnect.apply(this, args)
-    .catch((err: any) => {
-      failedQueries++;
-      console.error('Database connection error:', err.message);
-      throw err;
-    });
-};
-
-// Create drizzle instance with our schema
-export const db: NeonDatabase<typeof schema> = drizzle({
-  client: pool, 
-  schema
-});
-
-// Export health check function for monitoring
-export const getDbHealth = () => {
-  return {
-    totalQueries,
-    failedQueries,
-    successRate: totalQueries > 0 ? ((totalQueries - failedQueries) / totalQueries) * 100 : 100,
-    poolSize: pool.totalCount,
-    idleConnections: pool.idleCount,
-    waitingClients: pool.waitingCount
-  };
-};
-
-// Create a transaction helper
-export const transaction = async <T>(callback: (tx: NeonDatabase<typeof schema>) => Promise<T>): Promise<T> => {
-  const client = await pool.connect();
-  
+// Health check function
+export async function getDbHealth() {
+  let client;
   try {
-    await client.query('BEGIN');
-    const tx = drizzle({ client, schema });
-    const result = await callback(tx);
-    await client.query('COMMIT');
-    return result;
-  } catch (error) {
-    await client.query('ROLLBACK');
-    throw error;
+    client = await pool.connect();
+    const result = await client.query('SELECT NOW() as current_time');
+    return { 
+      healthy: true, 
+      message: `Database connected, current time: ${result.rows[0].current_time}` 
+    };
+  } catch (err) {
+    return { 
+      healthy: false, 
+      message: err instanceof Error ? err.message : 'Unknown database error' 
+    };
   } finally {
-    client.release();
+    if (client) client.release();
   }
-};
+}
 
 // Setup connection testing on startup
 (async function testConnection() {
@@ -103,3 +57,5 @@ export const transaction = async <T>(callback: (tx: NeonDatabase<typeof schema>)
     }
   }
 })();
+
+export default db;

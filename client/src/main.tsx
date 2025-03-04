@@ -30,31 +30,42 @@ const queryClient = new QueryClient({
 });
 
 // Error boundary component to prevent the entire app from crashing
-class ErrorBoundary extends React.Component {
-  constructor(props) {
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: React.ReactNode }) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
   }
 
-  componentDidCatch(error, errorInfo) {
-    console.error("Application error:", error, errorInfo);
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('React Error Boundary caught an error:', error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-          <div className="text-center p-8 max-w-xl mx-auto">
-            <h2 className="text-2xl font-bold mb-4">משהו השתבש</h2>
-            <p className="mb-4">אנחנו מתנצלים על התקלה. נסה לרענן את הדף.</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg transition-all">
-              רענן דף
+        <div className="min-h-screen flex items-center justify-center p-4">
+          <div className="max-w-md p-6 bg-red-50 rounded-lg shadow-lg border border-red-200">
+            <h2 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h2>
+            <p className="text-gray-700 mb-4">
+              We apologize for the inconvenience. Please try refreshing the page.
+            </p>
+            {this.state.error && (
+              <div className="p-3 bg-white rounded text-sm font-mono overflow-auto">
+                {this.state.error.toString()}
+              </div>
+            )}
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90 transition-colors"
+            >
+              Refresh Page
             </button>
           </div>
         </div>
@@ -65,67 +76,62 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// Main app component
-const App = () => {
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <div className="flex-grow">
-        <AnimatePresence mode="wait">
-          <Switch>
-            <Route path="/" exact>
-              <Suspense fallback={<LoadingFallback />}>
-                <Home />
-              </Suspense>
-            </Route>
-            <Route path="/about">
-              <Suspense fallback={<LoadingFallback />}>
-                <About />
-              </Suspense>
-            </Route>
-            <Route path="/contact">
-              <Suspense fallback={<LoadingFallback />}>
-                <Contact />
-              </Suspense>
-            </Route>
-            <Route path="/blog">
-              <Suspense fallback={<LoadingFallback />}>
-                <Blog />
-              </Suspense>
-            </Route>
-            <Route path="/features">
-              <Suspense fallback={<LoadingFallback />}>
-                <Features />
-              </Suspense>
-            </Route>
-            <Route>
-              <div className="container mx-auto py-20 text-center">
-                <h1 className="text-4xl font-bold mb-4">404 - Page Not Found</h1>
-                <p className="mb-8">The page you're looking for doesn't exist.</p>
-                <a href="/" className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-all">
-                  Return Home
-                </a>
-              </div>
-            </Route>
-          </Switch>
-        </AnimatePresence>
-      </div>
-      <Footer />
-    </div>
-  );
-};
-
-// Render the app
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <ThemeProvider>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
           <LazyMotion features={domAnimation}>
-            <App />
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow">
+                <AnimatePresence mode="wait">
+                  <Switch>
+                    <Route path="/" element={
+                      <Suspense fallback={<LoadingFallback />}>
+                        <Home />
+                      </Suspense>
+                    } />
+                    <Route path="/about" element={
+                      <Suspense fallback={<LoadingFallback />}>
+                        <About />
+                      </Suspense>
+                    } />
+                    <Route path="/contact" element={
+                      <Suspense fallback={<LoadingFallback />}>
+                        <Contact />
+                      </Suspense>
+                    } />
+                    <Route path="/blog" element={
+                      <Suspense fallback={<LoadingFallback />}>
+                        <Blog />
+                      </Suspense>
+                    } />
+                    <Route path="/features" element={
+                      <Suspense fallback={<LoadingFallback />}>
+                        <Features />
+                      </Suspense>
+                    } />
+                    <Route path="/:path*">
+                      <div className="container mx-auto px-4 py-12 text-center">
+                        <h1 className="text-4xl font-bold mb-4">Page Not Found</h1>
+                        <p className="mb-8">Sorry, we couldn't find the page you're looking for.</p>
+                        <a 
+                          href="/" 
+                          className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90"
+                        >
+                          Return Home
+                        </a>
+                      </div>
+                    </Route>
+                  </Switch>
+                </AnimatePresence>
+              </main>
+              <Footer />
+            </div>
           </LazyMotion>
-        </QueryClientProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </ErrorBoundary>
   </React.StrictMode>
 );

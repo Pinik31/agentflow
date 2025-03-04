@@ -55,136 +55,68 @@ class WhatsAppService {
     }
   }
 
-  async sendMessage(to: string, text: string): Promise<WhatsappMessage> {
+  async sendMessage(to: string, text: string) {
     if (!this.checkInitialization()) {
-      // Create a mock message if WhatsApp is not configured
-      const mockMessage: InsertWhatsappMessage = {
-        sessionId: 0, // Will be updated before storage
-        direction: "outbound",
-        messageType: "text",
-        content: text,
-        metadata: { mock: true },
-        status: "pending"
-      };
-      
-      try {
-        mockMessage.sessionId = await this.getOrCreateSession(to);
-        const storedMessage = await storage.createWhatsappMessage(mockMessage);
-        console.log("Created mock WhatsApp message (service not configured)", { to, text });
-        return storedMessage;
-      } catch (error) {
-        console.error("Failed to store mock WhatsApp message", error);
-        throw error;
-      }
+      return { success: false, error: "WhatsApp service not properly configured" };
     }
-    
+
     try {
       const data = {
         messaging_product: "whatsapp",
+        recipient_type: "individual",
         to,
         type: "text",
-        text: { body: text }
+        text: {
+          body: text
+        }
       };
 
       const result = await this.sendRequest(`${this.phoneNumber}/messages`, data);
-      const sessionId = await this.getOrCreateSession(to);
-
-      const message: InsertWhatsappMessage = {
-        sessionId,
-        direction: "outbound",
-        messageType: "text",
-        content: text,
-        metadata: result,
-        status: "sent"
-      };
-
-      return await storage.createWhatsappMessage(message);
+      return { success: true, data: result };
     } catch (error) {
-      console.error("Failed to send WhatsApp message", error);
-      throw error;
+      console.error("Failed to send WhatsApp message:", error);
+      return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
   }
 
-  async sendTemplate(to: string, templateName: string, variables: Record<string, string> = {}): Promise<WhatsappMessage> {
+  async sendTemplate(to: string, templateName: string, variables: Record<string, string>) {
     if (!this.checkInitialization()) {
-      // Create a mock template message if WhatsApp is not configured
-      const mockMessage: InsertWhatsappMessage = {
-        sessionId: 0, // Will be updated before storage
-        direction: "outbound",
-        messageType: "template",
-        content: `Template: ${templateName} (mock)`,
-        metadata: { mock: true, variables },
-        status: "pending"
-      };
-      
-      try {
-        mockMessage.sessionId = await this.getOrCreateSession(to);
-        const storedMessage = await storage.createWhatsappMessage(mockMessage);
-        console.log("Created mock WhatsApp template message (service not configured)", { to, templateName, variables });
-        return storedMessage;
-      } catch (error) {
-        console.error("Failed to store mock WhatsApp template message", error);
-        throw error;
-      }
+      return { success: false, error: "WhatsApp service not properly configured" };
     }
-    
-    try {
-      let template;
-      try {
-        template = await storage.getWhatsappTemplate(templateName);
-        if (!template) {
-          throw new Error(`Template ${templateName} not found`);
-        }
-      } catch (error) {
-        console.error(`WhatsApp template ${templateName} not found`, error);
-        throw error;
-      }
 
-      let content = template.content;
-      for (const [key, value] of Object.entries(variables)) {
-        content = content.replace(`{{${key}}}`, value);
-      }
+    try {
+      // Convert variables to components format expected by WhatsApp API
+      const components = Object.entries(variables).map(([key, value]) => ({
+        type: "body",
+        parameters: [
+          {
+            type: "text",
+            text: value
+          }
+        ]
+      }));
 
       const data = {
         messaging_product: "whatsapp",
+        recipient_type: "individual",
         to,
         type: "template",
         template: {
           name: templateName,
           language: {
-            code: template.language
+            code: "he" // Default to Hebrew, can be parameterized
           },
-          components: [
-            {
-              type: "body",
-              parameters: Object.entries(variables).map(([_, value]) => ({
-                type: "text",
-                text: value
-              }))
-            }
-          ]
+          components
         }
       };
 
       const result = await this.sendRequest(`${this.phoneNumber}/messages`, data);
-      const sessionId = await this.getOrCreateSession(to);
-
-      const message: InsertWhatsappMessage = {
-        sessionId,
-        direction: "outbound",
-        messageType: "template",
-        content,
-        metadata: result,
-        status: "sent"
-      };
-
-      return await storage.createWhatsappMessage(message);
+      return { success: true, data: result };
     } catch (error) {
-      console.error("Failed to send WhatsApp template message", error);
-      throw error;
+      console.error("Failed to send WhatsApp template:", error);
+      return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
   }
-
   private async getOrCreateSession(phoneNumber: string): Promise<number> {
     try {
       // First, attempt to get the existing session
