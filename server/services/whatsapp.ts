@@ -1,6 +1,9 @@
 import { WhatsappMessage, WhatsappSession, WhatsappTemplate, type InsertWhatsappMessage, type InsertWhatsappSession } from "@shared/schema";
 import { storage } from "../storage";
 
+import { WhatsappMessage, WhatsappSession, WhatsappTemplate, type InsertWhatsappMessage, type InsertWhatsappSession } from "@shared/schema";
+import { storage } from "../storage";
+
 class WhatsAppService {
   private apiToken: string | null = null;
   private phoneNumber: string | null = null;
@@ -123,10 +126,7 @@ class WhatsAppService {
   }
 }
 
-// Export a singleton instance
-export const whatsapp = new WhatsAppService();
-
-  async sendMessage(to: string, text: string) {
+async sendMessage(to: string, text: string) {
     // Format the phone number if needed
     const formattedNumber = to.startsWith('+') ? to.substring(1) : to;
 
@@ -169,6 +169,13 @@ export const whatsapp = new WhatsAppService();
         components
       }
     };
+    
+    return this.sendRequest(`${this.phoneNumber}/messages`, data);
+  }
+}
+
+// Export a singleton instance
+export const whatsapp = new WhatsAppService();
 
     return this.sendRequest(`${this.phoneNumber}/messages`, data);
   }
