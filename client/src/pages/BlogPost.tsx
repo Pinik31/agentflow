@@ -183,9 +183,7 @@ export default function BlogPostPage() {
         <meta name="description" content={post.excerpt} />
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.excerpt} />
-        <meta property="og:image" content={getOptimizedImageUrl(post.imageUrl, 1200, 630)} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        <meta property="og:image" content={post.imageUrl} />
         <meta property="og:type" content="article" />
         <meta property="article:published_time" content={new Date(post.publishedAt).toISOString()} />
         <meta property="article:section" content={getCategoryDisplayName(post.category)} />
@@ -211,10 +209,8 @@ export default function BlogPostPage() {
         >
           <div className="relative aspect-[16/9] rounded-xl overflow-hidden mb-6">
             <img 
-              src={getOptimizedImageUrl(post.imageUrl, 1200, 675)} 
+              src={post.imageUrl} 
               alt={post.title}
-              srcSet={generateSrcSet(post.imageUrl)}
-              sizes="(max-width: 768px) 100vw, 1200px"
               loading="eager" 
               className="object-cover w-full h-full" 
             />
@@ -232,7 +228,7 @@ export default function BlogPostPage() {
               <div className="flex items-center">
                 <div className="w-8 h-8 rounded-full overflow-hidden mr-2">
                   <img 
-                    src={getOptimizedImageUrl(post.author.imageUrl, 64, 64)} 
+                    src={post.author.imageUrl}
                     alt={post.author.name}
                     loading="eager"
                     className="object-cover w-full h-full" 

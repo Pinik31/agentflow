@@ -32,10 +32,8 @@ export default function BlogCard({ post }: BlogCardProps) {
       <Card className="overflow-hidden group flex flex-col h-full transition-shadow hover:shadow-lg cursor-pointer">
         <div className="aspect-video overflow-hidden relative">
           <img 
-            src={getOptimizedImageUrl(post.imageUrl, 600, 340)}
+            src={post.imageUrl} 
             alt={post.title}
-            srcSet={generateSrcSet(post.imageUrl)}
-            sizes="(max-width: 768px) 100vw, 33vw"
             loading="lazy"
             className="object-cover w-full h-full transition-transform group-hover:scale-105" 
           />

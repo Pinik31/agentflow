@@ -198,10 +198,8 @@ export default function Blog() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-muted/20 rounded-xl p-6">
                     <div className="aspect-video overflow-hidden rounded-lg">
                       <img 
-                        src={getOptimizedImageUrl(featuredPost.imageUrl, 800, 450)} 
+                        src={featuredPost.imageUrl} 
                         alt={featuredPost.title} 
-                        srcSet={generateSrcSet(featuredPost.imageUrl)}
-                        sizes="(max-width: 768px) 100vw, 50vw"
                         loading="lazy"
                         className="object-cover w-full h-full transition-transform hover:scale-105"
                       />
