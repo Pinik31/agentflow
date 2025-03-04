@@ -27,28 +27,32 @@ const limiter = rateLimit({
 
 export { limiter };
 
-export const setupMiddleware = (app: Express) => {
-  // In development mode, disable helmet to avoid CSP issues with Vite
-  if (process.env.NODE_ENV === 'production') {
-    app.use(
-      helmet({
-        contentSecurityPolicy: {
-          directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-            styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-            fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-            imgSrc: ["'self'", 'data:', 'blob:'],
-            connectSrc: ["'self'", 'ws:', 'wss:'],
-          },
-        },
-      })
-    );
-  } else {
-    // For development, completely disable helmet to avoid CSP issues
-    console.log('Development mode: Helmet disabled for Vite compatibility');
-  }
-  
+import { Express, Request, Response, NextFunction } from 'express';
+import helmet from 'helmet';
+//import { monitoringMiddleware } from './monitoring'; // Assuming this is in a separate file
+
+export function setupMiddleware(app: Express): void {
+  // Add security headers
+  app.use(helmet({
+    contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false,
+  }));
+
+  // Add monitoring middleware  (This line requires './monitoring' to be correctly implemented)
+  //app.use(monitoringMiddleware);
+
+  // Add request ID for better tracing
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    const requestId = Math.random().toString(36).substring(2, 15);
+    req.headers['x-request-id'] = requestId;
+    res.setHeader('X-Request-ID', requestId);
+    next();
+  });
+
+  // Health check endpoint
+  app.get('/api/health', (req: Request, res: Response) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  });
+
   // Configure CORS to be permissive
   app.use(cors({
     origin: true,
@@ -64,7 +68,7 @@ export const setupMiddleware = (app: Express) => {
       return /text|javascript|json|xml|html|css/i.test(contentType);
     }
   }));
-  
+
   // Apply rate limiting only in production
   if (process.env.NODE_ENV === 'production') {
     app.use(limiter);
@@ -74,7 +78,7 @@ export const setupMiddleware = (app: Express) => {
   app.use((req: Request, res: Response, next: NextFunction) => {
     // Only cache GET requests for specific routes
     if (req.method !== 'GET') return next();
-    
+
     // Only cache certain API endpoints (blog posts, templates, etc)
     if (!req.path.match(/^\/api\/(blog|whatsapp\/template)/)) return next();
 
@@ -87,7 +91,7 @@ export const setupMiddleware = (app: Express) => {
 
     // Store the original json method
     const originalJson = res.json;
-    
+
     // Override the json method
     res.json = function(body) {
       // Only cache successful responses
@@ -99,4 +103,4 @@ export const setupMiddleware = (app: Express) => {
 
     next();
   });
-};
+}
