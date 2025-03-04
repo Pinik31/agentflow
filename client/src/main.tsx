@@ -46,6 +46,38 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
+        <div className="error-container p-4 mx-auto my-8 max-w-md text-center bg-red-50 rounded-lg shadow">
+          <h2 className="text-xl font-bold text-red-700 mb-2">Something went wrong</h2>
+          <p className="text-gray-700 mb-4">We're sorry for the inconvenience. Please try refreshing the page.</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded"
+          >
+            Refresh Page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Error caught by boundary:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
         <div className="error-container">
           <h2>Something went wrong</h2>
           <p>We're sorry for the inconvenience. Please try refreshing the page.</p>
@@ -60,6 +92,66 @@ class ErrorBoundary extends React.Component {
 }
 
 // Root component with error boundary and providers
+const App = () => {
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <LazyMotion features={domAnimation}>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow">
+                <AnimatePresence mode="wait">
+                  <Switch>
+                    <Route path="/" component={() => (
+                      <Suspense fallback={<LoadingFallback />}>
+                        <Home />
+                      </Suspense>
+                    )} />
+                    <Route path="/about" component={() => (
+                      <Suspense fallback={<LoadingFallback />}>
+                        <About />
+                      </Suspense>
+                    )} />
+                    <Route path="/contact" component={() => (
+                      <Suspense fallback={<LoadingFallback />}>
+                        <Contact />
+                      </Suspense>
+                    )} />
+                    <Route path="/blog" component={() => (
+                      <Suspense fallback={<LoadingFallback />}>
+                        <Blog />
+                      </Suspense>
+                    )} />
+                    <Route path="/features" component={() => (
+                      <Suspense fallback={<LoadingFallback />}>
+                        <Features />
+                      </Suspense>
+                    )} />
+                    <Route>
+                      <div className="error-page">
+                        <h1>404 - Page Not Found</h1>
+                        <p>The page you are looking for does not exist.</p>
+                      </div>
+                    </Route>
+                  </Switch>
+                </AnimatePresence>
+              </main>
+              <Footer />
+            </div>
+          </LazyMotion>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
+};
+
+// Render application
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>

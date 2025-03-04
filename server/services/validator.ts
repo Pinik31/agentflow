@@ -29,23 +29,21 @@ export const validateMiddleware = (schema: AnyZodObject) =>
   };
 
 /**
- * Validates data against a Zod schema with enhanced error handling
+ * Validates data against a Zod schema
  * @param schema The Zod schema to validate against
  * @param data The data to validate
- * @returns Object with success status and either validated data or errors
+ * @returns Validation result with success status and either validated data or errors
  */
-export function validate<T>(schema: z.Schema<T>, data: unknown): {
-  success: true;
-  data: T;
-} | {
-  success: false;
-  errors: Array<{ path: string; message: string }>;
+export function validate<T>(schema: z.ZodType<T>, data: unknown): { 
+  success: boolean; 
+  data?: T; 
+  errors?: { path: string; message: string }[] 
 } {
   try {
-    const validData = schema.parse(data);
+    const validatedData = schema.parse(data);
     return {
       success: true,
-      data: validData,
+      data: validatedData
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -53,8 +51,8 @@ export function validate<T>(schema: z.Schema<T>, data: unknown): {
         success: false,
         errors: error.errors.map(err => ({
           path: err.path.join('.'),
-          message: err.message,
-        })),
+          message: err.message
+        }))
       };
     }
 

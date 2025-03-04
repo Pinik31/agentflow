@@ -1,7 +1,7 @@
 
 import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
-import { setupVite, serveStatic, log } from "./vite";
+import { setupVite, serveStatic } from "./vite";
 import compression from "compression";
 import cors from "cors";
 import { fileURLToPath } from "url";
