@@ -1,7 +1,0 @@
-{
-  "name": "Replit Server",
-  "description": "Run the Replit-specific Express server with ES module support",
-  "runs": {
-    "command": "node replit-server.js"
-  }
-}

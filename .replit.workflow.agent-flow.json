@@ -1,7 +1,0 @@
-{
-  "name": "Agent Flow",
-  "description": "Run the Agent Flow server",
-  "runs": {
-    "command": "node agent-flow-server.js"
-  }
-}

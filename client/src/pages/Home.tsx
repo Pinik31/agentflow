@@ -61,7 +61,7 @@ export default function Home() {
           >
             <motion.div variants={itemVariants}>
               <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary mb-6">אודותינו</div>
-              <h2 className="text-4xl font-bold mb-6 leading-tight text-gradient">Agent Flow<br />מובילים בחדשנות עם מומחיות ב-AI</h2>
+              <h2 className="text-4xl font-bold mb-6 leading-tight text-gradient">מובילים בחדשנות<br />עם מומחיות ב-AI</h2>
               <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                 אנחנו צוות של מומחי AI ואוטומציה עם ניסיון רב בפיתוח פתרונות חכמים לעסקים. 
                 המשימה שלנו היא לעזור לעסקים להתייעל ולצמוח באמצעות טכנולוגיות מתקדמות.

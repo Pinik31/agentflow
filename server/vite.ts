@@ -1,17 +1,15 @@
 import express, { type Express } from "express";
-import { createServer, type Server } from "http";
-import path from "path";
-import { fileURLToPath } from "url";
 import fs from "fs";
-import { createServer as createViteServer, type ViteDevServer } from "vite";
-import { createLogger, Logger } from "vite";
-import { nanoid } from "nanoid";
-import viteConfig from "../vite.config.js";
-
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+import { createServer as createViteServer, createLogger } from "vite";
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = dirname(__filename);
+import { type Server } from "http";
+import viteConfig from "../vite.config";
+import { nanoid } from "nanoid";
 
-const viteLogger: Logger = createLogger();
+const viteLogger = createLogger();
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -31,7 +29,7 @@ export async function setupVite(app: Express, server: Server) {
     allowedHosts: true,
   };
 
-  const vite: ViteDevServer = await createViteServer({
+  const vite = await createViteServer({
     ...viteConfig,
     configFile: false,
     customLogger: {
@@ -72,33 +70,19 @@ export async function setupVite(app: Express, server: Server) {
   });
 }
 
-
 export function serveStatic(app: Express) {
-  const publicDir = path.resolve(__dirname, "..", "dist", "public");
+  const distPath = path.resolve(__dirname, "public");
 
-  // Create a health check endpoint before static files
-  app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
-  });
+  if (!fs.existsSync(distPath)) {
+    throw new Error(
+      `Could not find the build directory: ${distPath}, make sure to build the client first`,
+    );
+  }
 
-  // Serve static files
-  app.use(express.static(publicDir, {
-    index: false // Don't serve index.html for / automatically
-  }));
+  app.use(express.static(distPath));
 
-  // Serve index.html for all routes for SPA routing
-  app.get('*', (req, res) => {
-    // Skip API routes
-    if (req.path.startsWith('/api')) {
-      return res.status(404).json({ error: 'API endpoint not found' });
-    }
-
-    const indexPath = path.join(publicDir, 'index.html');
-
-    if (fs.existsSync(indexPath)) {
-      res.sendFile(indexPath);
-    } else {
-      res.status(404).send('Application build not found. Please build the application first.');
-    }
+  // fall through to index.html if the file doesn't exist
+  app.use("*", (_req, res) => {
+    res.sendFile(path.resolve(distPath, "index.html"));
   });
 }

@@ -2,7 +2,6 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, HelpCircle, Lightbulb } from "lucide-react";
 import { useOnboardingStore } from "@/store/useOnboardingStore";
-import { useCallback } from "react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,12 +12,8 @@ import {
 } from "@/components/ui/navigation-menu";
 
 export default function Navigation() {
-  const [location, navigate] = useLocation();
+  const [location] = useLocation();
   const { startOnboarding, showWelcomeModalAgain, isActive } = useOnboardingStore();
-  
-  const handleServicesClick = useCallback(() => {
-    navigate("/services");
-  }, [navigate]);
   
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -37,8 +32,10 @@ export default function Navigation() {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger onClick={handleServicesClick}>
-                  <span className="cursor-pointer">השירותים שלנו</span>
+                <NavigationMenuTrigger>
+                  <Link href="/services">
+                    <span className="cursor-pointer">השירותים שלנו</span>
+                  </Link>
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 w-[400px]">

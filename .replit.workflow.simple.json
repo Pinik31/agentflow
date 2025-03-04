@@ -1,7 +1,0 @@
-{
-  "name": "Simple",
-  "description": "Run the Simple server using CommonJS",
-  "runs": {
-    "command": "node simple-server.cjs"
-  }
-}

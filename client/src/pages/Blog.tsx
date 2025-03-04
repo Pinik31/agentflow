@@ -1,75 +1,78 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "wouter";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import BlogCard from "@/components/BlogCard";
 import type { BlogPost } from "@shared/schema";
-import { Helmet } from "react-helmet";
+import BlogCard from "@/components/BlogCard";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search, Newspaper, Lightbulb, Star, Clock } from "lucide-react";
+import NewsletterForm from "@/components/NewsletterForm";
+
+// Create a partial type that allows string for date in our mock data
+type MockBlogPost = Omit<BlogPost, 'publishedAt'> & {
+  publishedAt: Date | string;
+};
 
 // Mock data for development
-export const mockPosts = [
+const mockPosts: MockBlogPost[] = [
   {
     id: 1,
-    title: "כיצד בינה מלאכותית משנה את תעשיית השירותים העסקיים",
-    content: "בינה מלאכותית הפכה לכוח משמעותי בתעשיית השירותים העסקיים. חברות מאמצות פתרונות AI לאוטומציה של תהליכים, שיפור שירות לקוחות, וייעול קבלת החלטות. המאמר סוקר את האופן שבו טכנולוגיות כמו עיבוד שפה טבעית, למידת מכונה, וראייה ממוחשבת משנות את הדרך שבה עסקים מתפקדים ומתחרים בשוק הגלובלי.",
-    excerpt: "סקירה מקיפה של השפעת הבינה המלאכותית על תעשיית השירותים העסקיים והאופן שבו חברות משתמשות בטכנולוגיות חדשניות לשיפור התפעול והשירות.",
-    slug: "ai-business-services-transformation",
-    imageUrl: "https://images.unsplash.com/photo-1643116774075-acc00caa9a7b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
-    category: "industry",
-    publishedAt: new Date("2025-02-20"),
-  },
-  {
-    id: 2,
-    title: "סקירת כלי AI לעיצוב גרפי: המדריך המלא למעצבים",
-    content: "עולם העיצוב הגרפי עובר מהפכה עם התפתחות כלי בינה מלאכותית המאפשרים יצירת אלמנטים ויזואליים מרהיבים במהירות וביעילות. מאמר זה סוקר את הכלים המובילים בתחום, כולל Midjourney, DALL-E, Leonardo.AI, וקבוצת המוצרים של Adobe Firefly. נדון ביתרונות, חסרונות, ותרחישי שימוש מיטביים לכל פלטפורמה.",
-    excerpt: "סקירה מקיפה של כלי AI לעיצוב גרפי המתאימים למעצבים מקצועיים וחובבים, כולל השוואת יכולות, מחירים והמלצות לשימוש יעיל.",
-    slug: "ai-graphic-design-tools",
-    imageUrl: "https://images.unsplash.com/photo-1708616748538-bdd66d6a9e25?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
+    title: "השילוב המושלם בין AI לאוטומציה של תהליכים עסקיים",
+    content: "כיצד בינה מלאכותית יכולה לשפר תהליכים עסקיים ולהביא לחסכון משמעותי בזמן ובמשאבים.",
+    excerpt: "כיצד בינה מלאכותית יכולה לשפר תהליכים עסקיים ולהביא לחסכון משמעותי בזמן ובמשאבים.",
+    slug: "ai-business-automation",
+    imageUrl: "https://images.unsplash.com/photo-1589254065878-42c9da997008?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
     category: "ai-tools",
-    publishedAt: new Date("2025-02-18"),
-  },
-  {
-    id: 3,
-    title: "השקת תוכנית ההכשרה החדשה: AI לארגונים",
-    content: "אנו שמחים להכריז על השקת תוכנית ההכשרה החדשה 'AI לארגונים', המיועדת למנהלים ומובילי דיגיטל בארגונים. התוכנית מציעה מסלול מקיף להטמעת טכנולוגיות בינה מלאכותית בעסק, כולל אסטרטגיה, יישום מעשי, וניהול שינוי ארגוני. המשתתפים ירכשו כלים פרקטיים להובלת פרויקטי AI וייהנו מליווי מקצועי של מומחים מובילים בתחום.",
-    excerpt: "תוכנית הכשרה חדשה המיועדת למנהלים ומובילי דיגיטל, המציעה מסלול מקיף להטמעת טכנולוגיות בינה מלאכותית בארגונים.",
-    slug: "ai-for-organizations-training",
-    imageUrl: "https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
-    category: "company",
-    publishedAt: new Date("2025-02-15"),
-  },
-  {
-    id: 4,
-    title: "שיתוף פעולה חדש: פתרונות AI לתעשיית הפיננסים",
-    content: "אנו גאים להודיע על שיתוף פעולה אסטרטגי עם חברת FinTech.IL, המתמחה בפתרונות טכנולוגיים מתקדמים לשוק הפיננסי הישראלי. במסגרת שיתוף הפעולה, נפתח יחד מערכת בינה מלאכותית ייעודית לניתוח סיכונים וזיהוי הונאות בתחום הבנקאות והביטוח. המערכת תשלב למידת מכונה מתקדמת עם ידע עסקי מעמיק בתעשייה הפיננסית.",
-    excerpt: "הכרזה על שיתוף פעולה אסטרטגי לפיתוח מערכת בינה מלאכותית ייעודית לניתוח סיכונים וזיהוי הונאות בתחום הבנקאות והביטוח.",
-    slug: "ai-fintech-partnership",
-    imageUrl: "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
-    category: "company",
     publishedAt: new Date("2025-02-10"),
   },
   {
-    id: 5,
-    title: "חמשת מודלי השפה המובילים ב-2025",
-    content: "עולם מודלי השפה הגדולים (LLMs) ממשיך להתפתח במהירות מסחררת. מאמר זה סוקר את חמשת המודלים המובילים בשנת 2025, עם ניתוח מעמיק של היכולות, החידושים, והיתרונות היחסיים של כל אחד מהם. נבחן את GPT-5, Claude Haiku, Gemini Pro, Llama 3, וModels – ונדגיש את תחומי היישום האופטימליים עבור כל מודל בהתאם לצרכים עסקיים שונים.",
-    excerpt: "סקירה מקיפה של מודלי השפה הגדולים המובילים בשנת 2025, כולל השוואת ביצועים, יכולות ייחודיות והתאמה לשימושים עסקיים שונים.",
-    slug: "top-5-llm-models-2025",
-    imageUrl: "https://images.unsplash.com/photo-1677442135136-760c813dce26?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
+    id: 2,
+    title: "5 כלים חדשים של OpenAI שכל עסק צריך להכיר",
+    content: "סקירה מעמיקה של הכלים החדשים של OpenAI שיכולים לשדרג את הפעילות העסקית שלכם.",
+    excerpt: "סקירה מעמיקה של הכלים החדשים של OpenAI שיכולים לשדרג את הפעילות העסקית שלכם.",
+    slug: "openai-new-tools",
+    imageUrl: "https://images.unsplash.com/photo-1655720828083-8a3a840631f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
     category: "ai-news",
+    publishedAt: new Date("2025-02-15"),
+  },
+  {
+    id: 3,
+    title: "בינה מלאכותית בשיווק: מגמות וחידושים לשנת 2025",
+    content: "כיצד בינה מלאכותית משנה את עולם השיווק הדיגיטלי בשנת 2025.",
+    excerpt: "כיצד בינה מלאכותית משנה את עולם השיווק הדיגיטלי בשנת 2025.",
+    slug: "ai-marketing-trends-2025",
+    imageUrl: "https://images.unsplash.com/photo-1677442135133-4da37d49c421?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
+    category: "industry",
+    publishedAt: new Date("2025-02-18"),
+  },
+  {
+    id: 4,
+    title: "מהפכת הצ'אטבוטים החכמים: כיצד הם משפרים את חווית הלקוח",
+    content: "מחקר חדש מראה כיצד צ'אטבוטים מבוססי AI משפרים את שביעות רצון הלקוחות ומפחיתים עלויות.",
+    excerpt: "מחקר חדש מראה כיצד צ'אטבוטים מבוססי AI משפרים את שביעות רצון הלקוחות ומפחיתים עלויות.",
+    slug: "ai-chatbots-customer-experience",
+    imageUrl: "https://images.unsplash.com/photo-1680695918853-b938379906c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
+    category: "ai-tools",
+    publishedAt: new Date("2025-02-20"),
+  },
+  {
+    id: 5,
+    title: "Agent Flow מציגה: פלטפורמת האוטומציה החדשה לעסקים",
+    content: "הפלטפורמה החדשה שלנו מאפשרת לכם לייעל תהליכים עסקיים באמצעות סוכני AI חכמים.",
+    excerpt: "הפלטפורמה החדשה שלנו מאפשרת לכם לייעל תהליכים עסקיים באמצעות סוכני AI חכמים.",
+    slug: "agent-flow-new-platform",
+    imageUrl: "https://images.unsplash.com/photo-1661347334036-d484f970ebc7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
+    category: "company",
     publishedAt: new Date("2025-02-22"),
   },
   {
     id: 6,
     title: "דוח: כך בינה מלאכותית משנה את שוק העבודה בישראל",
-    content: "דוח מחקר חדש חושף את ההשפעה העמוקה של בינה מלאכותית על שוק העבודה הישראלי. המחקר, שנערך בשיתוף עם מכון המחקר 'עתיד העבודה', מנתח מגמות תעסוקה בענפים שונים ומזהה את המקצועות שצפויים לעבור את השינויים המשמעותיים ביותר בחמש השנים הקרובות. הדוח מציג גם המלצות למדיניות לאומית להכשרה מחדש של עובדים בענפים פגיעים.",
-    excerpt: "דוח מקיף על ההשפעה של בינה מלאכותית על שוק העבודה בישראל, כולל ניתוח מגמות, זיהוי מקצועות בסיכון והמלצות למדיניות הכשרה מחדש.",
+    content: "דוח מקיף על ההשפעה של בינה מלאכותית על שוק העבודה בישראל בשנים הקרובות.",
+    excerpt: "דוח מקיף על ההשפעה של בינה מלאכותית על שוק העבודה בישראל בשנים הקרובות.",
     slug: "ai-impact-on-jobs-israel",
-    imageUrl: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1668869713519-9bcbb0da7171?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1296&q=80",
     category: "ai-news",
     publishedAt: new Date("2025-02-24"),
   }
@@ -109,155 +112,140 @@ export default function Blog() {
   );
 
   // Featured post is the newest one
-  const featuredPost = sortedPosts.length > 0 ? sortedPosts[0] : null;
+  const featuredPost = sortedPosts[0];
+  // Other posts are the rest
+  const otherPosts = sortedPosts.slice(1);
 
   return (
-    <>
-      <Helmet>
-        <title>בלוג בינה מלאכותית | עדכוני AI ומדריכים מקצועיים</title>
-        <meta name="description" content="בלוג מקצועי עם מאמרים, מדריכים וחדשות מעולם הבינה המלאכותית. תוכן איכותי בנושאי AI, מודלי שפה, כלי עיצוב חדשניים ועדכוני תעשייה." />
-        <meta name="keywords" content="בינה מלאכותית, AI, GPT, מדריכי AI, חדשות טכנולוגיה, כלי AI, אוטומציה, מודלי שפה" />
-      </Helmet>
-      
-      <div className="container py-12">
-        <h1 className="text-3xl font-bold mb-8">בלוג בינה מלאכותית</h1>
+    <div className="container py-8 md:py-12">
+      {/* Header section */}
+      <div className="max-w-4xl mx-auto text-center mb-10">
+        <h1 className="text-4xl font-bold mb-4">חדשות ומאמרים בעולם ה-AI</h1>
+        <p className="text-xl text-muted-foreground mb-8">
+          התעדכנו בחדשות והתובנות האחרונות בתחום הבינה המלאכותית והאוטומציה
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-          <div className="col-span-2">
-            <Input
-              type="search"
-              placeholder="חפש מאמרים..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="mb-4"
-            />
+        {/* Search bar */}
+        <div className="relative max-w-lg mx-auto mb-8">
+          <Input
+            type="text"
+            placeholder="חיפוש מאמרים..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="pr-10"
+          />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
+        </div>
+      </div>
 
-            <Tabs defaultValue="all" className="mb-8" onValueChange={setSelectedCategory}>
-              <TabsList className="w-full md:w-auto grid grid-cols-2 md:grid-cols-5">
-                <TabsTrigger value="all">הכל</TabsTrigger>
-                <TabsTrigger value="ai-news">חדשות AI</TabsTrigger>
-                <TabsTrigger value="ai-tools">כלי AI</TabsTrigger>
-                <TabsTrigger value="industry">עדכוני תעשייה</TabsTrigger>
-                <TabsTrigger value="company">חדשות החברה</TabsTrigger>
-              </TabsList>
-            </Tabs>
+      {/* Category stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <div className="bg-primary/5 rounded-lg p-4 text-center">
+          <Newspaper className="h-8 w-8 text-primary mx-auto mb-2" />
+          <h3 className="text-lg font-semibold mb-1">חדשות AI</h3>
+          <p className="text-2xl font-bold">{aiNews}</p>
+        </div>
+        <div className="bg-primary/5 rounded-lg p-4 text-center">
+          <Lightbulb className="h-8 w-8 text-primary mx-auto mb-2" />
+          <h3 className="text-lg font-semibold mb-1">כלי AI</h3>
+          <p className="text-2xl font-bold">{aiTools}</p>
+        </div>
+        <div className="bg-primary/5 rounded-lg p-4 text-center">
+          <Star className="h-8 w-8 text-primary mx-auto mb-2" />
+          <h3 className="text-lg font-semibold mb-1">עדכוני תעשייה</h3>
+          <p className="text-2xl font-bold">{industryUpdates}</p>
+        </div>
+        <div className="bg-primary/5 rounded-lg p-4 text-center">
+          <Clock className="h-8 w-8 text-primary mx-auto mb-2" />
+          <h3 className="text-lg font-semibold mb-1">חדשות החברה</h3>
+          <p className="text-2xl font-bold">{companyNews}</p>
+        </div>
+      </div>
 
-            {isLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {[1, 2, 3, 4].map((i) => (
-                  <Card key={i}>
-                    <div className="aspect-video w-full">
-                      <Skeleton className="h-full w-full" />
+      {/* Category tabs */}
+      <Tabs defaultValue={selectedCategory} onValueChange={setSelectedCategory} className="mb-10">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 max-w-3xl mx-auto">
+          <TabsTrigger value="all">הכל</TabsTrigger>
+          <TabsTrigger value="ai-news">חדשות AI</TabsTrigger>
+          <TabsTrigger value="ai-tools">כלי AI</TabsTrigger>
+          <TabsTrigger value="industry">עדכוני תעשייה</TabsTrigger>
+          <TabsTrigger value="company">חדשות החברה</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value={selectedCategory} className="mt-8">
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="flex flex-col space-y-3">
+                  <Skeleton className="w-full h-48 rounded-lg" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <>
+              {/* Featured post */}
+              {featuredPost && filteredPosts.length > 0 && (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold mb-6 border-r-4 border-primary pr-4">מאמר מומלץ</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-muted/20 rounded-xl p-6">
+                    <div className="aspect-video overflow-hidden rounded-lg">
+                      <img 
+                        src={featuredPost.imageUrl} 
+                        alt={featuredPost.title} 
+                        className="object-cover w-full h-full transition-transform hover:scale-105"
+                      />
                     </div>
-                    <CardContent className="p-4">
-                      <Skeleton className="h-6 w-full mb-2" />
-                      <Skeleton className="h-4 w-3/4" />
-                      <Skeleton className="h-4 w-1/2" />
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <>
-                {/* Featured post */}
-                {featuredPost && filteredPosts.length > 0 && (
-                  <div className="mb-12">
-                    <h2 className="text-2xl font-bold mb-6 border-r-4 border-primary pr-4">מאמר מומלץ</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-muted/20 rounded-xl p-6">
-                      <div className="aspect-video overflow-hidden rounded-lg">
-                        <img 
-                          src={featuredPost.imageUrl} 
-                          alt={featuredPost.title} 
-                          className="object-cover w-full h-full" 
-                        />
+                    <div className="flex flex-col justify-center">
+                      <div className="inline-block px-3 py-1 mb-4 text-xs font-medium text-primary bg-primary/10 rounded-full">
+                        {featuredPost.category === "ai-news" ? "חדשות AI" :
+                         featuredPost.category === "ai-tools" ? "כלי AI" :
+                         featuredPost.category === "industry" ? "עדכוני תעשייה" : "חדשות החברה"}
                       </div>
-                      <div className="flex flex-col">
-                        <div className="mb-2">
-                          <Badge variant="outline" className="mb-3">
-                            {featuredPost.category === "ai-news" && "חדשות AI"}
-                            {featuredPost.category === "ai-tools" && "כלי AI"}
-                            {featuredPost.category === "industry" && "עדכוני תעשייה"}
-                            {featuredPost.category === "company" && "חדשות החברה"}
-                          </Badge>
-                          <h3 className="text-2xl font-bold mb-2">{featuredPost.title}</h3>
-                          <p className="text-muted-foreground mb-4 line-clamp-3">
-                            {featuredPost.excerpt}
-                          </p>
-                        </div>
-                        <div className="mt-auto">
-                          <Link href={`/blog/${featuredPost.slug}`}>
-                            <span className="text-primary font-medium hover:underline inline-flex items-center cursor-pointer">
-                              קרא עוד
-                              <svg className="w-4 h-4 mr-1 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                              </svg>
-                            </span>
-                          </Link>
-                        </div>
-                      </div>
+                      <h3 className="text-2xl font-bold mb-3">{featuredPost.title}</h3>
+                      <p className="text-muted-foreground mb-4">{featuredPost.excerpt}</p>
+                      <Button className="self-start" variant="outline">קרא עוד</Button>
                     </div>
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* All posts grid */}
-                {sortedPosts.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {sortedPosts.map((post) => (
+              {/* If no results */}
+              {filteredPosts.length === 0 && (
+                <div className="text-center py-12">
+                  <h3 className="text-xl font-semibold mb-2">לא נמצאו תוצאות</h3>
+                  <p className="text-muted-foreground">נסו לחפש מונחים אחרים או לשנות את הקטגוריה</p>
+                </div>
+              )}
+
+              {/* Grid of other posts */}
+              {otherPosts.length > 0 && (
+                <>
+                  <h2 className="text-2xl font-bold mb-6 border-r-4 border-primary pr-4">מאמרים אחרונים</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {otherPosts.map((post) => (
                       <BlogCard key={post.id} post={post} />
                     ))}
                   </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <h3 className="text-xl font-medium mb-2">לא נמצאו מאמרים</h3>
-                    <p className="text-muted-foreground">
-                      נסה לחפש מושג אחר או לבחור קטגוריה שונה
-                    </p>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+                </>
+              )}
+            </>
+          )}
+        </TabsContent>
+      </Tabs>
 
-          <div className="col-span-1">
-            <div className="bg-muted/20 p-6 rounded-xl sticky top-24">
-              <h3 className="text-xl font-bold mb-6">קטגוריות</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span>חדשות AI</span>
-                  <Badge variant="outline">{aiNews}</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>כלי AI</span>
-                  <Badge variant="outline">{aiTools}</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>עדכוני תעשייה</span>
-                  <Badge variant="outline">{industryUpdates}</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>חדשות החברה</span>
-                  <Badge variant="outline">{companyNews}</Badge>
-                </div>
-              </div>
-
-              <div className="mt-8">
-                <h3 className="text-xl font-bold mb-6">הרשם לניוזלטר</h3>
-                <p className="text-muted-foreground mb-4">
-                  קבל עדכונים שבועיים על חדשות ומגמות בתחום הבינה המלאכותית
-                </p>
-                <Input
-                  type="email"
-                  placeholder="כתובת אימייל"
-                  className="mb-4"
-                />
-                <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md w-full">
-                  הרשם
-                </button>
-              </div>
-            </div>
-          </div>
+      {/* Newsletter section */}
+      <div className="bg-primary/5 rounded-lg p-8 my-12">
+        <div className="max-w-xl mx-auto text-center">
+          <h2 className="text-2xl font-bold mb-4">הישארו מעודכנים</h2>
+          <p className="text-muted-foreground mb-6">
+            הירשמו לניוזלטר שלנו וקבלו עדכונים על חידושים בעולם הבינה המלאכותית והאוטומציה
+          </p>
+          <NewsletterForm />
         </div>
       </div>
-    </>
+    </div>
   );
 }

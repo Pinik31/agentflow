@@ -1,168 +1,82 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Bot, Zap, Code, BarChart, Brain, Cpu, Sparkles } from 'lucide-react';
+import { Link as WouterLink } from 'wouter';
 
-import React, { useEffect, useState, useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { Sparkles, ArrowRight, Zap, Bot, PencilRuler, LineChart } from 'lucide-react';
-import { Link } from 'wouter';
-import Particles from './Particles';
-import { TypeAnimation } from 'react-type-animation';
-
-const HeroSection: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
-  
-  const y = useTransform(scrollYProgress, [0, 1], [0, 150]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  
-  const [aiServices] = useState([
-    "תהליכי מכירות", 
-    "ניהול לקוחות", 
-    "תמיכה וירטואלית",
-    "שירות לקוחות", 
-    "ניתוח נתונים", 
-    "אוטומציה עסקית"
-  ]);
-  
-  const featureItems = [
-    {
-      icon: <Bot className="w-6 h-6 text-primary-500" />,
-      title: "סוכנים AI חכמים",
-      description: "פיתוח והטמעת סוכני AI לביצוע משימות שחוזרות על עצמן תוך חיסכון של עד 70% בזמן."
-    },
-    {
-      icon: <PencilRuler className="w-6 h-6 text-secondary-500" />,
-      title: "פתרונות מותאמים אישית",
-      description: "פתרונות AI מותאמים במיוחד לצרכי העסק שלך, מחוברים למערכות הקיימות."
-    },
-    {
-      icon: <LineChart className="w-6 h-6 text-accent-500" />,
-      title: "ניתוח נתונים מתקדם",
-      description: "הפקת תובנות עסקיות קריטיות מהנתונים שלך באמצעות AI וכלי אנליטיקה מתקדמים."
-    }
-  ];
-  
+export default function HeroSection() {
+  // Animation variants for staggered animations
   const containerVariants = {
-    hidden: {},
+    hidden: { opacity: 0 },
     visible: {
+      opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3
+        staggerChildren: 0.2
       }
     }
   };
-  
+
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
+    hidden: { y: 20, opacity: 0 },
+    visible: {
       y: 0,
-      transition: { 
-        type: "spring", 
+      opacity: 1,
+      transition: {
+        type: 'spring',
         stiffness: 100,
         damping: 10
       }
     }
   };
-  
-  // Neural network animation
-  const [nodes, setNodes] = useState<JSX.Element[]>([]);
-  const [connectionLines, setConnectionLines] = useState<JSX.Element[]>([]);
-  
-  useEffect(() => {
-    const createNetworkEffect = () => {
-      const nodeCount = 12;
-      const newNodes: JSX.Element[] = [];
-      const newLines: JSX.Element[] = [];
-      
-      // Create nodes
-      const nodePositions: { x: number, y: number, size: number }[] = [];
-      
-      for (let i = 0; i < nodeCount; i++) {
-        const x = Math.random() * 100;
-        const y = Math.random() * 100;
-        const size = Math.random() * 6 + 3;
-        
-        nodePositions.push({ x, y, size });
-        
-        newNodes.push(
-          <div 
-            key={`node-${i}`}
-            className="absolute rounded-full bg-primary-400/30 backdrop-blur-md z-10"
-            style={{
-              width: `${size}px`,
-              height: `${size}px`,
-              left: `${x}%`,
-              top: `${y}%`,
-              animation: `float ${7 + Math.random() * 5}s ease-in-out infinite ${Math.random() * 2}s`
-            }}
+
+  // Network nodes for the AI-themed background
+  const nodes = Array.from({ length: 12 }, (_, i) => (
+    <div 
+      key={i}
+      className={`absolute hidden md:block rounded-full bg-primary/20 border border-primary/30 
+                 animate-pulse-${i % 2 === 0 ? 'slow' : 'subtle'}`}
+      style={{
+        width: `${Math.floor(Math.random() * 6) + 3}rem`,
+        height: `${Math.floor(Math.random() * 6) + 3}rem`,
+        top: `${Math.floor(Math.random() * 80) + 10}%`,
+        left: `${Math.floor(Math.random() * 80) + 10}%`,
+        animationDelay: `${i * 0.4}s`,
+        opacity: 0.15 + (Math.random() * 0.2)
+      }}
+    />
+  ));
+
+  // Connection lines for neural network effect
+  const connectionLines = (
+    <svg className="absolute inset-0 w-full h-full z-0 opacity-20" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="hsl(266, 90%, 55%)" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="hsl(190, 90%, 50%)" stopOpacity="0.5" />
+        </linearGradient>
+      </defs>
+      {Array.from({ length: 10 }, (_, i) => {
+        const x1 = Math.random() * 100;
+        const y1 = Math.random() * 100;
+        const x2 = Math.random() * 100;
+        const y2 = Math.random() * 100;
+        return (
+          <line 
+            key={i} 
+            x1={`${x1}%`} 
+            y1={`${y1}%`} 
+            x2={`${x2}%`} 
+            y2={`${y2}%`} 
+            stroke="url(#line-gradient)" 
+            strokeWidth="1" 
           />
         );
-      }
-      
-      // Create connections between nearby nodes
-      for (let i = 0; i < nodePositions.length; i++) {
-        for (let j = i + 1; j < nodePositions.length; j++) {
-          const dist = Math.sqrt(
-            Math.pow(nodePositions[i].x - nodePositions[j].x, 2) +
-            Math.pow(nodePositions[i].y - nodePositions[j].y, 2)
-          );
-          
-          // Only connect nodes that are close enough
-          if (dist < 30) {
-            const opacity = 0.1 * (1 - dist / 30);
-            
-            newLines.push(
-              <svg
-                key={`line-${i}-${j}`}
-                className="absolute top-0 left-0 w-full h-full pointer-events-none"
-                style={{ zIndex: 5 }}
-              >
-                <line
-                  x1={`${nodePositions[i].x}%`}
-                  y1={`${nodePositions[i].y}%`}
-                  x2={`${nodePositions[j].x}%`}
-                  y2={`${nodePositions[j].y}%`}
-                  stroke={`rgba(130, 88, 252, ${opacity})`}
-                  strokeWidth="1"
-                />
-              </svg>
-            );
-          }
-        }
-      }
-      
-      setNodes(newNodes);
-      setConnectionLines(newLines);
-    };
-    
-    createNetworkEffect();
-    
-    // Recreate network effect on window resize
-    const handleResize = () => {
-      createNetworkEffect();
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
+      })}
+    </svg>
+  );
+
   return (
-    <section 
-      ref={containerRef} 
-      className="relative pt-24 pb-32 md:pt-32 md:pb-40 overflow-hidden bg-gradient-to-b from-background via-primary/5 to-accent/10"
-    >
-      {/* Particles animation */}
-      <div className="absolute inset-0 pointer-events-none">
-        <Particles 
-          className="absolute inset-0" 
-          quantity={80} 
-          color="#8258fc" 
-          speed={0.3}
-        />
-      </div>
-      
+    <section className="relative pt-24 pb-24 md:pt-32 md:pb-40 overflow-hidden bg-gradient-to-b from-background via-primary/5 to-accent/10">
       {/* AI-themed background with neural network effect */}
       <div className="absolute inset-0 bg-ai-pattern opacity-10" />
       {nodes}
@@ -172,9 +86,9 @@ const HeroSection: React.FC = () => {
       <div className="absolute inset-0 bg-grid opacity-15" />
       
       {/* Glowing orbs for futuristic effect */}
-      <div className="absolute top-20 right-10 w-24 h-24 rounded-full bg-primary/20 blur-3xl animate-pulse-slow" />
-      <div className="absolute bottom-40 left-10 w-32 h-32 rounded-full bg-secondary/20 blur-3xl animate-pulse-slow" />
-      <div className="absolute top-1/3 left-1/3 w-48 h-48 rounded-full bg-accent/10 blur-3xl animate-pulse-slow" />
+      <div className="absolute top-20 right-10 w-24 h-24 rounded-full bg-primary/20 blur-3xl" />
+      <div className="absolute bottom-40 left-10 w-32 h-32 rounded-full bg-secondary/20 blur-3xl" />
+      <div className="absolute top-1/3 left-1/3 w-48 h-48 rounded-full bg-accent/10 blur-3xl" />
       
       <div className="container relative">
         <motion.div 
@@ -184,211 +98,191 @@ const HeroSection: React.FC = () => {
           className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
         >
           {/* Hero Text Content */}
-          <motion.div 
-            variants={itemVariants}
-            className="text-center lg:text-right"
-            style={{ y, opacity }}
-          >
+          <motion.div variants={itemVariants} className="text-center lg:text-right">
             {/* AI badge with pulse effect */}
             <div className="inline-block rounded-full bg-primary/15 px-4 py-1.5 text-sm font-medium text-primary mb-6 animate-pulse-slow border border-primary/20 backdrop-blur-sm">
               <Sparkles className="w-4 h-4 inline-block mr-1.5 animate-pulse" />
               פתרונות AI מתקדמים לעסקים
             </div>
             
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">
-              <span className="block text-gradient-primary">אוטומציה חכמה</span> 
-              <TypeAnimation
-                sequence={[
-                  'לעסקים מתקדמים',
-                  2000,
-                  'לצמיחה מהירה',
-                  2000,
-                  'לחיסכון בזמן',
-                  2000,
-                  'ליתרון תחרותי',
-                  2000
-                ]}
-                wrapper="span"
-                speed={40}
-                repeat={Infinity}
-                className="block"
-              />
+            {/* Main headline with enhanced gradient effect */}
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+              <span className="text-gradient">השירותים הטובים</span> <br />
+              <span className="relative">
+                ביותר 
+                <span className="text-primary relative">
+                  ב-AI
+                  <span className="absolute -inset-1 bg-primary/10 blur-lg rounded-full -z-10"></span>
+                </span>
+              </span>
             </h1>
             
-            <p className="text-lg md:text-xl text-muted mb-8 max-w-2xl mx-auto lg:mr-0 lg:ml-0">
-              סוכנות המתמחה בבניית פתרונות אוטומציה מבוססי AI שיחסכו לעסק שלך זמן, כסף ומשאבים.
-              אנו מפתחים מערכות חכמות המותאמות לצרכים הייחודיים של העסק שלך.
+            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+              אנו מציעים פתרונות מותאמים אישית מבוססי AI לעסקים בכל הגדלים.
+              מאתרים חכמים ועד אוטומציה של תהליכים עסקיים.
             </p>
             
-            <div className="flex flex-wrap gap-3 justify-center lg:justify-end mb-8">
-              {aiServices.map((service, index) => (
-                <div
-                  key={index}
-                  className="px-3 py-1.5 text-sm bg-primary-100/70 dark:bg-primary-900/20 text-primary-800 dark:text-primary-300 rounded-full backdrop-blur-sm border border-primary-200 dark:border-primary-800"
-                >
-                  {service}
-                </div>
-              ))}
-            </div>
-            
-            <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-end">
-              <Link href="/contact">
-                <motion.button 
-                  className="btn-primary btn-lg group"
-                  whileTap={{ scale: 0.98 }}
-                  whileHover={{ 
-                    scale: 1.02,
-                    boxShadow: "0 5px 20px rgba(130, 88, 252, 0.4)"
-                  }}
-                >
-                  <span>התחל עכשיו</span>
-                  <ArrowRight className="mr-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </motion.button>
-              </Link>
-              
-              <Link href="/services">
-                <motion.button 
-                  className="btn-outline btn-lg"
-                  whileTap={{ scale: 0.98 }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  גלה את השירותים שלנו
-                </motion.button>
-              </Link>
-            </div>
-            
-            {/* Trust indicators */}
-            <div className="mt-8 flex items-center justify-center lg:justify-end text-muted text-sm">
-              <Zap className="w-4 h-4 mr-1 text-accent-500" />
-              <span>מעל 95% שביעות רצון מלקוחות</span>
-              <span className="mx-2">•</span>
-              <span>חיסכון של עד 70% בזמן</span>
+            {/* CTA buttons with enhanced effects */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-end">
+              <WouterLink href="/services">
+                <Button size="lg" className="gap-2 text-base group relative overflow-hidden border-primary">
+                  <span className="relative z-10">התחל עכשיו</span>
+                  <ArrowRight className="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform" />
+                  <span className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-100 group-hover:opacity-80 transition-opacity"></span>
+                </Button>
+              </WouterLink>
+              <WouterLink href="/contact">
+                <Button size="lg" variant="outline" className="gap-2 text-base border-primary/20 hover:bg-primary/5 hover:border-primary/50 transition-all">
+                  צור קשר
+                </Button>
+              </WouterLink>
             </div>
           </motion.div>
           
-          {/* Hero Illustration/Animation */}
-          <motion.div 
-            variants={itemVariants}
-            className="relative perspective"
-          >
-            <motion.div
-              className="w-full h-full preserve-3d"
-              animate={{ 
-                rotateY: [0, 5, 0, -5, 0],
-                rotateX: [0, 5, 0, -5, 0]
-              }}
-              transition={{ 
-                repeat: Infinity, 
-                duration: 10,
-                ease: "easeInOut" 
-              }}
-            >
-              <div className="relative w-full aspect-square max-w-md mx-auto">
-                {/* 3D floating AI/Robot illustration */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-600/90 to-secondary-500/90 rounded-2xl shadow-2xl backdrop-blur-xl overflow-hidden glass">
-                  {/* Circuit board pattern inside */}
-                  <div className="absolute inset-0 bg-grid opacity-20" />
-                  
-                  {/* Content inside card */}
-                  <div className="absolute inset-0 p-8 flex flex-col justify-between">
-                    <div className="flex justify-between items-start">
-                      <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-                        <Bot className="w-6 h-6 text-white" />
-                      </div>
-                      
-                      {/* Animated elements */}
-                      <div className="space-y-2">
-                        <div className="w-16 h-2 bg-white/20 rounded-full animate-pulse" />
-                        <div className="w-12 h-2 bg-white/15 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
-                      </div>
+          {/* AI Features with enhanced 3D and glass effects */}
+          <motion.div variants={itemVariants} className="relative">
+            {/* Background blur effects */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 rounded-2xl blur-xl opacity-50"></div>
+            
+            {/* Glass card with neural network background */}
+            <div className="relative rounded-2xl p-8 border border-primary/20 shadow-xl backdrop-blur-lg bg-white/10 overflow-hidden">
+              {/* Neural network decorative background */}
+              <div className="absolute inset-0 bg-ai-grid opacity-5"></div>
+              
+              {/* AI features grid */}
+              <div className="grid grid-cols-2 gap-6 relative z-10">
+                <WouterLink href="/services/ai-agents">
+                  <motion.div 
+                    variants={itemVariants}
+                    className="flex flex-col items-center text-center p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300 hover:shadow-lg group backdrop-blur-sm relative overflow-hidden cursor-pointer"
+                  >
+                    {/* AI background image with overlay */}
+                    <div className="absolute inset-0 z-0">
+                      <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-background/80 backdrop-blur-sm z-10"></div>
+                      <div 
+                        className="absolute inset-0 bg-center bg-cover z-0"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000' fill-opacity='0.05'/%3E%3Cpath d='M50 30 C 40 30, 30 40, 30 50 C 30 60, 40 70, 50 70 C 60 70, 70 60, 70 50 C 70 40, 60 30, 50 30 Z' stroke='%238258fc' fill='none' stroke-width='0.5' stroke-opacity='0.3'/%3E%3Ccircle cx='50' cy='50' r='25' stroke='%238258fc' fill='none' stroke-width='0.5' stroke-opacity='0.2'/%3E%3Ccircle cx='50' cy='50' r='15' stroke='%238258fc' fill='none' stroke-width='0.5' stroke-opacity='0.4'/%3E%3Ccircle cx='30' cy='40' r='4' fill='%238258fc' fill-opacity='0.2'/%3E%3Ccircle cx='70' cy='40' r='4' fill='%238258fc' fill-opacity='0.2'/%3E%3Ccircle cx='40' cy='70' r='4' fill='%238258fc' fill-opacity='0.2'/%3E%3Ccircle cx='60' cy='70' r='4' fill='%238258fc' fill-opacity='0.2'/%3E%3Cpath d='M30 40 L 70 40 M 40 70 L 60 70 M 30 40 L 40 70 M 70 40 L 60 70' stroke='%238258fc' stroke-opacity='0.3' stroke-width='0.5'/%3E%3C/svg%3E")`
+                        }}
+                      ></div>
                     </div>
                     
-                    <div className="space-y-3 mt-auto">
-                      <div className="w-full h-3 bg-white/20 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }} />
-                      <div className="w-5/6 h-3 bg-white/15 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
-                      <div className="w-4/6 h-3 bg-white/10 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+                    {/* Content */}
+                    <div className="relative z-20">
+                      <div className="rounded-full bg-primary/20 p-3 mb-4 group-hover:bg-primary/30 transition-colors duration-300 glow-hover backdrop-blur-md">
+                        <Brain className="h-6 w-6 text-primary" />
+                      </div>
+                      <h3 className="font-medium mb-2">סוכני AI</h3>
+                      <p className="text-sm text-muted-foreground">פתרונות AI חכמים שעובדים 24/7</p>
                     </div>
                     
-                    <div className="mt-6 flex justify-between items-center">
-                      <div className="w-16 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                        <div className="w-2 h-2 bg-accent-400 rounded-full mr-1 animate-pulse" />
-                        <div className="w-2 h-2 bg-accent-400 rounded-full mr-1 animate-pulse" style={{ animationDelay: '0.5s' }} />
-                        <div className="w-2 h-2 bg-accent-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-                      </div>
-                      
-                      <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                        <ArrowRight className="w-4 h-4 text-white" />
-                      </div>
+                    {/* Decorative elements */}
+                    <div className="absolute top-0 right-0 w-12 h-12 bg-primary/5 rounded-bl-2xl opacity-70"></div>
+                    <div className="absolute bottom-0 left-0 w-12 h-12 bg-primary/5 rounded-tr-2xl opacity-70"></div>
+                  </motion.div>
+                </WouterLink>
+                
+                <WouterLink href="/services/automation">
+                  <motion.div 
+                    variants={itemVariants}
+                    className="flex flex-col items-center text-center p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300 hover:shadow-lg group backdrop-blur-sm relative overflow-hidden cursor-pointer"
+                  >
+                    {/* Automation background image with overlay */}
+                    <div className="absolute inset-0 z-0">
+                      <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-background/80 backdrop-blur-sm z-10"></div>
+                      <div 
+                        className="absolute inset-0 bg-center bg-cover z-0"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%236644ff' stroke-width='0.5' stroke-opacity='0.2'%3E%3Crect x='25' y='25' width='50' height='50' rx='5' /%3E%3Cline x1='30' y1='40' x2='70' y2='40' /%3E%3Cline x1='30' y1='50' x2='70' y2='50' /%3E%3Cline x1='30' y1='60' x2='70' y2='60' /%3E%3Ccircle cx='20' cy='40' r='3' fill='%236644ff' fill-opacity='0.2' /%3E%3Ccircle cx='80' cy='60' r='3' fill='%236644ff' fill-opacity='0.2' /%3E%3Cpath d='M20 40 L 25 40 M 80 60 L 75 60' stroke-width='0.7' /%3E%3C/g%3E%3C/svg%3E")`
+                        }}
+                      ></div>
                     </div>
-                  </div>
-                </div>
+                    
+                    {/* Content */}
+                    <div className="relative z-20">
+                      <div className="rounded-full bg-primary/20 p-3 mb-4 group-hover:bg-primary/30 transition-colors duration-300 glow-hover backdrop-blur-md">
+                        <Zap className="h-6 w-6 text-primary" />
+                      </div>
+                      <h3 className="font-medium mb-2">אוטומציה</h3>
+                      <p className="text-sm text-muted-foreground">ייעול תהליכים וחיסכון בזמן</p>
+                    </div>
+                    
+                    {/* Decorative elements */}
+                    <div className="absolute top-0 right-0 w-12 h-12 bg-primary/5 rounded-bl-2xl opacity-70"></div>
+                    <div className="absolute bottom-0 left-0 w-12 h-12 bg-primary/5 rounded-tr-2xl opacity-70"></div>
+                  </motion.div>
+                </WouterLink>
                 
-                {/* Floating elements around the card */}
-                <div className="absolute -top-6 -right-6 w-12 h-12 bg-accent-400/80 rounded-full blur-sm animate-float-slow" />
-                <div className="absolute -bottom-8 -left-8 w-16 h-16 bg-primary-400/80 rounded-full blur-sm animate-float" 
-                  style={{ animationDelay: '1s' }} />
-                <div className="absolute top-1/2 -right-10 transform -translate-y-1/2 w-8 h-8 bg-secondary-400/80 rounded-full blur-sm animate-float-fast" 
-                  style={{ animationDelay: '0.5s' }} />
-                  
-                {/* Visual elements around the card */}
-                <div className="absolute top-1/4 -left-12 w-24 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center shadow-lg animate-float-slow">
-                  <span className="text-xs font-medium text-primary-800 dark:text-primary-300">אוטומציה חכמה</span>
-                </div>
+                <WouterLink href="/services/integration">
+                  <motion.div 
+                    variants={itemVariants}
+                    className="flex flex-col items-center text-center p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300 hover:shadow-lg group backdrop-blur-sm relative overflow-hidden cursor-pointer"
+                  >
+                    {/* Integration background image with overlay */}
+                    <div className="absolute inset-0 z-0">
+                      <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-background/80 backdrop-blur-sm z-10"></div>
+                      <div 
+                        className="absolute inset-0 bg-center bg-cover z-0"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%235555ff' stroke-width='0.5' stroke-opacity='0.2'%3E%3Ccircle cx='30' cy='30' r='10' /%3E%3Ccircle cx='70' cy='70' r='10' /%3E%3Ccircle cx='70' cy='30' r='10' /%3E%3Ccircle cx='30' cy='70' r='10' /%3E%3Ccircle cx='50' cy='50' r='15' /%3E%3Cline x1='30' y1='30' x2='50' y2='50' /%3E%3Cline x1='70' y1='30' x2='50' y2='50' /%3E%3Cline x1='30' y1='70' x2='50' y2='50' /%3E%3Cline x1='70' y1='70' x2='50' y2='50' /%3E%3C/g%3E%3C/svg%3E")`
+                        }}
+                      ></div>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="relative z-20">
+                      <div className="rounded-full bg-primary/20 p-3 mb-4 group-hover:bg-primary/30 transition-colors duration-300 glow-hover backdrop-blur-md">
+                        <Cpu className="h-6 w-6 text-primary" />
+                      </div>
+                      <h3 className="font-medium mb-2">אינטגרציה</h3>
+                      <p className="text-sm text-muted-foreground">התממשקות למערכות קיימות</p>
+                    </div>
+                    
+                    {/* Decorative elements */}
+                    <div className="absolute top-0 right-0 w-12 h-12 bg-primary/5 rounded-bl-2xl opacity-70"></div>
+                    <div className="absolute bottom-0 left-0 w-12 h-12 bg-primary/5 rounded-tr-2xl opacity-70"></div>
+                  </motion.div>
+                </WouterLink>
                 
-                <div className="absolute bottom-1/4 -right-14 w-28 h-8 bg-secondary-100 dark:bg-secondary-900/30 rounded-lg flex items-center justify-center shadow-lg animate-float"
-                  style={{ animationDelay: '1.5s' }}>
-                  <span className="text-xs font-medium text-secondary-800 dark:text-secondary-300">חיסכון בזמן וכסף</span>
-                </div>
+                <WouterLink href="/services/analytics">
+                  <motion.div 
+                    variants={itemVariants}
+                    className="flex flex-col items-center text-center p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all duration-300 hover:shadow-lg group backdrop-blur-sm relative overflow-hidden cursor-pointer"
+                  >
+                    {/* Analytics background image with overlay */}
+                    <div className="absolute inset-0 z-0">
+                      <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-background/80 backdrop-blur-sm z-10"></div>
+                      <div 
+                        className="absolute inset-0 bg-center bg-cover z-0"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%237733ff' stroke-width='0.5' stroke-opacity='0.2'%3E%3Crect x='20' y='20' width='60' height='60' rx='2' /%3E%3Cline x1='30' y1='35' x2='70' y2='35' /%3E%3Cline x1='30' y1='45' x2='50' y2='45' /%3E%3Cline x1='30' y1='55' x2='60' y2='55' /%3E%3Cline x1='30' y1='65' x2='40' y2='65' /%3E%3Ccircle cx='75' cy='45' r='10' fill='%237733ff' fill-opacity='0.1' /%3E%3Cpath d='M70 45 L 65 45' stroke-width='0.7' /%3E%3C/g%3E%3C/svg%3E")`
+                        }}
+                      ></div>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="relative z-20">
+                      <div className="rounded-full bg-primary/20 p-3 mb-4 group-hover:bg-primary/30 transition-colors duration-300 glow-hover backdrop-blur-md">
+                        <BarChart className="h-6 w-6 text-primary" />
+                      </div>
+                      <h3 className="font-medium mb-2">אנליטיקה</h3>
+                      <p className="text-sm text-muted-foreground">ניתוח נתונים ותובנות עסקיות</p>
+                    </div>
+                    
+                    {/* Decorative elements */}
+                    <div className="absolute top-0 right-0 w-12 h-12 bg-primary/5 rounded-bl-2xl opacity-70"></div>
+                    <div className="absolute bottom-0 left-0 w-12 h-12 bg-primary/5 rounded-tr-2xl opacity-70"></div>
+                  </motion.div>
+                </WouterLink>
               </div>
-            </motion.div>
+              
+              {/* Decorative elements */}
+              <div className="absolute -bottom-4 -right-4 w-28 h-28 border border-primary/20 rounded-2xl opacity-40 rotate-12" />
+              <div className="absolute -top-4 -left-4 w-20 h-20 border border-secondary/20 rounded-2xl opacity-40 -rotate-6" />
+            </div>
           </motion.div>
         </motion.div>
-        
-        {/* Feature cards section */}
-        <div className="mt-20 lg:mt-32">
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { 
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.2,
-                  delayChildren: 0.6
-                }
-              }
-            }}
-            initial="hidden"
-            animate="visible"
-          >
-            {featureItems.map((item, index) => (
-              <motion.div
-                key={index}
-                className="bg-surface/80 backdrop-blur-lg border border-subtle rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { 
-                    opacity: 1, 
-                    y: 0,
-                    transition: { 
-                      type: "spring", 
-                      stiffness: 100
-                    }
-                  }
-                }}
-              >
-                <div className="w-12 h-12 rounded-lg bg-primary-100/50 dark:bg-primary-900/30 flex items-center justify-center mb-4">
-                  {item.icon}
-                </div>
-                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                <p className="text-muted">{item.description}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
       </div>
     </section>
   );
-};
-
-export default HeroSection;
+}

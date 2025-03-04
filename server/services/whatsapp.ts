@@ -1,9 +1,6 @@
 import { WhatsappMessage, WhatsappSession, WhatsappTemplate, type InsertWhatsappMessage, type InsertWhatsappSession } from "@shared/schema";
 import { storage } from "../storage";
 
-import { WhatsappMessage, WhatsappSession, WhatsappTemplate, type InsertWhatsappMessage, type InsertWhatsappSession } from "@shared/schema";
-import { storage } from "../storage";
-
 class WhatsAppService {
   private apiToken: string | null = null;
   private phoneNumber: string | null = null;
@@ -57,128 +54,137 @@ class WhatsAppService {
       throw error;
     }
   }
-  
-  /**
-   * Send a plain text message
-   * @param to Recipient phone number (with country code)
-   * @param text Message text
-   * @returns Response from the WhatsApp API
-   */
-  async sendMessage(to: string, text: string) {
-    // Ensure phone number is in the right format
-    const formattedPhone = to.startsWith('+') ? to.substring(1) : to;
-    
-    const data = {
-      messaging_product: 'whatsapp',
-      recipient_type: 'individual',
-      to: formattedPhone,
-      type: 'text',
-      text: {
-        preview_url: false,
-        body: text
-      }
-    };
-    
-    return this.sendRequest(`${this.phoneNumber}/messages`, data);
-  }
-  
-  /**
-   * Send a template message
-   * @param to Recipient phone number (with country code)
-   * @param templateName Name of the template to use
-   * @param variables Variables to use in the template
-   * @returns Response from the WhatsApp API
-   */
-  async sendTemplate(to: string, templateName: string, variables: Record<string, string>) {
-    // Ensure phone number is in the right format
-    const formattedPhone = to.startsWith('+') ? to.substring(1) : to;
-    
-    // Format variables into components
-    const components = [];
-    
-    if (Object.keys(variables).length > 0) {
-      const parameters = Object.entries(variables).map(([_, value]) => ({
-        type: 'text',
-        text: value
-      }));
+
+  async sendMessage(to: string, text: string): Promise<WhatsappMessage> {
+    if (!this.checkInitialization()) {
+      // Create a mock message if WhatsApp is not configured
+      const mockMessage: InsertWhatsappMessage = {
+        sessionId: 0, // Will be updated before storage
+        direction: "outbound",
+        messageType: "text",
+        content: text,
+        metadata: { mock: true },
+        status: "pending"
+      };
       
-      components.push({
-        type: 'body',
-        parameters
-      });
+      try {
+        mockMessage.sessionId = await this.getOrCreateSession(to);
+        const storedMessage = await storage.createWhatsappMessage(mockMessage);
+        console.log("Created mock WhatsApp message (service not configured)", { to, text });
+        return storedMessage;
+      } catch (error) {
+        console.error("Failed to store mock WhatsApp message", error);
+        throw error;
+      }
     }
     
-    const data = {
-      messaging_product: 'whatsapp',
-      recipient_type: 'individual',
-      to: formattedPhone,
-      type: 'template',
-      template: {
-        name: templateName,
-        language: {
-          code: 'he' // Default to Hebrew
-        },
-        components
+    try {
+      const data = {
+        messaging_product: "whatsapp",
+        to,
+        type: "text",
+        text: { body: text }
+      };
+
+      const result = await this.sendRequest(`${this.phoneNumber}/messages`, data);
+      const sessionId = await this.getOrCreateSession(to);
+
+      const message: InsertWhatsappMessage = {
+        sessionId,
+        direction: "outbound",
+        messageType: "text",
+        content: text,
+        metadata: result,
+        status: "sent"
+      };
+
+      return await storage.createWhatsappMessage(message);
+    } catch (error) {
+      console.error("Failed to send WhatsApp message", error);
+      throw error;
+    }
+  }
+
+  async sendTemplate(to: string, templateName: string, variables: Record<string, string> = {}): Promise<WhatsappMessage> {
+    if (!this.checkInitialization()) {
+      // Create a mock template message if WhatsApp is not configured
+      const mockMessage: InsertWhatsappMessage = {
+        sessionId: 0, // Will be updated before storage
+        direction: "outbound",
+        messageType: "template",
+        content: `Template: ${templateName} (mock)`,
+        metadata: { mock: true, variables },
+        status: "pending"
+      };
+      
+      try {
+        mockMessage.sessionId = await this.getOrCreateSession(to);
+        const storedMessage = await storage.createWhatsappMessage(mockMessage);
+        console.log("Created mock WhatsApp template message (service not configured)", { to, templateName, variables });
+        return storedMessage;
+      } catch (error) {
+        console.error("Failed to store mock WhatsApp template message", error);
+        throw error;
       }
-    };
+    }
     
-    return this.sendRequest(`${this.phoneNumber}/messages`, data);
-  }
-}
-
-async sendMessage(to: string, text: string) {
-    // Format the phone number if needed
-    const formattedNumber = to.startsWith('+') ? to.substring(1) : to;
-
-    const data = {
-      messaging_product: 'whatsapp',
-      recipient_type: 'individual',
-      to: formattedNumber,
-      type: 'text',
-      text: {
-        body: text
+    try {
+      let template;
+      try {
+        template = await storage.getWhatsappTemplate(templateName);
+        if (!template) {
+          throw new Error(`Template ${templateName} not found`);
+        }
+      } catch (error) {
+        console.error(`WhatsApp template ${templateName} not found`, error);
+        throw error;
       }
-    };
 
-    return this.sendRequest(`${this.phoneNumber}/messages`, data);
-  }
-
-  async sendTemplate(to: string, templateName: string, variables: Record<string, string> = {}) {
-    // Format the phone number if needed
-    const formattedNumber = to.startsWith('+') ? to.substring(1) : to;
-
-    // Convert variables to components format expected by WhatsApp API
-    const components = Object.keys(variables).length > 0 ? [{
-      type: 'body',
-      parameters: Object.entries(variables).map(([_, value]) => ({
-        type: 'text',
-        text: value
-      }))
-    }] : [];
-
-    const data = {
-      messaging_product: 'whatsapp',
-      recipient_type: 'individual',
-      to: formattedNumber,
-      type: 'template',
-      template: {
-        name: templateName,
-        language: {
-          code: 'he' // Default to Hebrew, could be made configurable
-        },
-        components
+      let content = template.content;
+      for (const [key, value] of Object.entries(variables)) {
+        content = content.replace(`{{${key}}}`, value);
       }
-    };
-    
-    return this.sendRequest(`${this.phoneNumber}/messages`, data);
-  }
-}
 
-// Export a singleton instance
-export const whatsapp = new WhatsAppService();
+      const data = {
+        messaging_product: "whatsapp",
+        to,
+        type: "template",
+        template: {
+          name: templateName,
+          language: {
+            code: template.language
+          },
+          components: [
+            {
+              type: "body",
+              parameters: Object.entries(variables).map(([_, value]) => ({
+                type: "text",
+                text: value
+              }))
+            }
+          ]
+        }
+      };
 
-    return this.sendRequest(`${this.phoneNumber}/messages`, data);
+      const result = await this.sendRequest(`${this.phoneNumber}/messages`, data);
+      const sessionId = await this.getOrCreateSession(to);
+
+      const message: InsertWhatsappMessage = {
+        sessionId,
+        direction: "outbound",
+        messageType: "template",
+        content,
+        metadata: result,
+        status: "sent"
+      };
+
+      return await storage.createWhatsappMessage(message);
+    } catch (error) {
+      console.error("Failed to send WhatsApp template message", error);
+      throw error;
+    }
   }
+
   private async getOrCreateSession(phoneNumber: string): Promise<number> {
     try {
       // First, attempt to get the existing session

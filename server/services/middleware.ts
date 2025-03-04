@@ -1,71 +1,102 @@
-import express, { type Express, Request, Response, NextFunction } from 'express';
-import { errorHandler } from './errorHandler';
+import { rateLimit } from 'express-rate-limit';
+import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
-import compression from 'compression';
-import rateLimit from 'express-rate-limit';
+import { Express, Request, Response, NextFunction } from 'express';
+import NodeCache from 'node-cache';
 
-// Setup middleware for the Express application
-export function setupMiddleware(app: Express) {
-  // Security middleware
-  app.use(helmet({
-    contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false,
-    crossOriginEmbedderPolicy: process.env.NODE_ENV === 'production'
-  }));
+// Create cache with increased TTL for better performance
+export const cache = new NodeCache({ 
+  stdTTL: 600, // 10 minutes default TTL
+  checkperiod: 120, // Check for expired keys every 2 minutes instead of every 60 seconds
+  useClones: false // Disable cloning for better performance
+}); 
 
-  // CORS setup
+// Create a more permissive rate limiter for development
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: process.env.NODE_ENV === 'production' ? 100 : 1000, // Higher limit in development
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting for local development
+    const ip = req.ip || req.connection.remoteAddress;
+    return ip === '127.0.0.1' || ip === '::1';
+  }
+});
+
+export { limiter };
+
+export const setupMiddleware = (app: Express) => {
+  // In development mode, disable helmet to avoid CSP issues with Vite
+  if (process.env.NODE_ENV === 'production') {
+    app.use(
+      helmet({
+        contentSecurityPolicy: {
+          directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+            styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+            fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+            imgSrc: ["'self'", 'data:', 'blob:'],
+            connectSrc: ["'self'", 'ws:', 'wss:'],
+          },
+        },
+      })
+    );
+  } else {
+    // For development, completely disable helmet to avoid CSP issues
+    console.log('Development mode: Helmet disabled for Vite compatibility');
+  }
+  
+  // Configure CORS to be permissive
   app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-      ? ['https://agentflow.io', /\.agentflow\.io$/] 
-      : true,
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: true,
+    credentials: true
   }));
 
-  // Request body parsers
-  app.use(express.json({ 
-    limit: '1mb',
-    verify: (req: Request, res: Response, buf: Buffer) => {
-      try {
-        JSON.parse(buf.toString());
-      } catch(e) {
-        res.status(400).json({ error: 'Invalid JSON' });
-        throw new Error('Invalid JSON');
-      }
+  // Apply compression but only to text-based responses
+  app.use(compression({
+    level: 6, // Balance between compression ratio and CPU usage (default is 6)
+    filter: (req: Request, res: Response) => {
+      // Only compress responses with content types that benefit from compression
+      const contentType = res.getHeader('Content-Type') as string || '';
+      return /text|javascript|json|xml|html|css/i.test(contentType);
     }
   }));
-  app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+  
+  // Apply rate limiting only in production
+  if (process.env.NODE_ENV === 'production') {
+    app.use(limiter);
+  }
 
-  // Performance middleware
-  app.use(compression());
-
-  // Global rate limiting
-  const globalLimiter = rateLimit({
-    windowMs: 5 * 60 * 1000, // 5 minutes
-    max: 500, // limit each IP to 500 requests per windowMs
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: 'Too many requests from this IP, please try again later'
-  });
-  app.use(globalLimiter);
-
-  // Request ID middleware
+  // Optimize cache middleware: Only apply to specific API routes that benefit from caching
   app.use((req: Request, res: Response, next: NextFunction) => {
-    const requestId = req.headers['x-request-id'] || 
-      `req-${Math.random().toString(36).substring(2, 10)}-${Date.now()}`;
+    // Only cache GET requests for specific routes
+    if (req.method !== 'GET') return next();
+    
+    // Only cache certain API endpoints (blog posts, templates, etc)
+    if (!req.path.match(/^\/api\/(blog|whatsapp\/template)/)) return next();
 
-    req.headers['x-request-id'] = requestId as string;
-    res.setHeader('X-Request-ID', requestId as string);
+    const key = req.originalUrl;
+    const cachedResponse = cache.get(key);
+
+    if (cachedResponse) {
+      return res.json(cachedResponse);
+    }
+
+    // Store the original json method
+    const originalJson = res.json;
+    
+    // Override the json method
+    res.json = function(body) {
+      // Only cache successful responses
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        cache.set(key, body);
+      }
+      return originalJson.call(this, body);
+    };
+
     next();
   });
-
-  // Add timestamp to request object for performance measurement
-  app.use((req: Request, _res: Response, next: NextFunction) => {
-    (req as any).__startTime = Date.now();
-    next();
-  });
-
-  // Global error handler should be registered after all routes
-  app.use(errorHandler);
-}
+};
