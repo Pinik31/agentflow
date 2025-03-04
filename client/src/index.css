@@ -521,6 +521,16 @@ html, body {
 
 /* Add any additional global styles here */
 
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradient {
+  background-size: 200% auto;
+  animation: gradient 5s ease infinite;
+}
+
 @layer base {
   :root {
     --font-sans: 'Exo 2', 'Space Grotesk', 'Assistant', system-ui, sans-serif;
@@ -588,7 +598,7 @@ html, body {
   }
 
   * {
-    @apply border-border;
+    @apply border-input;
   }
 
   body {

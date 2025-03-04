@@ -31,6 +31,18 @@ export interface LeadResponse {
   createdAt: string;
 }
 
+export interface LeadRequest {
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  message?: string;
+  metadata?: any;
+  businessSize?: string;
+  industry?: string;
+  website?: string;
+}
+
 export interface BusinessNeedResponse {
   id: number;
   assessmentId: number;

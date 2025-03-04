@@ -22,17 +22,3 @@ const LoadingFallback: React.FC = () => {
 };
 
 export default LoadingFallback;
-import React from 'react';
-
-const LoadingFallback: React.FC = () => {
-  return (
-    <div className="min-h-[60vh] flex items-center justify-center">
-      <div className="flex flex-col items-center">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-4 text-lg font-medium text-gray-600">Loading...</p>
-      </div>
-    </div>
-  );
-};
-
-export default LoadingFallback;

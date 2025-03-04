@@ -14,7 +14,7 @@ export type ValidationResult<T> = {
   }>;
 };
 
-export const validate = (schema: AnyZodObject) =>
+export const validateMiddleware = (schema: AnyZodObject) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await schema.parseAsync({

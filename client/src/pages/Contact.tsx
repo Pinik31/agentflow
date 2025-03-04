@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { insertLeadSchema } from "@shared/schema";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { LeadRequest } from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
 import { Building2, Mail, MessageSquare, Phone, Check, ArrowRight } from "lucide-react";
 import { SiWhatsapp, SiInstagram, SiYoutube, SiLinkedin } from "react-icons/si";
@@ -85,10 +86,10 @@ export default function Contact() {
     },
   });
 
-  const mutation = useMutation({
-    mutationFn: async (data) => {
+  const mutation = useMutation<any, Error, LeadRequest>({
+    mutationFn: async (data: LeadRequest) => {
       setIsSubmitting(true);
-      await apiRequest("POST", "/api/leads", data);
+      return await apiRequest("POST", "/api/leads", data);
     },
     onSuccess: () => {
       toast({
@@ -109,17 +110,17 @@ export default function Contact() {
     },
   });
 
-  const nextStage = () => {
+  const nextStage = async () => {
     if (formStage === 0) {
-      const nameValid = form.trigger("name");
-      const emailValid = form.trigger("email");
+      const nameValid = await form.trigger("name");
+      const emailValid = await form.trigger("email");
 
       if (nameValid && emailValid) {
         setFormStage(1);
       }
     } else if (formStage === 1) {
-      const phoneValid = form.trigger("phone");
-      const companyValid = form.trigger("company");
+      const phoneValid = await form.trigger("phone");
+      const companyValid = await form.trigger("company");
 
       if (phoneValid && companyValid) {
         setFormStage(2);
@@ -199,7 +200,9 @@ export default function Contact() {
               {/* Contact form with multi-step animation */}
               <Form {...form}>
                 <form
-                  onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
+                  onSubmit={form.handleSubmit((data) => {
+                    mutation.mutate(data);
+                  })}
                   className="space-y-6"
                 >
                   {/* Progress steps indicator */}
@@ -398,27 +401,7 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Global animations for the page */}
-      <style jsx global>{`
-        @keyframes float {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-          100% { transform: translateY(0px); }
-        }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
-
-        @keyframes gradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .animate-gradient {
-          background-size: 200% auto;
-          animation: gradient 5s ease infinite;
-        }
-      `}</style>
+      {/* Global animations are defined in index.css */}
     </>
   );
 }

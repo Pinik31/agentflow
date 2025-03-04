@@ -1,5 +1,5 @@
 run = "npm run dev"
-modules = ["nodejs-20:v8-20230920-bd784b9"]
+modules = ["nodejs-20"]
 hidden = [".config", "package-lock.json", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
@@ -26,10 +26,18 @@ externalPort = 80
 PORT = "5000"
 
 [workflows]
-runButton = "dev"
+runButton = "Start Server"
 
 [[workflows.workflow]]
 name = "dev"
+author = 38908678
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+
+[[workflows.workflow]]
+name = "Start Server"
 author = 38908678
 
 [[workflows.workflow.tasks]]
