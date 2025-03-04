@@ -24,6 +24,16 @@ const logger = {
   error: (message: string, error?: any) => console.error(`[ERROR] ${new Date().toISOString()} - ${message}`, error || '')
 };
 
+// Debug logging
+console.log("=== SERVER STARTUP DEBUG INFO ===");
+console.log(`Current directory: ${process.cwd()}`);
+console.log(`Node version: ${process.version}`);
+console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+console.log(`__dirname: ${__dirname}`);
+console.log(`Client directory exists: ${existsSync(resolve(__dirname, '..', 'client'))}`);
+console.log(`Client/index.html exists: ${existsSync(resolve(__dirname, '..', 'client', 'index.html'))}`);
+console.log("=================================");
+
 // Create Express application
 const app = express();
 
