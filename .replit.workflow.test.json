@@ -1,0 +1,9 @@
+{
+  "name": "Test Server",
+  "tasks": [
+    {
+      "task": "shell.exec",
+      "args": "node test-server.js"
+    }
+  ]
+}

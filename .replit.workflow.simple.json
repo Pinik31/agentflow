@@ -1,0 +1,9 @@
+{
+  "name": "Simple Server",
+  "tasks": [
+    {
+      "task": "shell.exec",
+      "args": "node simple-server.cjs"
+    }
+  ]
+}

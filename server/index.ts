@@ -281,7 +281,7 @@ function completeAppSetup() {
 }
 
 // Improved server startup process
-function startServer(port = 5000, retries = 3) {
+function startServer(port = process.env.PORT ? parseInt(process.env.PORT) : 8091, retries = 3) {
   server.listen(port, "0.0.0.0")
     .on('listening', () => {
       const address = server.address();
@@ -317,12 +317,13 @@ import { exec } from 'child_process';
 
 // Gracefully attempt to release port first
 const attemptPortRelease = () => {
+  const port = process.env.PORT || "8091";
   return new Promise<void>((resolve) => {
-    exec(`lsof -ti:5000 | xargs kill -9 2>/dev/null || true`, (error) => {
+    exec(`lsof -ti:${port} | xargs kill -9 2>/dev/null || true`, (error) => {
       if (error) {
-        logger.warn(`Could not release port 5000: ${error.message}`);
+        logger.warn(`Could not release port ${port}: ${error.message}`);
       } else {
-        logger.info("Port 5000 is now available");
+        logger.info(`Port ${port} is now available`);
       }
       // Always resolve, even on error, to ensure server starts
       resolve();

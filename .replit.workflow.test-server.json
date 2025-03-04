@@ -1,0 +1,7 @@
+{
+  "name": "Test Server",
+  "description": "Run a lightweight test server for debugging",
+  "runs": {
+    "command": "node test-server.js"
+  }
+}
